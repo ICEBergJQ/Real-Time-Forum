@@ -1,0 +1,115 @@
+<!-- File: index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Page</title>
+    <link rel="stylesheet" href="../src/css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>My Forum</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/categories">Categories</a></li>
+                    <li><a href="/my-posts">My Posts</a></li>
+                    <li><a href="/popular-posts">Popular Posts</a></li>
+                    <li><a href="/help">Help</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <button class="btn login">Login</button>
+                <button class="btn start-topic">Register</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Homepage or Feed -->
+        <section class="feed">
+            <h2>Recent Posts</h2>
+            <div class="filters">
+                <label for="category-filter">Filter by Category:</label>
+                <select id="category-filter">
+                    <option value="all">All</option>
+                    <option value="general">General</option>
+                    <option value="tech">Tech</option>
+                    <option value="news">News</option>
+                </select>
+                <button class="btn">Apply Filter</button>
+            </div>
+            <div class="post-list">
+                <div class="post-preview">
+                    <h3><a href="/post/1">Post Title Example</a></h3>
+                    <p>By <strong>Username</strong> | Category: <em>General</em></p>
+                    <p class="post-snippet">A short preview of the post...</p>
+                    <a href="/post/1" class="btn">Read More</a>
+                </div>
+                <!-- Repeat for other posts -->
+            </div>
+        </section>
+    
+        <!-- Post Details -->
+        <section class="post-details">
+            <h2>Post Title</h2>
+            <p>By <strong>Username</strong> | Category: <em>Tech</em> | Posted on: 2024-11-27</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+            <button class="btn like-btn">👍 Like (20)</button>
+            <button class="btn dislike-btn">👎 Dislike (3)</button>
+    
+            <div class="comments-section">
+                <h3>Comments</h3>
+                <div class="comment">
+                    <p><strong>Username</strong> | Posted on: 2024-11-27</p>
+                    <p>This is a comment!</p>
+                    <button class="btn like-btn">👍 Like (5)</button>
+                    <button class="btn dislike-btn">👎 Dislike (1)</button>
+                </div>
+                <!-- Repeat for other comments -->
+                <form class="add-comment">
+                    <textarea placeholder="Write your comment here..."></textarea>
+                    <button type="submit" class="btn">Post Comment</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-sections">
+                <div>
+                    <h4>Forum</h4>
+                    <ul>
+                        <li><a href="/categories">Categories</a></li>
+                    <li><a href="/popular-posts">Popular Posts</a></li>
+                    <li><a href="/help">Help</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="/report">Report Issue</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p>&copy; 2024 My Forum. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

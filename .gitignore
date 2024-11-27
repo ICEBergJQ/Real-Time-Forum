@@ -1,0 +1,54 @@
+# Ignore Node.js modules
+node_modules/
+
+# Ignore compiled Go binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.o
+*.a
+*.out
+
+# Ignore build output directories
+/dist/
+/bin/
+/build/
+
+# SQLite database files (local development databases)
+*.sqlite
+*.sqlite3
+*.db
+
+# Ignore log files
+*.log
+
+# Ignore system files and editor-specific files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.swn
+.idea/
+.vscode/
+*.iml
+
+# Ignore environment configuration
+.env
+.env.local
+
+# Ignore Docker-related files
+docker-compose.override.yml
+**/docker-data/
+
+# Ignore front-end build artifacts
+/public/js/bundle.js
+/public/css/bundle.css
+
+# Ignore unnecessary test or coverage files
+*.test
+*.spec
+*.coverage
+coverage/
+*.lcov

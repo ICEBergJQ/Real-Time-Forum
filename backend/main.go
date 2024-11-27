@@ -5,15 +5,15 @@ import (
 	"net/http"
 	"os"
 
-	forum "Forum/routes"
+	handlers "Forum/routes"
 )
 
 func main() {
 	http.HandleFunc("/posts", func(w http.ResponseWriter, r *http.Request) {
         if r.Method == http.MethodPost {
-            forum.CreatePost(w, r)
+            handlers.CreatePost(w, r)
         } else if r.Method == http.MethodGet {
-            forum.GetPosts(w, r)
+            handlers.GetPosts(w, r)
         } else {
             http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
         }

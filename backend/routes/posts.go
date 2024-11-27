@@ -4,18 +4,11 @@ import (
 	"encoding/json"
 	"net/http"
 	"sync"
+	forum "Forum/models"
 )
 
-type Post struct {
-	Author     string	`json:"author"`
-	ID         int      `json:"id"`
-	Title      string   `json:"title"`
-	Content    string   `json:"content"`
-	Categories []string `json:"categories"`
-}
-
 var (
-	posts         []Post
+	posts         []forum.Post
 	postIDCounter = 1
 	mu            sync.Mutex // To handle concurrent writes
 )
@@ -26,7 +19,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var newPost Post
+	var newPost forum.Post
 	if err := json.NewDecoder(r.Body).Decode(&newPost); err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return
@@ -49,7 +42,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	category := r.URL.Query().Get("category")
-	var filteredPosts []Post
+	var filteredPosts []forum.Post
 
 	mu.Lock()
 	defer mu.Unlock()

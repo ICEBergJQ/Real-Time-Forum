@@ -4,7 +4,7 @@ import "time"
 
 type Post struct {
 	Author     string    `json:"author"`
-	ID         int       `json:"id"`
+	ID         string    `json:"id"`
 	Title      string    `json:"title"`
 	Content    string    `json:"content"`
 	Categories []string  `json:"categories"`

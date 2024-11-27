@@ -5,14 +5,13 @@ import (
 	"encoding/json"
 	"net/http"
 	"sync"
+
 	uuid "github.com/gofrs/uuid"
 
 	forum "Forum/models"
 )
 
-var (
-	mu    sync.Mutex // To handle concurrent writes
-)
+var mu sync.Mutex // To handle concurrent writes
 
 func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -28,16 +27,16 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	mu.Lock()
 	id, err := uuid.NewV4()
 	if err != nil {
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		http.Error(w, "internal server error id", http.StatusInternalServerError)
 		return
 	}
 
 	newPost.ID = id.String()
 
-	query := `INSERT INTO posts (id, title, content, category) VALUES (?, ?, ?, ?)`
+	query := `INSERT INTO posts (user_id, title, content, category_id) VALUES (?, ?, ?, ?);`
 	_, err = db.Exec(query, newPost.ID, newPost.Title, newPost.Content, newPost.Categories, newPost.CreatedAt)
 	if err != nil {
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		http.Error(w, "internal server error exec", http.StatusInternalServerError)
 		return
 	}
 	mu.Unlock()

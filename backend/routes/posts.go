@@ -43,26 +43,32 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 	newPost.ID = postID.String()
 
-	var categoryID int
-	err = db.QueryRow("SELECT category_id FROM categories WHERE name = ?", newPost.Categories[0]).Scan(&categoryID)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			http.Error(w, "Category does not exist", http.StatusBadRequest)
-			return
-		} else {
-			http.Error(w, fmt.Sprintf("Error checking category: %v", err), http.StatusInternalServerError)
-			return
+	//var categoryID int
+	var validCategories []int
+	for _, categoryName := range newPost.Categories {
+		var categoryID int
+		err := db.QueryRow("SELECT category_id FROM categories WHERE name = ?", categoryName).Scan(&categoryID)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				http.Error(w, "Category does not exist: "+categoryName, http.StatusBadRequest)
+				return
+			} else {
+				http.Error(w, fmt.Sprintf("Error checking category: %v", err), http.StatusInternalServerError)
+				return
+			}
 		}
+		validCategories = append(validCategories, categoryID)
 	}
 
-	query := `INSERT INTO posts (post_id, user_id, category_id, title, content)
-              VALUES (?, ?, ?, ?, ?);`
-	_, err = db.Exec(query, newPost.ID, newPost.Author, categoryID, newPost.Title, newPost.Content)
+	query := `INSERT INTO posts (post_id, user_id, title, content)
+	VALUES (?, ?, ?, ?);`
+	result, err := db.Exec(query, newPost.ID, newPost.Author, newPost.Title, newPost.Content)
 	if err != nil {
 		http.Error(w, "Error creating post", http.StatusInternalServerError)
 		return
 	}
-
+	rowsAffected, _ := result.RowsAffected()
+	fmt.Println("Rows affected by insert:", rowsAffected)
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newPost)
 }

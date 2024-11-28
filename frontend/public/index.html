@@ -30,25 +30,21 @@
         </div>
     </header>
 
+
+    <!-- for login -->
+    <div id="dynamicContent"></div>
+
+    
+
     <!-- Main Content -->
     <main class="main-content">
         <!-- Homepage or Feed -->
         <section class="feed">
             <h2>Recent Posts</h2>
-            <div class="filters">
-                <label for="category-filter">Filter by Category:</label>
-                <select id="category-filter">
-                    <option value="all">All</option>
-                    <option value="general">General</option>
-                    <option value="tech">Tech</option>
-                    <option value="news">News</option>
-                </select>
-                <button class="btn">Apply Filter</button>
-            </div>
             <div class="post-list">
                 <div class="post-preview">
-                    <h3><a href="/post/1">Post Title Example</a></h3>
-                    <p>By <strong>Username</strong> | Category: <em>General</em></p>
+                    <h3><a href="/post/1">Post Title</a></h3>
+                    <p>By <strong>Username</strong> | Category: <em>Tech</em> | Posted on: 2024-11-27</p>
                     <p class="post-snippet">A short preview of the post...</p>
                     <a href="/post/1" class="btn">Read More</a>
                 </div>
@@ -58,13 +54,11 @@
     
         <!-- Post Details -->
         <section class="post-details">
-            <h2>Post Title</h2>
-            <p>By <strong>Username</strong> | Category: <em>Tech</em> | Posted on: 2024-11-27</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
             <button class="btn like-btn">👍 Like (20)</button>
             <button class="btn dislike-btn">👎 Dislike (3)</button>
-    
-            <div class="comments-section">
+            <button class="btn comment-btn">💬 Comment</button>
+            <!-- comment section -->
+            <div class="comments-section hidden">
                 <h3>Comments</h3>
                 <div class="comment">
                     <p><strong>Username</strong> | Posted on: 2024-11-27</p>
@@ -72,11 +66,6 @@
                     <button class="btn like-btn">👍 Like (5)</button>
                     <button class="btn dislike-btn">👎 Dislike (1)</button>
                 </div>
-                <!-- Repeat for other comments -->
-                <form class="add-comment">
-                    <textarea placeholder="Write your comment here..."></textarea>
-                    <button type="submit" class="btn">Post Comment</button>
-                </form>
             </div>
         </section>
     </main>
@@ -111,5 +100,53 @@
             <p>&copy; 2024 My Forum. All rights reserved.</p>
         </div>
     </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const commentBtns = document.querySelectorAll(".comment-btn");
+            commentBtns.forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const commentsSection = btn.closest(".post-details").querySelector(".comments-section");
+                    commentsSection.classList.toggle("hidden");
+                });
+            });
+        });
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+        const loginBtn = document.querySelector(".btn.login");
+        const dynamicContent = document.querySelector("#dynamicContent");
+
+        // Load the login modal from login.html
+        fetch("login.html")
+            .then((response) => {
+                if (!response.ok) throw new Error("Failed to load login modal");
+                return response.text();
+            })
+            .then((html) => {
+                dynamicContent.innerHTML = html;
+        
+                const loginModal = document.querySelector("#loginModal");
+                const closeModal = loginModal.querySelector(".close");
+
+                // Show the login modal when the login button is clicked
+                loginBtn.addEventListener("click", () => {
+                    loginModal.classList.remove("hidden");
+                });
+
+                // Hide the modal when the close button is clicked
+                closeModal.addEventListener("click", () => {
+                    loginModal.classList.add("hidden");
+                });
+
+                // Hide the modal when clicking outside the modal content
+                window.addEventListener("click", (event) => {
+                    if (event.target === loginModal) {
+                        loginModal.classList.add("hidden");
+                    }
+                });
+            })
+            .catch((error) => console.error(error));
+        });
+    </script>
 </body>
 </html>

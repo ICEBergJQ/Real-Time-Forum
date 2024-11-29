@@ -66,6 +66,13 @@ CREATE TABLE
         UNIQUE (user_id, post_id, comment_id)
     );
 
+CREATE TABLE IF NOT EXISTS session (
+    user_id TEXT,
+    session_id TEXT PRIMARY KEY,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
 INSERT OR IGNORE INTO categories (name) VALUES
     ('Technology'),
     ('Sport'),

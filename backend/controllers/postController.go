@@ -96,10 +96,10 @@ func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query := `SELECT id, title, content, category, created_at FROM posts`
+	query := "SELECT post_id, user_id, title, content, created_at FROM posts"
 	rows, err := db.Query(query)
 	if err != nil {
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		http.Error(w, "internal server error v", http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
@@ -107,9 +107,9 @@ func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	var posts []forum.Post
 	for rows.Next() {
 		var post forum.Post
-		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.CreatedAt)
+		err := rows.Scan(&post.ID,&post.Author_id , &post.Title, &post.Content, &post.CreatedAt)
 		if err != nil {
-			http.Error(w, "internal server error", http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("internal server error x: %v", err), http.StatusInternalServerError)
 			return
 		}
 		posts = append(posts, post)

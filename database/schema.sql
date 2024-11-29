@@ -1,6 +1,6 @@
 PRAGMA foreign_keys = ON;
 
--- Users Table :
+-- Users Table:
 CREATE TABLE
     IF NOT EXISTS users (
         user_id TEXT NOT NULL UNIQUE,
@@ -11,26 +11,25 @@ CREATE TABLE
         PRIMARY KEY (user_id)
     );
 
--- Posts Table :
+-- Posts Table:
 CREATE TABLE
     IF NOT EXISTS posts (
         post_id TEXT PRIMARY KEY,
         user_id TEXT,
-        category_id INTEGER,
         title TEXT NOT NULL,
         content TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (user_id)
     );
 
--- categories Table : 
+-- Categories Table:
 CREATE TABLE
     IF NOT EXISTS categories (
         category_id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL UNIQUE
     );
 
--- postsCategories Table :
+-- PostsCategories Table:
 CREATE TABLE
     IF NOT EXISTS postsCategories (
         post_id TEXT,
@@ -40,7 +39,7 @@ CREATE TABLE
         FOREIGN KEY (category_id) REFERENCES categories (category_id)
     );
 
--- comments Table :
+-- Comments Table:
 CREATE TABLE
     IF NOT EXISTS comments (
         comment_id TEXT PRIMARY KEY,
@@ -52,7 +51,7 @@ CREATE TABLE
         FOREIGN KEY (post_id) REFERENCES posts (post_id) ON DELETE CASCADE
     );
 
--- like/dislike Table :
+-- Like/Dislike Table:
 CREATE TABLE
     IF NOT EXISTS likeAndDislike (
         likeAndDislike_id TEXT PRIMARY KEY,
@@ -66,6 +65,7 @@ CREATE TABLE
         UNIQUE (user_id, post_id, comment_id)
     );
 
+-- Insert Default Categories:
 INSERT OR IGNORE INTO categories (name) VALUES
     ('Technology'),
     ('Sport'),

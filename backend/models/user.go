@@ -3,7 +3,7 @@ package Forum
 import "time"
 
 type Post struct {
-	Author     string    `json:"author"`
+	Author_id  string    `json:"author_id"`
 	ID         string    `json:"id"`
 	Title      string    `json:"title"`
 	Content    string    `json:"content"`

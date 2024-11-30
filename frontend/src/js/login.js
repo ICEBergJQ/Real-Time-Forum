@@ -29,6 +29,7 @@ form.addEventListener("submit", function (e) {
             console.log(data.message); // For debugging purposes
             // Redirect to the home page
             localStorage.setItem("user_id", data.user.id);
+            ///save username to localstorage to display it in profile section
             localStorage.setItem("username", data.user.username);
             window.location.href = "/";
         })

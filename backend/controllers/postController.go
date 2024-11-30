@@ -61,14 +61,6 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		validCategories = append(validCategories, categoryID)
 	}
 
-	// query := `INSERT INTO posts (post_id, user_id, title, content)
-	// VALUES (?, ?, ?, ?);`
-	// result, err := db.Exec(query, newPost.ID, newPost.Author, newPost.Title, newPost.Content)
-	// if err != nil {
-	// 	http.Error(w, fmt.Sprintf("Error creating post: %v", err), http.StatusInternalServerError)
-	// 	return
-	// }
-
 	// Insert the post
 	query := "INSERT INTO posts (post_id, user_id, title, content) VALUES (?, ?, ?, ?)"
 	_, err = db.Exec(query, newPost.ID, newPost.Author_id, newPost.Title, newPost.Content)

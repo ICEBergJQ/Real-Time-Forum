@@ -4,12 +4,17 @@ form.addEventListener("submit", function (event) {
     event.preventDefault();
 
 
-    
+
     const username = document.getElementById("username").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("password").value;
     ///add confirm password input
-/*password === confirmPassword */
+    /* */
+    if (password !== confirmPassword) {
+        alert("password err..")
+        return false
+    }
 
     ///TODO : password validation
     ///email regex
@@ -22,7 +27,7 @@ form.addEventListener("submit", function (event) {
         alert('all fields are required!!!!!!')
         return
     }
-    fetch("http://localhost:5000/register", {
+    fetch("http://localhost:5000/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),

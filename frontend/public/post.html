@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+</head>
+<body>
+    <!-- Homepage or Feed -->
+    <section class="feed">
+        <h2>Recent Posts</h2>
+        <div class="post-list">
+            <div class="post-preview">
+                <h3><a href="/post/1">Post Title</a></h3>
+                <p>By <strong>Username</strong> | Category: <em>Tech</em> | Posted on: 2024-11-27</p>
+                <p class="post-snippet">A short preview of the post...</p>
+                <a href="/post/1" class="btn">Read More</a>
+            </div>
+            <!-- Repeat for other posts -->
+        </div>
+    </section>
+
+    <!-- Post Details -->
+    <section class="post-details">
+        <button class="btn like-btn">👍 Like (20)</button>
+        <button class="btn dislike-btn">👎 Dislike (3)</button>
+        <button class="btn comment-btn">💬 Comment</button>
+        <!-- comment section -->
+        <div class="comments-section hidden">
+            <h3>Comments</h3>
+            <div class="comment">
+                <p><strong>Username</strong> | Posted on: 2024-11-27</p>
+                <p>This is a comment!</p>
+                <button class="btn like-btn">👍 Like (5)</button>
+                <button class="btn dislike-btn">👎 Dislike (1)</button>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

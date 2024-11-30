@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS session (
     user_id TEXT,
     session_id TEXT PRIMARY KEY,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expired_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 

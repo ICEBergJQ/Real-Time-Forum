@@ -1,5 +1,3 @@
-///fill category drop down
-const userId = localStorage.getItem("user_id");
 
 const category = document.querySelector('.category')
 const createPost = document.getElementById("create-post-container")
@@ -23,7 +21,7 @@ if (userId) {
     </form>
     `;
 
-    fetch("http://localhost:5000/get-categories")
+    fetch("/get-categories")
         .then(res => res.json())
         .then(catesss => {
             const option = document.createElement('option')
@@ -61,7 +59,7 @@ if (userId) {
 
 ///get poosts
 const postsContainer = document.querySelector('.main>.container')
-fetch('http://localhost:5000/get-posts')
+fetch('/get-posts')
     .then(res => res.json())
     .then(data => {
         postsContainer.innerHTML = data.map(post => `

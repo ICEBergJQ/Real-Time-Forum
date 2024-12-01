@@ -12,7 +12,7 @@ like.addEventListener('click', (e) => {
     ///there will be a data attribbute in the like btn
     const postId = e.dataset.postId
     //already liked
-    if (like.classList.contains('liked')) {
+    if (like.classList.contains('liked')) { 
         ///removve the like
         likeCounter -= 1
 

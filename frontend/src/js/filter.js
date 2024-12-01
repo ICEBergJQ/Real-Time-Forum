@@ -42,15 +42,15 @@ function listFilteredPosts(posts) {
 
     posts.forEach(elem => {
 
-        const post = create("div", "post")
+        const post = createElem("div", "post")
 
-        const title = create("h2", "title", elem.title)
-        const content = create("p", "content", elem.content)
-        const details = create("p")
+        const title = createElem("h2", "title", elem.title)
+        const content = createElem("p", "content", elem.content)
+        const details = createElem("p")
 
         ///datails
-        const cat = create("span", "category", elem.category)
-        const craetedAt = create("span", "date", elem.craetedAt)
+        const cat = createElem("span", "category", elem.category)
+        const craetedAt = createElem("span", "date", elem.craetedAt)
         details.appendChild(cat)
         details.appendChild(craetedAt)
 
@@ -60,14 +60,4 @@ function listFilteredPosts(posts) {
 
         main.appendChild(post)
     })
-}
-
-
-function create(tag, className, content) {
-    const element = document.createElement(tag)
-    element.classList.add(className)
-    element.textContent = content
-
-
-    return element
 }

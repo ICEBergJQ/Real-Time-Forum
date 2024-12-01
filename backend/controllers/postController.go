@@ -20,6 +20,10 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
 	}
+	if r.URL.Path != "/" {
+		http.Error(w, "not found", http.StatusNotFound)
+		return
+	}
 
 	var newPost forum.Post
 
@@ -27,6 +31,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return
 	}
+	defer r.Body.Close()
 
 	_, err := db.Exec("PRAGMA foreign_keys = ON;")
 	if err != nil {

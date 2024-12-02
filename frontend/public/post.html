@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../src/css/style.css">
+    <title>Posts</title>
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const postList = document.querySelector('.post-list');
+            if (postList.children.length === 0) {
+                document.querySelector('.feed').innerHTML = '<p>No posts yet. Be the first to create one!</p>';
+            }
+        });
+    </script> -->
+</head>
+<body>
+    <!-- Homepage or Feed -->
+    <section class="feed">
+        <h2>Recent Posts</h2>
+        <div class="post-list">
+            <div class="post-preview">
+                <div class="post-header">
+                    <h3><a href="/post/1">Post Title</a></h3>
+                    <p>By <strong>Username</strong> | Category: <em>Tech</em> | Posted on: 2024-11-27</p>
+                </div>
+                <p class="post-snippet">A short preview of the post...</p>
+                <a href="/post/1" class="btn">Read More</a>
+                <div class="post-details">
+                    <button class="btn like-btn">👍 Like (20)</button>
+                    <button class="btn dislike-btn">👎 Dislike (3)</button>
+                    <button class="btn comment-btn" data-route="comment.html">💬 Comment</button>
+                    <!-- <div class=""> </div> -->
+            </div>
+            <!-- Additional posts will be added here by the backend or dynamically -->
+        </div>
+    </section>
+    <div id="dynamic-content"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const commentButtons = document.querySelectorAll(".comment-btn");
+
+            commentButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const route = button.getAttribute("data-route");
+
+                    // Fetch the content of the new page (comment.html)
+                    fetch(route)
+                        .then(response => {
+                            if (!response.ok) throw new Error("Network response was not ok");
+                            return response.text();
+                        })
+                        .then(html => {
+                            // Inject the fetched content into the DOM
+                            document.getElementById("dynamic-content").innerHTML = html;
+
+                            // Optionally hide the main content
+                            document.querySelector("main").style.display = "none";
+                        })
+                        .catch(error => {
+                            console.error("Error loading the page:", error);
+                        });
+                });
+            });
+        });
+    </script>
+
+    <!-- <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const commentBtns = document.querySelectorAll(".comment-btn");
+            commentBtns.forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const commentsSection = btn.closest(".post-details").querySelector(".comments-section");
+                    commentsSection.classList.toggle("hidden");
+                });
+            });
+        });
+    </script> -->
+</body>
+</html>

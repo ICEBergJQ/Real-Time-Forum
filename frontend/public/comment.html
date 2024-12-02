@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Comments for Post</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <section class="comments">
+            <h2>Comments</h2>
+            <div>
+                <div class="comment">
+                    <p><strong>John Doe</strong> | Posted on: 2024-12-01</p>
+                    <p>This is a comment!</p>
+                    <div class="comment-actions">
+                        <button class="btn like-btn">👍 Like (10)</button>
+                        <button class="btn dislike-btn">👎 Dislike (2)</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+    const commentButtons = document.querySelectorAll(".comment-btn");
+
+    commentButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const route = button.getAttribute("data-route");
+
+            // Update the browser history
+            window.history.pushState({}, "", route);
+
+            // Fetch and inject the content
+            fetch(route)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("dynamic-content").innerHTML = html;
+                    document.querySelector("main").style.display = "none";
+                })
+                .catch(error => console.error("Error loading page:", error));
+        });
+    });
+
+    // Handle browser back/forward navigation
+    window.addEventListener("popstate", () => {
+        const currentRoute = window.location.pathname;
+
+        // Re-fetch and load the content for the current route
+        fetch(currentRoute)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("dynamic-content").innerHTML = html;
+                document.querySelector("main").style.display = currentRoute === "/" ? "block" : "none";
+            })
+            .catch(error => console.error("Error loading page:", error));
+    });
+});
+        </script>
+        <!-- <header>
+            <h1>{{ post.title }}</h1>
+            <p>By <strong>{{ post.author }}</strong> | Posted on: {{ post.date }}</p>
+        </header>
+        <section class="comments">
+            <h2>Comments</h2>
+            <div>
+                {{#each comments}}
+                <div class="comment">
+                    <p><strong>{{ this.username }}</strong> | Posted on: {{ this.date }}</p>
+                    <p>{{ this.content }}</p>
+                    <div class="comment-actions">
+                        <button class="btn like-btn" data-comment-id="{{ this.id }}">👍 Like ({{ this.likes }})</button>
+                        <button class="btn dislike-btn" data-comment-id="{{ this.id }}">👎 Dislike ({{ this.dislikes }})</button>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </section>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const likeButtons = document.querySelectorAll(".like-btn");
+                const dislikeButtons = document.querySelectorAll(".dislike-btn");
+
+                likeButtons.forEach(button => {
+                    button.addEventListener("click", () => {
+                        const commentId = button.getAttribute("data-comment-id");
+                        // Increment likes via backend API
+                        fetch(`/comment/${commentId}/like`, { method: 'POST' })
+                            .then(response => response.json())
+                            .then(data => {
+                                button.innerText = `👍 Like (${data.likes})`;
+                            });
+                    });
+                });
+
+                dislikeButtons.forEach(button => {
+                    button.addEventListener("click", () => {
+                        const commentId = button.getAttribute("data-comment-id");
+                        // Increment dislikes via backend API
+                        fetch(`/comment/${commentId}/dislike`, { method: 'POST' })
+                            .then(response => response.json())
+                            .then(data => {
+                                button.innerText = `👎 Dislike (${data.dislikes})`;
+                            });
+                    });
+                });
+            });
+        </script> -->
+    </body>
+</html>

@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 	"forum/controllers"
-	utils "forum/utils"
+	"forum/utils"
 )
 
 

@@ -10,7 +10,7 @@ import (
 
 	uuid "github.com/gofrs/uuid"
 
-	forum "Forum/models"
+	forum "forum/models"
 )
 
 var mu sync.Mutex

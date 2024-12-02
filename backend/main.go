@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	routes "Forum/routes"
-	database "Forum/config"
+	routes "forum/routes"
+	database "forum/config"
 )
 
 func main() {

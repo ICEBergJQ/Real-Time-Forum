@@ -3,13 +3,20 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"forum/routes"
+	"os"
+
+	routes "forum/routes"
+	database "forum/config"
 )
 
 func main() {
+	db := database.InitDB("../database/forum.db")
+	defer db.Close()
 	// authentication routes
 	routes.AuthRoutes()
-
-	fmt.Println("Server is running on port 8080")
-	http.ListenAndServe(":8080", nil)
+	routes.PostRout(db)
+	fmt.Println("Server is running on :8080")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		os.Exit(1)
+	}
 }

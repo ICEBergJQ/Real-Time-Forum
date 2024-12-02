@@ -1,1 +1,1 @@
-package Forum
+package config

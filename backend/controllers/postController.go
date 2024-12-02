@@ -1,4 +1,4 @@
-package Forum
+package controllers
 
 import (
 	"database/sql"

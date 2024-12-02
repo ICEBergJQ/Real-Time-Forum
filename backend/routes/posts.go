@@ -1,5 +1,4 @@
-package Forum
-
+package routes
 import (
 	"database/sql"
 	"net/http"

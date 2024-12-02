@@ -20,6 +20,10 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
 	}
+	if r.URL.Path != "/" {
+		http.Error(w, "not found", http.StatusNotFound)
+		return
+	}
 
 	var newPost forum.Post
 
@@ -27,6 +31,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return
 	}
+	defer r.Body.Close()
 
 	_, err := db.Exec("PRAGMA foreign_keys = ON;")
 	if err != nil {
@@ -90,6 +95,42 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	query := "SELECT post_id, user_id, category_id,title, content, created_at FROM posts"
+	rows, err := db.Query(query)
+	if err != nil {
+		http.Error(w, "internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var posts []forum.Post
+	var categoryJSON []byte
+	for rows.Next() {
+		var post forum.Post
+		err := rows.Scan(&post.ID, &post.Author_id, &categoryJSON, &post.Title, &post.Content, &post.CreatedAt)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("internal server error x: %v", err), http.StatusInternalServerError)
+			return
+		}
+		err = json.Unmarshal(categoryJSON, &post.Category_id)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		posts = append(posts, post)
+	}
+
+	json.NewEncoder(w).Encode(posts)
+}
+
+
+func GetFilteredPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return

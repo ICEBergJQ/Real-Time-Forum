@@ -3,7 +3,7 @@ import (
 	"database/sql"
 	"net/http"
 
-	controllers "forum/controllers"
+	"forum/controllers"
 )
 
 func PostRout(db *sql.DB) {

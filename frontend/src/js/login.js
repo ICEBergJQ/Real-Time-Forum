@@ -6,17 +6,24 @@ form.addEventListener("submit", function (e) {
     e.preventDefault();
 
     ///username or email
-    const username_email = document.getElementById("username_email").value;
-    const password = document.getElementById("password").value;
+    const username = document.querySelector("#username").value.trim();
+    const password = document.querySelector("#password").value.trim();
+    ///    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;  // At least 8 chars, 1 letter, 1 number
 
-    if (username_email == "" || password == "") {
+    if (username == "" || password == "") {
         loginError.textContent = "fields are required!!"
+    } else if (password.length < 6) {
+        loginError.textContent = "Password must be at least 6 characters long !!"
+    }
+
+    if (loginError.textContent) {
+        loginError.classList.add('display-err')
         return
     }
-    fetch("http://localhost:5000/authentication/login", {
+    fetch("/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
     })
         .then((res) => {
             if (!res.ok) {
@@ -25,11 +32,10 @@ form.addEventListener("submit", function (e) {
             }
             return res.json();
         })
-        .then((data) => {
-            console.log(data.message); // For debugging purposes
-            // Redirect to the home page
-            localStorage.setItem("user_id", data.user.id);
+        .then(data => {
+            console.log(data); 
             ///save username to localstorage to display it in profile section
+            localStorage.setItem("user_id", data.user.id);
             localStorage.setItem("username", data.user.username);
             window.location.href = "/";
         })

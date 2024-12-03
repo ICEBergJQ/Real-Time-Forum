@@ -5,9 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Comments for Post</title>
         <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>
-        <section class="comments">
+        <!-- <section class="comments">
             <h2>Comments</h2>
             <div>
                 <div class="comment">
@@ -18,46 +20,102 @@
                         <button class="btn dislike-btn">👎 Dislike (2)</button>
                     </div>
                 </div>
+                Reply Section
+          <div class="reply-section">
+            <h3>Reply</h3>
+            <div class="editor">
+              <textarea class="reply-input" placeholder="Add as many details as possible..."></textarea>
             </div>
-        </section>
+            <button class="btn send-btn">Send</button>
+          </div>
+            </div>
+        </section> -->
+        <div class="container-comment hidden">
+            <section class="comments">
+              <h2>Comments</h2>
+              <div class="comment">
+                <div class="comment-header">
+                  <img src="user-avatar.jpg" alt="User Avatar" class="user-avatar">
+                  <div class="comment-details">
+                    <p><strong>F-Martins</strong> <span class="user-role">New Member</span> • 4 replies</p>
+                    <p class="comment-time">2 days ago</p>
+                  </div>
+                </div>
+                <div class="comment-body">
+                  <p>
+                    Estamos enfrentando este problema e está impactando muito na
+                    usabilidade do sistema. Muitas pessoas reclamando do sistema.
+                  </p>
+                </div>
+                <div class="comment-footer">
+                  <p>1 person likes this</p>
+                  <button class="btn">👍 Like</button>
+                  <button class="btn">👎 Dislike (2)</button>
+                </div>
+              </div>
+          
+              <!-- Reply Section -->
+              <div class="reply-section">
+                <h3>Reply</h3>
+                <div class="editor">
+                  <textarea class="reply-input" placeholder="Add as many details as possible..."></textarea>
+                </div>
+                <button class="btn send-btn">Send</button>
+              </div>
+            </section>
+          </div>
+    
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const sendBtn = document.querySelector(".send-btn");
+                    const replyInput = document.querySelector(".reply-input");
+    
+                    sendBtn.addEventListener("click", () => {
+                        const replyText = replyInput.value;
+                        if (replyText.trim() !== "") {
+                            alert("Reply submitted: " + replyText);
+                            replyInput.value = ""; // Clear the input after submission
+                        } else {
+                            alert("Reply cannot be empty!");
+                        }
+                    });
+                });
+            </script>
+<!-- //             document.addEventListener("DOMContentLoaded", () => {
+//     const commentButtons = document.querySelectorAll(".comment-btn");
 
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-    const commentButtons = document.querySelectorAll(".comment-btn");
+//     commentButtons.forEach(button => {
+//         button.addEventListener("click", () => {
+//             const route = button.getAttribute("data-route");
 
-    commentButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            const route = button.getAttribute("data-route");
+//             // Update the browser history
+//             window.history.pushState({}, "", route);
 
-            // Update the browser history
-            window.history.pushState({}, "", route);
+//             // Fetch and inject the content
+//             fetch(route)
+//                 .then(response => response.text())
+//                 .then(html => {
+//                     document.getElementById("dynamic-content").innerHTML = html;
+//                     document.querySelector("main").style.display = "none";
+//                 })
+//                 .catch(error => console.error("Error loading page:", error));
+//         });
+//     });
 
-            // Fetch and inject the content
-            fetch(route)
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById("dynamic-content").innerHTML = html;
-                    document.querySelector("main").style.display = "none";
-                })
-                .catch(error => console.error("Error loading page:", error));
-        });
-    });
+//     // Handle browser back/forward navigation
+//     window.addEventListener("popstate", () => {
+//         const currentRoute = window.location.pathname;
 
-    // Handle browser back/forward navigation
-    window.addEventListener("popstate", () => {
-        const currentRoute = window.location.pathname;
-
-        // Re-fetch and load the content for the current route
-        fetch(currentRoute)
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById("dynamic-content").innerHTML = html;
-                document.querySelector("main").style.display = currentRoute === "/" ? "block" : "none";
-            })
-            .catch(error => console.error("Error loading page:", error));
-    });
-});
-        </script>
+//         // Re-fetch and load the content for the current route
+//         fetch(currentRoute)
+//             .then(response => response.text())
+//             .then(html => {
+//                 document.getElementById("dynamic-content").innerHTML = html;
+//                 document.querySelector("main").style.display = currentRoute === "/" ? "block" : "none";
+//             })
+//             .catch(error => console.error("Error loading page:", error));
+//     });
+// }); -->
         <!-- <header>
             <h1>{{ post.title }}</h1>
             <p>By <strong>{{ post.author }}</strong> | Posted on: {{ post.date }}</p>

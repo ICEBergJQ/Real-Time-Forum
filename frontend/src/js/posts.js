@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 btn.addEventListener("click", () => {
                     const commentsSection = btn
                         .closest(".post-details")
-                        .querySelector(".comments-section");
+                        .querySelector(".container-comment");
+                        console.log(commentsSection)
                     commentsSection.classList.toggle("hidden");
                 });
             });
@@ -23,15 +24,55 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch((error) => console.error(error));
 });
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const commentBtns = document.querySelectorAll(".comment-btn");
+
     commentBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
-            const commentsSection = btn.closest(".post-details").querySelector(".comments-section");
-            commentsSection.classList.toggle("hidden");
+            // Get the closest comments container
+            const commentsSection = btn
+                .closest(".post-preview")
+                .querySelector(".comments-container");
+
+            if (commentsSection) {
+                commentsSection.classList.toggle("hidden"); // Toggle hidden class
+            } else {
+                console.error("Comments section not found for this post");
+            }
         });
     });
 });
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const likeButtons = document.querySelectorAll(".btn");
+
+    likeButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            if (button.textContent.includes("👍")) {
+                const likes = parseInt(button.textContent.match(/\d+/)) || 0;
+                button.textContent = `👍 Like (${likes + 1})`;
+            }
+        });
+    });
+
+    const sendBtn = document.querySelector(".send-btn");
+    const replyInput = document.querySelector(".reply-input");
+
+    sendBtn.addEventListener("click", () => {
+        const replyText = replyInput.value;
+        if (replyText.trim() !== "") {
+            alert("Reply submitted: " + replyText);
+            replyInput.value = ""; // Clear the input after submission
+        } else {
+            alert("Reply cannot be empty!");
+        }
+    });
+});
+
 
 // /LOGIN AND SIGN UP/ 
 
@@ -63,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 loginModal.classList.add("hidden");
             });
 
-            // Hide the modal when clicking outside the modal content
+            // Hide the modal when clicit pull origin developking outside the modal content
             window.addEventListener("click", (event) => {
                 if (event.target === loginModal) {
                     loginModal.classList.add("hidden");

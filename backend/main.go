@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	db := database.InitDB("../database/forum.db")
+	db := database.InitDB("../database/data/forum.db")
 	defer db.Close()
 	address := "localhost:8080"
 	// authentication routes

@@ -1,31 +1,3 @@
-// document.addEventListener("DOMContentLoaded", () => {
-//     const mainContent = document.querySelector("#main-content");
-
-//     fetch("post.html")
-//         .then((response) => {
-//             if (!response.ok) throw new Error("Failed to load content");
-//             return response.text();
-//         })
-//         .then((html) => {
-//             mainContent.innerHTML = html;
-
-//             // Add any additional event listeners for dynamically loaded content
-//             const commentBtns = document.querySelectorAll(".comment-btn");
-//             commentBtns.forEach((btn) => {
-//                 btn.addEventListener("click", () => {
-//                     const commentsSection = btn
-//                         .closest(".post-details")
-//                         .querySelector(".container-comment");
-//                         console.log(commentsSection)
-//                     commentsSection.classList.toggle("hidden");
-//                 });
-//             });
-//         })
-//         .catch((error) => console.error(error));
-// });
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
     const commentBtns = document.querySelectorAll(".comment-btn");
 
@@ -163,6 +135,52 @@ document.addEventListener("DOMContentLoaded", () => {
                     loginModal.classList.remove("hidden"); // Show login modal
                 }
             });
+
+            const likebtn = document.querySelector(".like-btn")
+            likebtn.addEventListener("click", (e)=>{
+                e.preventDefault();
+                const loginModal = document.querySelector("#loginModal");
+                if (loginModal) {
+                    loginModal.classList.remove("hidden"); // Show login modal
+                }
+            })
+
+            const dislikebtn = document.querySelector(".dislike-btn")
+            dislikebtn.addEventListener("click", (e)=>{
+                e.preventDefault();
+                const loginModal = document.querySelector("#loginModal");
+                if (loginModal) {
+                    loginModal.classList.remove("hidden"); // Show login modal
+                }
+            })
+
+            const likecomment = document.querySelector("#Like")
+            likecomment.addEventListener("click", (e)=>{
+                e.preventDefault();
+                const loginModal = document.querySelector("#loginModal");
+                if (loginModal) {
+                    loginModal.classList.remove("hidden"); // Show login modal
+                }
+            })
+
+            const dislikecomment = document.querySelector("#DisLike")
+            dislikecomment.addEventListener("click", (e)=>{
+                e.preventDefault();
+                const loginModal = document.querySelector("#loginModal");
+                if (loginModal) {
+                    loginModal.classList.remove("hidden"); // Show login modal
+                }
+            })
+
+            const sending = document.querySelector(".send-btn")
+            sending.addEventListener("click", (e)=>{
+                e.preventDefault();
+                const loginModal = document.querySelector("#loginModal");
+                if (loginModal) {
+                    loginModal.classList.remove("hidden"); // Show login modal
+                }
+            })
+
         })
         .catch((error) => console.error(error));
 });

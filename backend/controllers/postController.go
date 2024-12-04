@@ -129,7 +129,6 @@ func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(posts)
 }
 
-
 func GetFilteredPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)

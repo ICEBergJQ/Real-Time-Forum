@@ -1,28 +1,28 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const mainContent = document.querySelector("#main-content");
+// document.addEventListener("DOMContentLoaded", () => {
+//     const mainContent = document.querySelector("#main-content");
 
-    fetch("post.html")
-        .then((response) => {
-            if (!response.ok) throw new Error("Failed to load content");
-            return response.text();
-        })
-        .then((html) => {
-            mainContent.innerHTML = html;
+//     fetch("post.html")
+//         .then((response) => {
+//             if (!response.ok) throw new Error("Failed to load content");
+//             return response.text();
+//         })
+//         .then((html) => {
+//             mainContent.innerHTML = html;
 
-            // Add any additional event listeners for dynamically loaded content
-            const commentBtns = document.querySelectorAll(".comment-btn");
-            commentBtns.forEach((btn) => {
-                btn.addEventListener("click", () => {
-                    const commentsSection = btn
-                        .closest(".post-details")
-                        .querySelector(".container-comment");
-                        console.log(commentsSection)
-                    commentsSection.classList.toggle("hidden");
-                });
-            });
-        })
-        .catch((error) => console.error(error));
-});
+//             // Add any additional event listeners for dynamically loaded content
+//             const commentBtns = document.querySelectorAll(".comment-btn");
+//             commentBtns.forEach((btn) => {
+//                 btn.addEventListener("click", () => {
+//                     const commentsSection = btn
+//                         .closest(".post-details")
+//                         .querySelector(".container-comment");
+//                         console.log(commentsSection)
+//                     commentsSection.classList.toggle("hidden");
+//                 });
+//             });
+//         })
+//         .catch((error) => console.error(error));
+// });
 
 
 

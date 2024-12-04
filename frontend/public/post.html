@@ -75,19 +75,19 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-                    const sendBtn = document.querySelector(".send-btn");
-                    const replyInput = document.querySelector(".reply-input");
-    
-                    sendBtn.addEventListener("click", () => {
-                        const replyText = replyInput.value;
-                        if (replyText.trim() !== "") {
-                            alert("Reply submitted: " + replyText);
-                            replyInput.value = ""; // Clear the input after submission
-                        } else {
-                            alert("Reply cannot be empty!");
-                        }
-                    });
-                });
+          const sendBtn = document.querySelector(".send-btn");
+          const replyInput = document.querySelector(".reply-input");
+
+          sendBtn.addEventListener("click", () => {
+              const replyText = replyInput.value;
+              if (replyText.trim() !== "") {
+                  alert("Reply submitted: " + replyText);
+                  replyInput.value = ""; // Clear the input after submission
+              } else {
+                  alert("Reply cannot be empty!");
+              }
+          });
+      });
 
 
 
@@ -106,8 +106,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
-        // const commentButtons = document.querySelectorAll('.comment-btn');
+</script>
+        <!-- // const commentButtons = document.querySelectorAll('.comment-btn');
         // commentButtons.forEach(btn => {
         //   btn.addEventListener('click', (e) => {
         //     const postElement = e.target.closest('.post-preview'); // Get the current post
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //     .catch(error => {
         //       console.error('Error loading comment section:', error);
         //     });
-        // }
-    </script>
+        // } -->
+    
 </body>
 </html>

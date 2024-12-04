@@ -41,7 +41,99 @@
     
 
     <!-- Main Content -->
-    <main id="main-content" class="main-content"></main>
+    <!-- <main id="main-content" class="main-content"></main> -->
+    <main class="main-content">
+        <section class="feed">
+            <h2>Recent Posts</h2>
+            <div class="post-list">
+                <div class="post-preview">
+                    <div class="post-header">
+                        <h3><a href="/post/1">Post Title</a></h3>
+                        <p>By <strong>Username</strong> | Category: <em>Tech</em> | Posted on: 2024-11-27</p>
+                    </div>
+                    <p class="post-snippet">A short preview of the post...</p>
+                    <a href="/post/1" class="btn">Read More</a>
+                    <div class="post-details">
+                        <button class="btn like-btn"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like (20)</button>
+                        <button class="btn dislike-btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike (3)</button>
+                        <button class="btn comment-btn">💬 Comment</button>
+                      </div>
+                      <!-- Comments Section (Initially Hidden) -->
+                      <div class="container-comment hidden">
+                        <section class="comments">
+                          <h2>Comments</h2>
+                          <div class="comment">
+                            <div class="comment-header">
+                              <img src="./Unknown_person.jpg" alt="User Avatar" class="user-avatar">
+                              <div class="comment-details">
+                                <p><strong>F-Martins</strong> <span class="user-role">New Member</span> • 4 replies</p>
+                                <p class="comment-time">2 days ago</p>
+                              </div>
+                            </div>
+                            <div class="comment-body">
+                              <p>
+                                Estamos enfrentando este problema e está impactando muito na
+                                usabilidade do sistema. Muitas pessoas reclamando do sistema.
+                              </p>
+                            </div>
+                            <div class="comment-footer">
+                              <p>1 person likes this</p>
+                              <button class="btn"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like</button>
+                              <button class="btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike (2)</button>
+                            </div>
+                          </div>
+    
+                      <!-- Reply Section -->
+                      <div class="reply-section">
+                        <h3>Reply</h3>
+                        <div class="editor">
+                          <textarea class="reply-input" placeholder="Add as many details as possible..."></textarea>
+                        </div>
+                        <button class="btn send-btn">Send</button>
+                      </div>
+                    </section>
+                  </div>
+                      <!-- <div class="comments-container"></div> -->
+                <!-- Additional posts will be added here by the backend or dynamically -->
+            </div>
+        </section>
+    
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+              const sendBtn = document.querySelector(".send-btn");
+              const replyInput = document.querySelector(".reply-input");
+    
+              sendBtn.addEventListener("click", () => {
+                  const replyText = replyInput.value;
+                  if (replyText.trim() !== "") {
+                      alert("Reply submitted: " + replyText);
+                      replyInput.value = ""; // Clear the input after submission
+                  } else {
+                      alert("Reply cannot be empty!");
+                  }
+              });
+          });
+    
+    
+    
+    document.addEventListener("DOMContentLoaded", () => {
+      const commentBtns = document.querySelectorAll(".comment-btn");
+    
+      commentBtns.forEach((btn, index) => {
+        btn.addEventListener("click", () => {
+          // Use index to find the correct comment section
+          const commentContainer = document.querySelectorAll(".container-comment")[index];
+    
+          // Toggle visibility of the comment container
+          if (commentContainer) {
+            commentContainer.classList.toggle("hidden");
+          }
+        });
+      });
+    });
+    </script>
+    </main>
+
 
     <!-- Footer -->
     <footer class="footer">

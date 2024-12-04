@@ -54,6 +54,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const dynamicContent = document.querySelector("#dynamicContent");
     const anotherDynamic = document.querySelector("#anotherDynamic");
 
+    const showLoginModal = () => {
+        const loginModal = document.querySelector("#loginModal");
+        if (loginModal) {
+            loginModal.classList.remove("hidden");
+        }
+    };
+    
+    const attachModalEventListeners = () => {
+        const buttons = document.querySelectorAll(".like-btn, .dislike-btn, #Like, #DisLike, .send-btn");
+        buttons.forEach((button) => {
+            button.addEventListener("click", (e) => {
+                e.preventDefault();
+                if (!localStorage.getItem("user_id")) {
+                    showLoginModal();
+                } else {
+                    alert("Action successful! You are logged in.");
+                }
+            });
+        });
+    };
+
     // Load the login modal from login.html
     fetch("login.html")
         .then((response) => {
@@ -67,9 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const closeLoginModal = loginModal.querySelector(".close");
 
             // Show the login modal when the login button is clicked
-            loginBtn.addEventListener("click", () => {
-                loginModal.classList.remove("hidden");
-            });
+            loginBtn.addEventListener("click", showLoginModal);
 
             // Hide the modal when the close button is clicked
             closeLoginModal.addEventListener("click", () => {
@@ -93,6 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     signUpModal.classList.remove("hidden"); // Show register modal
                 }
             });
+
+            attachModalEventListeners();
+            
         })
         .catch((error) => console.error(error));
 
@@ -135,52 +157,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     loginModal.classList.remove("hidden"); // Show login modal
                 }
             });
-
-            const likebtn = document.querySelector(".like-btn")
-            likebtn.addEventListener("click", (e)=>{
-                e.preventDefault();
-                const loginModal = document.querySelector("#loginModal");
-                if (loginModal) {
-                    loginModal.classList.remove("hidden"); // Show login modal
-                }
-            })
-
-            const dislikebtn = document.querySelector(".dislike-btn")
-            dislikebtn.addEventListener("click", (e)=>{
-                e.preventDefault();
-                const loginModal = document.querySelector("#loginModal");
-                if (loginModal) {
-                    loginModal.classList.remove("hidden"); // Show login modal
-                }
-            })
-
-            const likecomment = document.querySelector("#Like")
-            likecomment.addEventListener("click", (e)=>{
-                e.preventDefault();
-                const loginModal = document.querySelector("#loginModal");
-                if (loginModal) {
-                    loginModal.classList.remove("hidden"); // Show login modal
-                }
-            })
-
-            const dislikecomment = document.querySelector("#DisLike")
-            dislikecomment.addEventListener("click", (e)=>{
-                e.preventDefault();
-                const loginModal = document.querySelector("#loginModal");
-                if (loginModal) {
-                    loginModal.classList.remove("hidden"); // Show login modal
-                }
-            })
-
-            const sending = document.querySelector(".send-btn")
-            sending.addEventListener("click", (e)=>{
-                e.preventDefault();
-                const loginModal = document.querySelector("#loginModal");
-                if (loginModal) {
-                    loginModal.classList.remove("hidden"); // Show login modal
-                }
-            })
-
         })
         .catch((error) => console.error(error));
 });

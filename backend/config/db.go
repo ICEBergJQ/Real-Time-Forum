@@ -2,6 +2,7 @@ package config
 
 import (
 	"database/sql"
+	"os"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -18,4 +19,16 @@ func InitDB(dataSourceName string) *sql.DB {
 	}
 
 	return db
+}
+
+func CreateDatabaseTables(db *sql.DB, dbPath string){
+	schema, err := os.ReadFile(dbPath)
+	if err != nil {
+		log.Fatal("Failed to read the schema: ", err)
+	}
+
+	_ , err = db.Exec(string(schema))
+	if err != nil{
+		log.Fatal("Failed to execute the schema: ", err)
+	}
 }

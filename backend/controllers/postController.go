@@ -151,7 +151,8 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 			p.post_id, 
 			p.title, 
 			p.content, 
-			p.created_at, 
+			p.created_at,
+			p.category_id,
 			c.name AS category_name
 		FROM 
 			posts AS p
@@ -180,14 +181,15 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 	var categoryJSON []byte
 	for rows.Next() {
 		var post forum.Post
-		err := rows.Scan(&post.ID, &post.Author_id, &categoryJSON, &post.Title, &post.Content, &post.CreatedAt)
+		fmt.Println(rows)
+		err := rows.Scan(&post.ID, &post.Author_id, &post.Title, &post.Content, &categoryJSON, &post.CreatedAt)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("internal server error x: %v", err), http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("internal server error (scan): %v", err), http.StatusInternalServerError)
 			return
 		}
 		err = json.Unmarshal(categoryJSON, &post.Category_id)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("internal server error (unmarshall): %v", err), http.StatusInternalServerError)
 			return
 		}
 

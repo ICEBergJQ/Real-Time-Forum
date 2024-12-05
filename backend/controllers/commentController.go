@@ -1,4 +1,4 @@
-package Forum
+package controllers
 
 import (
 	"database/sql"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	forum "Forum/models"
+	forum "forum/models"
 
 	uuid "github.com/gofrs/uuid"
 )

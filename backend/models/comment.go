@@ -1,4 +1,4 @@
-package Forum
+package models
 
 import "time"
 

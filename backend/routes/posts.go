@@ -1,10 +1,9 @@
-package Forum
-
+package routes
 import (
 	"database/sql"
 	"net/http"
 
-	controllers "Forum/controllers"
+	controllers "forum/controllers"
 )
 
 func PostRout(db *sql.DB) {

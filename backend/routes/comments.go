@@ -1,9 +1,9 @@
-package Forum
+package routes
 
 import (
 	"database/sql"
 	"net/http"
-	controllers "Forum/controllers"
+	"forum/controllers"
 )
 
 func CommentsRoute(db *sql.DB) {

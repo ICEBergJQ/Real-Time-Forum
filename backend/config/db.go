@@ -1,4 +1,4 @@
-package Forum
+package config
 
 import (
 	"database/sql"

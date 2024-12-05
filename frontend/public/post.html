@@ -3,9 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../src/css/style.css">
     <title>post</title>
 </head>
 <body>
+    <div class="popup-overlay hidden" id="popupOverlay">
+        <div class="popup">
+            <button class="close-btn" id="closePopup">X</button>
+            <h2>Create a Post</h2>
+            <form id="createPostForm">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" placeholder="Enter post title" required>
     
+                <label for="content">Content</label>
+                <textarea id="content" name="content" rows="5" placeholder="Enter post content" required></textarea>
+    
+                <label for="categories">Category</label>
+                <select id="categories" name="categories" required>
+                    <option value="">Select a category</option>
+                    <option value="technology">Technology</option>
+                    <option value="science">Science</option>
+                    <option value="art">Art</option>
+                    <option value="education">Education</option>
+                </select>
+    
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    <script src="../src/js/posts.js"></script>
 </body>
 </html>

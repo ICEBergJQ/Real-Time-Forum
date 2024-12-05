@@ -182,11 +182,133 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         })
+
+
+    // const createBtn = document.querySelector(".btn.createPostBtn");
+    // const dynaicPost = document.querySelector("#dynaicPost");
+
+    // fetch("post.html")
+    //     .then((response) => {
+    //         if (!response.ok) throw new Error("Failed to load create post");
+    //         return response.text();
+    //     })
+    //     .then((html) => {
+    //         dynaicPost.innerHTML = html;
+            
+    //         const createPostBtn = document.querySelector("#createPostBtn");
+    //         const closecreatePost = createPostBtn.querySelector(".close");
+
+    //         // Show the login modal when the login button is clicked
+    //         createBtn.addEventListener("click", showLoginModal);
+
+    //         // Hide the modal when the close button is clicked
+    //         closecreatePost.addEventListener("click", () => {
+    //             createPostBtn.classList.add("hidden");
+    //         });
+
+    //         // Hide the modal when clicit pull origin developking outside the modal content
+    //         window.addEventListener("click", (event) => {
+    //             if (event.target === createPostBtn) {
+    //                 createPostBtn.classList.add("hidden");
+    //             }
+    //         });
+    //     })
+        
         .catch((error) => console.error(error));
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const createPostBtn = document.querySelector(".btn.createPostBtn");
+    const dynamicPostContainer = document.querySelector("#dynaicPost");
+
+    // Fetch and load the post.html content
+    fetch("post.html")
+        .then((response) => {
+            if (!response.ok) throw new Error("Failed to load create post form");
+            return response.text();
+        })
+        .then((html) => {
+            dynamicPostContainer.innerHTML = html;
+
+            // Now that content is loaded, add event listeners for the popup
+            const popupOverlay = document.getElementById("popupOverlay");
+            const closePopupBtn = document.getElementById("closePopup");
+            const postForm = document.getElementById("createPostForm");
+
+            // Show popup when "Create Post" button is clicked
+            createPostBtn.addEventListener("click", () => {
+                popupOverlay.style.display = "block";
+            });
+
+            // Hide popup when "X" button is clicked
+            closePopupBtn.addEventListener("click", () => {
+                popupOverlay.style.display = "none";
+            });
+
+            // Hide popup when clicking outside the popup
+            window.addEventListener("click", (e) => {
+                if (e.target === popupOverlay) {
+                    popupOverlay.style.display = "none";
+                }
+            });
+
+            // Handle form submission
+            postForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const title = document.getElementById("title").value;
+                const content = document.getElementById("content").value;
+                const category = document.getElementById("categories").value;
+
+                alert(`Post Created!\nTitle: ${title}\nContent: ${content}\nCategory: ${category}`);
+
+                // Reset the form and close the popup
+                postForm.reset();
+                popupOverlay.style.display = "none";
+            });
+        })
+        .catch((error) => console.error("Error loading post form:", error));
+});
 
 
+// document.addEventListener("DOMContentLoaded", () => {
+
+//     const showLoginModal = () => {
+//         const loginModal = document.querySelector("#loginModal");
+//         if (loginModal) {
+//             loginModal.classList.remove("hidden");
+//         }
+//     };
+
+//     const createBtn = document.querySelector(".btn.createPostBtn");
+//     const dynaicPost = document.querySelector("#dynaicPost");
+
+//     fetch("post.html")
+//         .then((response) => {
+//             if (!response.ok) throw new Error("Failed to load create post");
+//             return response.text();
+//         })
+//         .then((html) => {
+//             dynaicPost.innerHTML = html;
+            
+//             const createPostBtn = document.querySelector("#createPostBtn");
+//             const closecreatePost = loginModal.querySelector(".close");
+
+//             // Show the login modal when the login button is clicked
+//             createBtn.addEventListener("click", showLoginModal);
+
+//             // Hide the modal when the close button is clicked
+//             closecreatePost.addEventListener("click", () => {
+//                 createPostBtn.classList.add("hidden");
+//             });
+
+//             // Hide the modal when clicit pull origin developking outside the modal content
+//             window.addEventListener("click", (event) => {
+//                 if (event.target === createPostBtn) {
+//                     createPostBtn.classList.add("hidden");
+//                 }
+//             });
+//         })
+// });
 
 
 

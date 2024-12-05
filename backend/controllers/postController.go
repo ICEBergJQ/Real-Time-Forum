@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 
@@ -129,15 +130,46 @@ func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(posts)
 }
 
-
 func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
 	}
 
-	query := "SELECT post_id, user_id, category_id,title, content, created_at FROM posts"
-	rows, err := db.Query(query)
+	categoryQuery := r.URL.Query().Get("categories")
+	if categoryQuery == "" {
+		http.Error(w, "categories query parameter is required", http.StatusBadRequest)
+		return
+	}
+	categoryNames := strings.Split(categoryQuery, ",")
+
+	placeholders := strings.Repeat("?,", len(categoryNames))
+	placeholders = strings.TrimRight(placeholders, ",") // Remove the trailing comma
+
+	query := fmt.Sprintf(`
+		SELECT 
+			p.post_id, 
+			p.title, 
+			p.content, 
+			p.created_at, 
+			c.name AS category_name
+		FROM 
+			posts AS p
+		JOIN 
+			postsCategories AS pc ON p.post_id = pc.post_id
+		JOIN 
+			categories AS c ON pc.category_id = c.category_id
+		WHERE 
+			c.name IN (%s);
+	`, placeholders)
+
+	// Convert the slice of category names to a slice of interface{}
+	args := make([]interface{}, len(categoryNames))
+	for i, v := range categoryNames {
+		args[i] = v
+	}
+
+	rows, err := db.Query(query, args...)
 	if err != nil {
 		http.Error(w, "internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
@@ -163,8 +195,4 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 	}
 
 	json.NewEncoder(w).Encode(posts)
-}
-
-func GetlikedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	
 }

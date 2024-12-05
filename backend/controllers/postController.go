@@ -130,7 +130,7 @@ func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 
-func GetFilteredPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
@@ -163,4 +163,8 @@ func GetFilteredPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(posts)
+}
+
+func GetlikedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	
 }

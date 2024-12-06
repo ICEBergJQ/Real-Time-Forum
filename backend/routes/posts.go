@@ -11,7 +11,7 @@ func PostRout(db *sql.DB) {
 		if r.Method == http.MethodPost {
 			controllers.CreatePost(db, w, r)
 		} else if r.Method == http.MethodGet {
-			controllers.GetPosts(db, w, r)
+			controllers.GetFilteredPostsByCategory(db, w, r)
 		} else {
 			http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		}

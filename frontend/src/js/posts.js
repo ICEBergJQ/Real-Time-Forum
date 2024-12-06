@@ -11,11 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Add any additional event listeners for dynamically loaded content
             const commentBtns = document.querySelectorAll(".comment-btn");
+            
             commentBtns.forEach((btn) => {
+                
                 btn.addEventListener("click", () => {
-                    const commentsSection = btn
-                        .closest(".post-details")
-                        .querySelector(".comments-section");
+                    const commentsSection = btn.parentElement.parentElement.querySelector(".container-comment");
                     commentsSection.classList.toggle("hidden");
                 });
             });
@@ -128,9 +128,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 const category = document.querySelector('.category')
-const createPost = document.getElementById("create-post-container")
+const createPost = document.querySelector(".create-post-container")
 
-if (userId) {
+if (userId ) {
     createPost.innerHTML = `
     <h2>Create a Post</h2>
     <form id="createPostForm">
@@ -185,7 +185,7 @@ if (userId) {
 }
 
 
-///get poosts
+//get poosts
 const postsContainer = document.querySelector('.main>.container')
 fetch('/get-posts')
     .then(res => res.json())

@@ -1,6 +1,7 @@
 <!-- File: index.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
+
 <body>
     <!-- Navigation Bar -->
     <header class="navbar">
@@ -27,7 +29,7 @@
             </nav>
             <div class="nav-actions">
                 <button class="btn login">Login</button>
-                <button class="btn start-topic">Sign Up</button>
+                <button class="btn start-topic register">Sign Up</button>
             </div>
         </div>
     </header>
@@ -38,11 +40,11 @@
 
     <!-- for register -->
     <div id="anotherDynamic"></div>
-    
+
 
     <!-- Main Content -->
     <main id="main-content" class="main-content"></main>
-
+    <div class="create-post-container"></div>
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -51,28 +53,64 @@
                     <h4>Forum</h4>
                     <ul>
                         <li><a href="/categories">Categories</a></li>
-                    <li><a href="/popular-posts">Popular Posts</a></li>
-                    <li><a href="/help">Help</a></li>
+                        <li><a href="/popular-posts">Popular Posts</a></li>
+                        <li><a href="/help">Help</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4>Legal</h4>
                     <ul>
                         <li><a href="/terms">Terms of Service</a></li>
-                    <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4>Support</h4>
                     <ul>
                         <li><a href="/contact">Contact Us</a></li>
-                    <li><a href="/report">Report Issue</a></li>
+                        <li><a href="/report">Report Issue</a></li>
                     </ul>
                 </div>
             </div>
             <p>&copy; 2024 My Forum. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+      
+        const commentBtns = document.querySelectorAll(".comment-btn");
+
+        commentBtns.forEach((btn, index) => {
+            btn.addEventListener("click", () => {
+                // Use index to find the correct comment section
+                const commentContainer = document.querySelectorAll(".container-comment")[index];
+
+                // Toggle visibility of the comment container
+                if (commentContainer) {
+                    commentContainer.classList.toggle("hidden");
+                }
+            });
+        });
+
+        // document.addEventListener("DOMContentLoaded", () => {
+        //     const sendBtn = document.querySelector(".send-btn") || ''
+        //     const replyInput = document.querySelector(".reply-input");
+
+        //     sendBtn.addEventListener("click", () => {
+        //         const replyText = replyInput.value;
+        //         if (replyText.trim() !== "") {
+        //             alert("Reply submitted: " + replyText);
+        //             replyInput.value = ""; // Clear the input after submission
+        //         } else {
+        //             alert("Reply cannot be empty!");
+        //         }
+        //     });
+        // });
+
+    </script>
+    <script src="../src/js/main.js"></script>
     <script src="../src/js/posts.js"></script>
+
 </body>
+
 </html>

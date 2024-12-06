@@ -1,8 +1,8 @@
 const userId = localStorage.getItem("user_id");
-const logoutBtn = document.querySelector('button.logout')
-const registerBtn = document.getElementById("button.register")
-const loginBtn = document.getElementById("button.login")
-const profileName = document.querySelector('.profile')
+const logoutBtn = document.querySelector('button.logout') || ''
+const registerBtn = document.querySelector("button.register")
+const loginBtn = document.querySelector("button.login")
+// const profileName = document.querySelector('.profile')
 
 function createElem(tag, className, content) {
     const element = document.createElement(tag)
@@ -12,8 +12,8 @@ function createElem(tag, className, content) {
 }
 if (userId) {
     logoutBtn.style.display = "inline-block"
-    profileName.textContent = localStorage.getItem("username")
-    profileName.style.display = 'inline-block'
+    // profileName.textContent = localStorage.getItem("username")
+    // profileName.style.display = 'inline-block'
 
     //hide login / register
     loginBtn.style.display = "none"
@@ -23,10 +23,10 @@ if (userId) {
     loginBtn.style.display = "inline-block"
     registerBtn.style.display = "inline-block"
 //hide profile
-profileName.style.display = 'none'
+// profileName.style.display = 'none':
 
-}
-
+}  
+logoutBtn ? 
 
 logoutBtn.addEventListener("click", function () {
     // Clear user data from localStorage
@@ -37,4 +37,4 @@ logoutBtn.addEventListener("click", function () {
         // Redirect to the login page
         window.location.href = "/"
     ) : null
-})
+}):null

@@ -217,58 +217,72 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch((error) => console.error(error));
 });
 
+
 document.addEventListener("DOMContentLoaded", () => {
     const createPostBtn = document.querySelector(".btn.createPostBtn");
-    const dynamicPostContainer = document.querySelector("#dynaicPost");
+    
+    const dynaicPost = document.querySelector("#dynaicPost");
 
-    // Fetch and load the post.html content
+    // Load the create post modal from post.html
     fetch("post.html")
         .then((response) => {
-            if (!response.ok) throw new Error("Failed to load create post form");
+            if (!response.ok) throw new Error("Failed to load create post modal");
             return response.text();
         })
         .then((html) => {
-            dynamicPostContainer.innerHTML = html;
+            
+            dynaicPost.innerHTML = html;
+            const popupOverlay = document.querySelector("#popupOverlay");
+            const closePopupBtn = document.querySelector("#closePopup");
+            const createPostForm = document.querySelector("#createPostForm");
 
-            // Now that content is loaded, add event listeners for the popup
-            const popupOverlay = document.getElementById("popupOverlay");
-            const closePopupBtn = document.getElementById("closePopup");
-            const postForm = document.getElementById("createPostForm");
-
-            // Show popup when "Create Post" button is clicked
-            createPostBtn.addEventListener("click", () => {
-                popupOverlay.style.display = "block";
+            // Show create post modal when create post button is clicked
+            createPostBtn.addEventListener("click", () => {                
+                dynaicPost.style.display = "block";
+                popupOverlay.classList.remove("hidden");
             });
 
-            // Hide popup when "X" button is clicked
+            // Close popup
             closePopupBtn.addEventListener("click", () => {
-                popupOverlay.style.display = "none";
+                popupOverlay.classList.add("hidden");
+                dynaicPost.style.display = "none";
             });
 
-            // Hide popup when clicking outside the popup
-            window.addEventListener("click", (e) => {
-                if (e.target === popupOverlay) {
-                    popupOverlay.style.display = "none";
+            // Close popup when clicking outside
+            window.addEventListener("click", (event) => {
+                if (event.target === popupOverlay) {
+                    popupOverlay.classList.add("hidden");
+                    dynaicPost.style.display = "none";
                 }
             });
 
             // Handle form submission
-            postForm.addEventListener("submit", (e) => {
+            createPostForm.addEventListener("submit", (e) => {
                 e.preventDefault();
-                const title = document.getElementById("title").value;
-                const content = document.getElementById("content").value;
-                const category = document.getElementById("categories").value;
+                
+                const title = document.querySelector("#title").value;
+                const content = document.querySelector("#content").value;
+                const category = document.querySelector("#categories").value;
 
-                alert(`Post Created!\nTitle: ${title}\nContent: ${content}\nCategory: ${category}`);
+                // Basic validation
+                if (!title || !content || !category) {
+                    alert("Please fill in all fields");
+                    return;
+                }
 
-                // Reset the form and close the popup
-                postForm.reset();
-                popupOverlay.style.display = "none";
+                // Placeholder for post creation
+                alert(`Post Created:\nTitle: ${title}\nCategory: ${category}`);
+
+                // Close the modal
+                popupOverlay.classList.add("hidden");
+                dynaicPost.style.display = "none";
+
+                // Reset form
+                createPostForm.reset();
             });
         })
-        .catch((error) => console.error("Error loading post form:", error));
+        .catch((error) => console.error("Error loading create post modal:", error));
 });
-
 
 // document.addEventListener("DOMContentLoaded", () => {
 

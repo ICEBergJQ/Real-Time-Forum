@@ -1,9 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
     const commentBtns = document.querySelectorAll(".comment-btn");
+
     commentBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
-            const commentsSection = btn.closest(".post-details").querySelector(".comments-section");
-            commentsSection.classList.toggle("hidden");
+            // Get the closest comments container
+            const commentsSection = btn
+                .closest(".post-preview")
+                .querySelector(".comments-container");
+
+            if (commentsSection) {
+                commentsSection.classList.toggle("hidden"); // Toggle hidden class
+            } else {
+                console.error("Comments section not found for this post");
+            }
         });
     });
 });
@@ -107,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 loginModal.classList.add("hidden");
             });
 
-            // Hide the modal when clicking outside the modal content
+            // Hide the modal when clicit pull origin developking outside the modal content
             window.addEventListener("click", (event) => {
                 if (event.target === loginModal) {
                     loginModal.classList.add("hidden");

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Page</title>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../src/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -29,7 +29,8 @@
             <div class="nav-actions">
                 <button class="btn login">Login</button>
                 <button class="btn start-topic">Sign Up</button>
-                <button class="btn logout hidden">Logout</button>
+                <!-- <button class="btn logout hidden">Logout</button> -->
+                <button class="btn logout">Logout</button>
                 <button class="btn createPostBtn">Create Post</button>
             </div>
         </div>
@@ -44,7 +45,10 @@
 
     <!-- for creating post -->
      <div id="dynaicPost"></div>
-    
+
+    <!-- for logout -->
+    <div id="logoutdynamic"></div>
+
 
     <!-- Main Content -->
     <!-- <main id="main-content" class="main-content"></main> -->
@@ -171,6 +175,6 @@
             <p>&copy; 2024 My Forum. All rights reserved.</p>
         </div>
     </footer>
-    <script src="./script.js"></script>
+    <script src="../src/js/posts.js"></script>
 </body>
 </html>

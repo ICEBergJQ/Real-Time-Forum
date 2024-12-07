@@ -1,32 +1,8 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const commentBtns = document.querySelectorAll(".comment-btn");
+const postsContainer = document.querySelector('main .post-list')
 
-    commentBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-            // Get the closest comments container
-            const commentsSection = btn
-                .closest(".post-preview")
-                .querySelector(".comments-container");
-
-            if (commentsSection) {
-                commentsSection.classList.toggle("hidden"); // Toggle hidden class
-            } else {
-                console.error("Comments section not found for this post");
-            }
-        });
-    });
-});
-
-
-
-
-
-
-
-
-
-
-
+function displayComment(e) {
+    e.target.parentElement.nextElementSibling.classList.toggle("hidden")
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const likeButtons = document.querySelectorAll(".btn");
@@ -40,6 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+
+});
+
+
+///TODO : still not working
+function Reply() {
     const sendBtn = document.querySelector(".send-btn");
     const replyInput = document.querySelector(".reply-input");
 
@@ -52,24 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Reply cannot be empty!");
         }
     });
-});
-
-
-
-
-
-
-
-
-
-
+}
 
 
 // /LOGIN AND SIGN UP/ 
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginBtn = document.querySelector(".btn.login");
-    const registerBtn = document.querySelector(".btn.start-topic");
     const dynamicContent = document.querySelector("#dynamicContent");
     const anotherDynamic = document.querySelector("#anotherDynamic");
 
@@ -79,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
             loginModal.classList.remove("hidden");
         }
     };
-    
+
     const attachModalEventListeners = () => {
         const buttons = document.querySelectorAll(".like-btn, .dislike-btn, #Like, #DisLike, .send-btn");
         buttons.forEach((button) => {
@@ -135,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             attachModalEventListeners();
-            
+
         })
         .catch((error) => console.error(error));
 
@@ -191,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const createPostBtn = document.querySelector(".btn.createPostBtn");
-    
+
     const dynaicPost = document.querySelector("#dynaicPost");
 
     // Load the create post modal from post.html
@@ -201,14 +172,14 @@ document.addEventListener("DOMContentLoaded", () => {
             return response.text();
         })
         .then((html) => {
-            
+
             dynaicPost.innerHTML = html;
             const popupOverlay = document.querySelector("#popupOverlay");
             const closePopupBtn = document.querySelector("#closePopup");
             const createPostForm = document.querySelector("#createPostForm");
 
             // Show create post modal when create post button is clicked
-            createPostBtn.addEventListener("click", () => {                
+            createPostBtn.addEventListener("click", () => {
                 dynaicPost.style.display = "block";
                 popupOverlay.classList.remove("hidden");
             });
@@ -230,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Handle form submission
             createPostForm.addEventListener("submit", (e) => {
                 e.preventDefault();
-                
+
                 const title = document.querySelector("#title").value;
                 const content = document.querySelector("#content").value;
                 const category = document.querySelector("#categories").value;
@@ -313,3 +284,129 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch((error) => console.error(error));
 });
+
+
+
+const category = document.querySelector('.category')
+const createPost = document.querySelector(".create-post-container")
+
+if (userId) {
+    createPost.innerHTML = `
+    <h2>Create a Post</h2>
+    <form id="createPostForm">
+      <label for="title">Title:</label><br>
+      <input type="text" id="title" name="title" required><br>
+    
+      <label for="content">Content:</label><br>
+      <textarea id="content" name="content" required></textarea><br>
+    
+      <label for="categories">Categories:</label><br>
+      <select id="categories" name="categories" multiple required>
+      
+      </select><br>
+    
+      <button type="submit">Submit Post</button>
+    </form>
+    `;
+
+    fetch("/get-categories")
+        .then(res => res.json())
+        .then(catesss => {
+            const option = document.createElement('option')
+            option.value = catesss.id
+            option.textConten = catesss.name
+            category.appendChild(option)
+        })
+        .catch((err) => console.log("can't get categories", err))
+
+    createPost.querySelector('button').addEventListener('click', (e) => {
+        e.preventDefault()
+        const title = document.querySelector('input[type=text]').value
+        const content = document.querySelector('textarea').value
+        const selectedCategory = document.querySelector('textarea').value
+
+        fetch('localhost:5000/craete-post', {
+            method: 'post',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id: userId,
+                title, content,
+                categories: selectedCategory
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message)
+                Window.location.reload()
+            })
+            .catch((error) => alert("creating post Error : " + error.message));
+
+    })
+}
+
+
+//get poosts
+// fetch('/')
+fetch('./posts.json')
+    .then(res => res.json())
+    .then(data =>  
+        postsContainer.innerHTML += data.posts.length ?
+            data.posts.map(post => `
+  
+    <article class="post-preview">
+      <div class="post-header">
+        <h3><a href="/post/${post.id}">${post.title}</a></h3>
+        <p>By <strong>${post.author}</strong> | Category: <em><span>${post.category}</span></em> | Posted on: ${post.date}</p>
+      </div>
+      <p class="post-snippet">${post.content}</p>
+      <a href="/post/${post.id}" class="btn">Read More</a>
+      <div class="post-details">
+        <button class="btn like-btn"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
+          (<span>${post.likes}</span>)</button>
+        <button class="btn dislike-btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
+          (${post.dislikes})</button>
+        <button class="btn comment-btn" onclick="displayComment(event)">💬 Comment</button>
+      </div>
+      <!-- Comments Section (Initially Hidden) -->
+      <div class="container-comment hidden">
+        <h2><span>${post.comments.length}</span> Comments</h2>
+         ${loadComments(post.comments)}
+      </div>
+    </article> 
+    `) : `<p>No Posts For Now!! </p>`
+    )
+
+
+const loadComments = (comments) =>
+    comments.map(com =>
+        `
+      <section class="comments">
+              <div class="comment">
+                <div class="comment-header">
+                  <img src="./Unknown_person.jpg" alt="User Avatar" class="user-avatar">
+                  <div class="comment-details">
+                    <p><strong>${com.author}</strong> <span class="user-role">New Member</span> • 4 replies</p>
+                    <p class="comment-time">${com.date}</p>
+                  </div>
+                </div>
+                <div class="comment-body">
+                  <p>${com.content}</p>
+                </div>
+                <div id="Comment-footer" class="comment-footer">
+                  <p>1 person likes this</p>
+                  <button id="Like" class="btn"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like</button>
+                  <button id="DisLike" class="btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
+                    (${com.dislikes})</button>
+                </div>
+              </div>
+
+              <!-- Reply Section -->
+              <div id="Reply-section" class="reply-section">
+                <h3>Reply</h3>
+                <div class="editor">
+                  <textarea class="reply-input" placeholder="Add as many details as possible..."></textarea>
+                </div>
+                <button class="btn send-btn">Send</button>
+              </div>
+            </section>
+    `)

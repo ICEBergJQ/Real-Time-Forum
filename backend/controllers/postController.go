@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -131,11 +132,13 @@ func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	// Validate HTTP method
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
 	}
 
+	// Get and parse the categories from query parameters
 	categoryQuery := r.URL.Query().Get("categories")
 	if categoryQuery == "" {
 		http.Error(w, "categories query parameter is required", http.StatusBadRequest)
@@ -143,17 +146,19 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 	}
 	categoryNames := strings.Split(categoryQuery, ",")
 
+	// Dynamically construct placeholders for the query
 	placeholders := strings.Repeat("?,", len(categoryNames))
-	placeholders = strings.TrimRight(placeholders, ",") // Remove the trailing comma
+	placeholders = strings.TrimRight(placeholders, ",")
 
 	query := fmt.Sprintf(`
 		SELECT 
 			p.post_id, 
 			p.title, 
 			p.content, 
-			p.created_at,
-			p.category_id,
-			c.name AS category_name
+			p.created_at, 
+			p.user_id, 
+			GROUP_CONCAT(c.category_id) AS category_ids, 
+			GROUP_CONCAT(c.name) AS category_names
 		FROM 
 			posts AS p
 		JOIN 
@@ -161,40 +166,67 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 		JOIN 
 			categories AS c ON pc.category_id = c.category_id
 		WHERE 
-			c.name IN (%s);
+			c.name IN (%s)
+		GROUP BY 
+			p.post_id;
 	`, placeholders)
 
-	// Convert the slice of category names to a slice of interface{}
+	// Prepare arguments for the query
 	args := make([]interface{}, len(categoryNames))
 	for i, v := range categoryNames {
 		args[i] = v
 	}
 
+	// Execute the query
 	rows, err := db.Query(query, args...)
 	if err != nil {
-		http.Error(w, "internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
 
+	// Collect the posts
 	var posts []forum.Post
-	var categoryJSON []byte
 	for rows.Next() {
 		var post forum.Post
-		fmt.Println(rows)
-		err := rows.Scan(&post.ID, &post.Author_id, &post.Title, &post.Content, &categoryJSON, &post.CreatedAt)
+		var categoryIDs, categoryNames string
+		err := rows.Scan(
+			&post.ID,
+			&post.Title,
+			&post.Content,
+			&post.CreatedAt,
+			&post.Author_id,
+			&categoryIDs,
+			&categoryNames,
+		)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("internal server error (scan): %v", err), http.StatusInternalServerError)
+			http.Error(w, "Internal server error (scan): "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 			return
 		}
-		err = json.Unmarshal(categoryJSON, &post.Category_id)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("internal server error (unmarshall): %v", err), http.StatusInternalServerError)
-			return
+
+		// Parse aggregated category IDs and names
+		categoryIDList := strings.Split(categoryIDs, ",")
+		categoryNameList := strings.Split(categoryNames, ",")
+
+		// Convert category IDs to []int
+		for _, idStr := range categoryIDList {
+			id, convErr := strconv.Atoi(idStr)
+			if convErr != nil {
+				http.Error(w, "Internal server error (category ID conversion): "+fmt.Sprintf("%v", convErr), http.StatusInternalServerError)
+				return
+			}
+			post.Category_id = append(post.Category_id, id)
 		}
+
+		// Assign category names
+		post.Categories = categoryNameList
 
 		posts = append(posts, post)
 	}
 
-	json.NewEncoder(w).Encode(posts)
+	// Encode the posts to JSON and send the response
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(posts); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+	}
 }

@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	db := database.InitDB("../database/data/forum.db")
+	db := database.InitDB("../database/forum.db")
 	database.CreateDatabaseTables(db, "../database/schema.sql")
 	defer db.Close()
 	address := "localhost:8080"

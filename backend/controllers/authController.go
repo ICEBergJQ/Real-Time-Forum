@@ -45,21 +45,34 @@ func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-// LoginUser handles user login
-// func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
-// 	if r.Method != http.MethodPost {
-// 		return errors.New("invalid request method")
-// 	}
-
-// 	var payload map[string]string
-// 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-// 		return fmt.Errorf("invalid payload: %w", err)
-// 	}
-
+//LoginUser handles user login
+func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodPost {
+		return errors.New("invalid request method")
+	}
+	var user models.User
+	var userFromDb models.User
+	var response models.Response
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		return fmt.Errorf("invalid payload: %w", err)
+	}
+	if err := utils.Validation(user); err != nil {
+		return fmt.Errorf("invalid payload: %w", err)
+	}
 	
-
-// 	token := "mock-token-for-" + // Mock token
-// 	w.WriteHeader(http.StatusOK)
-// 	json.NewEncoder(w).Encode(map[string]string{"token": token})
-// 	return nil
-// }
+	query := "SELECT username, email, password FROM users WHERE username = ?"
+	row := db.QueryRow(query, user.Username)
+	err := row.Scan(&userFromDb.ID, &userFromDb.Username, &userFromDb.Email, &userFromDb.Password)
+	if err != nil {
+		if err == sql.ErrNoRows{
+			response.Message = "no user found with this username"
+		}
+		return fmt.Errorf("invalid payload: %w", err)
+	}
+	
+	token, err := utils.SeesionCreation(userFromDb.ID)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"token": token})
+	return nil
+}

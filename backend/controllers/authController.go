@@ -71,7 +71,7 @@ func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 		return fmt.Errorf("invalid payload: %w", err)
 	}
 	
-	token, err := utils.SeesionCreation(userFromDb.ID)
+	token, err := utils.SeesionCreation(userFromDb.ID, db)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"token": token})
 	return nil

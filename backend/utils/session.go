@@ -3,12 +3,17 @@ package utils
 import (
 	"github.com/gofrs/uuid"
 	"fmt"
+	"database/sql"
 )
-func SeesionCreation(user_id int) (uuid.UUID,error){
+func SeesionCreation(user_id int, db *sql.DB) (string ,error){
 
 	token, err := uuid.NewV4()
 	if err != nil {
-		return fmt.Errorf("invalid payload: %w", err)
+		return "error",fmt.Errorf("invalid payload: %w", err)
 	}
-	query := "INSERT INTO session (session)"
+	query := "INSERT INTO session (session_id, user_id, expired_at) VALUES (?, ?, ?)"
+	_, err := db.Exec(query, token.String(), user_id, )
+	if err != nil {
+		
+	}
 }

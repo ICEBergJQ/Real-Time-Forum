@@ -1,0 +1,87 @@
+{
+    "posts": [
+      {
+        "id": 1,
+        "title": "The Future of Web Development",
+        "content": "Web development is constantly evolving, and it’s important to keep up with the latest trends and technologies...",
+        "author": "Jane Doe",
+        "date": "2024-12-05",
+        "category": "Web Development",
+        "likes": 20,
+        "dislikes": 3,
+        "comments": [
+          {
+            "author": "Alice Johnson",
+            "date": "2024-12-06",
+            "content": "This is an excellent article! I agree that web development is constantly changing, and it's exciting to see what comes next.",
+            "likes": 5,
+            "dislikes": 0
+          },
+          {
+            "author": "John Smith",
+            "date": "2024-12-07",
+            "content": "I think the future of web dev is really bright, but we also need to be cautious about security vulnerabilities.",
+            "likes": 2,
+            "dislikes": 1
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Understanding Artificial Intelligence",
+        "content": "Artificial Intelligence (AI) is reshaping industries and transforming the way we work and live. This post explores AI applications...",
+        "author": "John Smith",
+        "date": "2024-12-06",
+        "category": "AI & Technology",
+        "likes": 15,
+        "dislikes": 4,
+        "comments": [
+          {
+            "author": "Mike Brown",
+            "date": "2024-12-07",
+            "content": "AI is the future! It's already transforming so many industries, from healthcare to finance. Looking forward to more developments.",
+            "likes": 3,
+            "dislikes": 0
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Top 10 JavaScript Libraries in 2024",
+        "content": "JavaScript libraries make coding easier and faster. Here's a list of the top 10 libraries that every developer should know in 2024...",
+        "author": "Alice Johnson",
+        "date": "2024-12-07",
+        "category": "Programming",
+        "likes": 25,
+        "dislikes": 2,
+        "comments": [
+          {
+            "author": "Sara Lee",
+            "date": "2024-12-08",
+            "content": "This list is great! I personally love using React and Vue.js for building dynamic interfaces. Definitely agree with this list!",
+            "likes": 6,
+            "dislikes": 2
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "The Importance of Web Accessibility",
+        "content": "Web accessibility is a vital part of creating inclusive websites. This post discusses how to make websites more accessible for everyone...",
+        "author": "Mike Brown",
+        "date": "2024-12-08",
+        "category": "Web Accessibility",
+        "likes": 30,
+        "dislikes": 1,
+        "comments": [
+          {
+            "author": "Jessica White",
+            "date": "2024-12-08",
+            "content": "Accessibility is key to ensuring all users can access web content. It’s encouraging to see more developers focused on this important issue.",
+            "likes": 8,
+            "dislikes": 1
+          }
+        ]
+      }
+    ]
+  }

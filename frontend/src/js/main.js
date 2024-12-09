@@ -1,6 +1,6 @@
 const userId = localStorage.getItem("user_id");
 const logoutBtn = document.querySelector('button.logout') || ''
-const registerBtn = document.querySelector("button.register")
+const registerBtn = document.querySelector(".start-topic")
 const loginBtn = document.querySelector("button.login")
 // const profileName = document.querySelector('.profile')
 

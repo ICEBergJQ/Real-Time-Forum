@@ -223,7 +223,7 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func GetcreatedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+func GetCreatedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return

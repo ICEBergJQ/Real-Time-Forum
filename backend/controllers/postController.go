@@ -229,36 +229,33 @@ func GetcreatedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get user_id from query parameters
 	userID := r.URL.Query().Get("user_id")
 	if userID == "" {
 		http.Error(w, "user_id query parameter is required", http.StatusBadRequest)
 		return
 	}
 
-	// Query to fetch posts by user_id, including category information
 	query := `
-			SELECT 
-				p.post_id, 
-				p.title, 
-				p.content, 
-				p.created_at, 
-				p.user_id, 
-				GROUP_CONCAT(c.category_id) AS category_ids, 
-				GROUP_CONCAT(c.name) AS category_names
-			FROM 
-				posts AS p
-			LEFT JOIN 
-				postsCategories AS pc ON p.post_id = pc.post_id
-			LEFT JOIN 
-				categories AS c ON pc.category_id = c.category_id
-			WHERE 
-				p.user_id = ?
-			GROUP BY 
-				p.post_id;
-		`
+	SELECT
+		p.user_id, 
+    	p.post_id, 
+    	p.title, 
+    	p.content, 
+    	p.created_at,
+		GROUP_CONCAT(c.category_id) AS category_ids,
+    	GROUP_CONCAT(c.name) AS categories
+	FROM 
+    	posts AS p
+	JOIN 
+    	postsCategories AS pc ON p.post_id = pc.post_id
+	JOIN 
+    	categories AS c ON pc.category_id = c.category_id
+	WHERE 
+    	p.user_id = ?
+	GROUP BY 
+	    p.post_id;
 
-	// Execute the query
+		`
 	rows, err := db.Query(query, userID)
 	if err != nil {
 		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
@@ -266,18 +263,17 @@ func GetcreatedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	// Collect the posts
 	var posts []forum.Post
 	for rows.Next() {
 		var post forum.Post
 		var categoryIDs, categoryNames string
 
 		err := rows.Scan(
+			&post.Author_id,
 			&post.ID,
 			&post.Title,
 			&post.Content,
 			&post.CreatedAt,
-			&post.Author_id,
 			&categoryIDs,
 			&categoryNames,
 		)
@@ -286,14 +282,12 @@ func GetcreatedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Parse aggregated category IDs and names
 		categoryIDList := strings.Split(categoryIDs, ",")
 		categoryNameList := strings.Split(categoryNames, ",")
 
-		// Convert category IDs to []int
 		for _, idStr := range categoryIDList {
 			if idStr == "" {
-				continue // Skip empty entries if there are no categories
+				continue
 			}
 			id, convErr := strconv.Atoi(idStr)
 			if convErr != nil {
@@ -303,13 +297,11 @@ func GetcreatedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			post.Category_id = append(post.Category_id, id)
 		}
 
-		// Assign category names
 		post.Categories = categoryNameList
 
 		posts = append(posts, post)
 	}
 
-	// Encode the posts to JSON and send the response
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(posts); err != nil {
 		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)

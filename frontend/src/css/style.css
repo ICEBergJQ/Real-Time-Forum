@@ -6,7 +6,7 @@ body {
     display: flex;
     flex-direction: column;
     /* for dev  */
-    /* background-color: #101020; */
+    background-color: #101020;
 }
 
 .container {
@@ -84,7 +84,7 @@ body {
     border: 1px solid #ccc;
     background: #f9f9f9;
     /* for dev  */
-    /* background: #aaa; */
+    background: #aaa;
     margin-bottom: 1rem;
 }
 

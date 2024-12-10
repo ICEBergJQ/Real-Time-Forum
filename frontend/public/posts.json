@@ -83,5 +83,19 @@
           }
         ]
       }
+    ],
+    "categories":[
+      {
+        "id:":213,
+        "name":"tech"
+      },
+      {
+        "id:":213,
+        "name":"sport"
+      },
+      {
+        "id:":213,
+        "name":"fit"
+      }
     ]
   }

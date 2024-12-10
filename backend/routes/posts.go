@@ -24,7 +24,7 @@ func FilterRoute(db *sql.DB) {
 		if r.Method == http.MethodGet {
 			query := r.URL.Query()
 
-			allowedParams := []string{"user_id", "categories"}
+			allowedParams := []string{"user_id", "categories", "liked_user"}
 			foundParams := []string{}
 			for _, param := range allowedParams {
 				if value := query.Get(param); value != "" {
@@ -46,6 +46,8 @@ func FilterRoute(db *sql.DB) {
 				controllers.GetCreatedPosts(db, w, r)
 			case "categories":
 				controllers.GetFilteredPostsByCategory(db, w, r)
+			case "liked_user":
+				controllers.GetLikedPosts(db, w, r)
 			default:
 				http.Error(w, "Unsupported query parameter", http.StatusNotFound)
 			}

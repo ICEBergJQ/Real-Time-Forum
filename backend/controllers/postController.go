@@ -306,3 +306,88 @@ func GetCreatedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 	}
 }
+
+
+func GetLikedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userID := r.URL.Query().Get("liked_user")
+	if userID == "" {
+		http.Error(w, "user_id query parameter is required", http.StatusBadRequest)
+		return
+	}
+
+	query := `
+	SELECT
+    	p.user_id, 
+    	p.post_id, 
+    	p.title, 
+    	p.content, 
+    	p.created_at,
+    	GROUP_CONCAT(c.category_id) AS category_ids
+	FROM 
+    	likeAndDislike AS ld
+	JOIN 
+    	posts AS p ON ld.post_id = p.post_id
+	JOIN 
+    	postsCategories AS pc ON p.post_id = pc.post_id
+	JOIN 
+    	categories AS c ON pc.category_id = c.category_id
+	WHERE 
+    	ld.user_id = ?
+	GROUP BY 
+    	p.post_id;
+`
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var posts []forum.Post
+	for rows.Next() {
+		var post forum.Post
+		var categoryIDs, categoryNames string
+
+		err := rows.Scan(
+			&post.Author_id,
+			&post.ID,
+			&post.Title,
+			&post.Content,
+			&post.CreatedAt,
+			&categoryIDs,
+		)
+		if err != nil {
+			http.Error(w, "Internal server error (scan): "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+			return
+		}
+
+		categoryIDList := strings.Split(categoryIDs, ",")
+		categoryNameList := strings.Split(categoryNames, ",")
+
+		for _, idStr := range categoryIDList {
+			if idStr == "" {
+				continue
+			}
+			id, convErr := strconv.Atoi(idStr)
+			if convErr != nil {
+				http.Error(w, "Internal server error (category ID conversion): "+fmt.Sprintf("%v", convErr), http.StatusInternalServerError)
+				return
+			}
+			post.Category_id = append(post.Category_id, id)
+		}
+
+		post.Categories = categoryNameList
+
+		posts = append(posts, post)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(posts); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+	}
+}

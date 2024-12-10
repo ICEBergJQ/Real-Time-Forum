@@ -18,15 +18,34 @@
                 <label for="content">Content</label>
                 <textarea id="content" name="content" rows="5" placeholder="Enter post content" required></textarea>
     
-                <label for="categories">Category</label>
+                <!-- <label for="categories">Category</label>
                 <select id="categories" name="categories" required>
                     <option value="">Select a category</option>
                     <option value="technology">Technology</option>
                     <option value="science">Science</option>
                     <option value="art">Art</option>
                     <option value="education">Education</option>
-                </select>
-    
+                </select> -->
+                
+                <label for="categories">Categories:</label><br>
+                <div class="categories-container">
+                    <input type="checkbox" id="tech" name="categories" value="Technology">
+                    <label for="tech">Technology</label>
+
+                    <input type="checkbox" id="science" name="categories" value="Science">
+                    <label for="science">Science</label>
+
+                    <input type="checkbox" id="health" name="categories" value="Health">
+                    <label for="health">Health</label>
+
+                    <input type="checkbox" id="sports" name="categories" value="Sports">
+                    <label for="sports">Sports</label>
+
+                    <input type="checkbox" id="art" name="categories" value="Art">
+                    <label for="art">Art</label>
+                </div>
+
+
                 <button class="sbtn" type="submit">Submit</button>
             </form>
         </div>

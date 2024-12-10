@@ -154,8 +154,8 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 			p.content, 
 			p.created_at, 
 			p.user_id, 
-			GROUP_CONCAT(c.category_id) AS category_ids, 
-			GROUP_CONCAT(c.name) AS category_names
+			GROUP_CONCAT(DISTINCT c.category_id) AS category_ids, 
+			GROUP_CONCAT(DISTINCT c.name) AS category_names
 		FROM 
 			posts AS p
 		JOIN 
@@ -165,13 +165,16 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 		WHERE 
 			c.name IN (%s)
 		GROUP BY 
-			p.post_id;
+			p.post_id
+		HAVING 
+			COUNT(DISTINCT c.name) = ?;
 	`, placeholders)
 
-	args := make([]interface{}, len(categoryNames))
+	args := make([]interface{}, len(categoryNames)+1)
 	for i, v := range categoryNames {
 		args[i] = v
 	}
+	args[len(categoryNames)] = len(categoryNames) // Match all categories
 
 	rows, err := db.Query(query, args...)
 	if err != nil {
@@ -180,7 +183,6 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 	}
 	defer rows.Close()
 
-	// Collect the posts
 	var posts []forum.Post
 	for rows.Next() {
 		var post forum.Post
@@ -200,8 +202,6 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 		}
 
 		categoryIDList := strings.Split(categoryIDs, ",")
-		categoryNameList := strings.Split(categoryNames, ",")
-
 		for _, idStr := range categoryIDList {
 			id, convErr := strconv.Atoi(idStr)
 			if convErr != nil {
@@ -210,9 +210,7 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 			}
 			post.Category_id = append(post.Category_id, id)
 		}
-
-		// Assign category names
-		post.Categories = categoryNameList
+		post.Categories = strings.Split(categoryNames, ",")
 
 		posts = append(posts, post)
 	}
@@ -222,6 +220,7 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 	}
 }
+
 
 func GetCreatedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {

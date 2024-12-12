@@ -1,14 +1,14 @@
-const like = document.querySelector('button.like')
-const dislike = document.querySelector('button.dislike')
-const likeCounter = document.querySelector('likes')
-const dislikeCounter = document.querySelector('dislikes')
+const likeBtn = document.querySelector('button.like')
+const dislikeBtn = document.querySelector('button.dislike')
+const likeCounter = document.querySelector('.like-btn span')
+const dislikeCounter = document.querySelector('.dislike-btn span')
 
 
 ///if the user is logged
 const userId = localStorage.getItem("user_id");
 /// else hide like/dislike btns
 
-like.addEventListener('click', (e) => {
+likeBtn.addEventListener('click', (e) => {
     ///there will be a data attribbute in the like btn
     const postId = e.dataset.postId
 
@@ -19,24 +19,23 @@ like.addEventListener('click', (e) => {
     })
         .then((response) => response.json())
         .then((data) => {
-            ///post like removed
-            alert(data.message);
-            
             ///check if there is row in the like table with the userid and postid
             ///chech the response for the value of case
-            if (data.case === "remove") {
-                likeCounter -= 1
+
+            if (data.msg == 'Done') {
+                alert('liked...');
+                interact('like')
+            } else {
+                alert('already liked...')
             }
-            else if (data.case === "add") {
-                likeCounter += 1
-            }
+
             // window.location.reload();
         })
         .catch((error) => alert("post like Error : " + error.message))
 })
 
 
-dislike.addEventListener('click', () => {
+dislikeBtn.addEventListener('click', () => {
     const postId = e.dataset.postId
     //already disliked
     dislikeCounter -= 1
@@ -61,3 +60,16 @@ dislike.addEventListener('click', () => {
         .catch((error) => alert("dislike Error : " + error.message))
 
 })
+
+function interact(action) {
+    if (action === 'like') {
+        let likes = parseInt(likeCounter.textContent)
+        typeof (likes) === 'number' ?
+            likeCounter.textContent = likes++ : null
+    } else if (action === 'dislike') {
+        let dislikes = parseInt(dislikeCounter.textContent)
+        typeof (dislikes) === 'number' ?
+            dislikeCounter.textContent = dislikes++ : null
+
+    }
+}

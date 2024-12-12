@@ -596,6 +596,10 @@ form input:focus {
     margin-bottom: 20px;
 }
 
+textarea {
+    resize: none;
+  }
+
 /* categories css */
 
 /* Hide the native checkbox */
@@ -694,4 +698,3 @@ form input:focus {
 .cancel-btn:hover {
     background-color: #d32f2f;
 }
-

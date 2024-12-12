@@ -1,0 +1,393 @@
+/* File: responsive.css */
+
+/* General Reset */
+body, h1, h2, h3, p, ul, li, a, button, input, textarea {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Small devices (max-width: 768px) */
+@media (max-width: 768px) {
+  /* Navigation Bar */
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    text-align: center;
+    background-color: #f9f9f9;
+    width: 100%;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-actions {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  /* Dropdown Menu */
+  .dropdown-menu {
+    position: static;
+    display: none;
+    flex-direction: column;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    width: 100%;
+  }
+
+  .dropdown-menu.show {
+    display: flex;
+  }
+
+  /* Modals */
+  .modal {
+    width: 90%;
+    margin: 20px auto;
+  }
+
+  .modal-content {
+    padding: 20px;
+  }
+
+  /* Forms */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  input, textarea, select, button {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  /* Categories */
+  .categories-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .categories-container label {
+    font-size: 14px;
+  }
+
+  /* Main Content */
+  .main-content {
+    padding: 20px;
+  }
+
+  .feed h2 {/* File: responsive.css */
+
+    /* General Reset */
+    body, h1, h2, h3, p, ul, li, a, button, input, textarea {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    /* Small devices (max-width: 768px) */
+    @media (max-width: 768px) {
+      /* Navigation Bar */
+      .navbar {
+        flex-direction: column;
+        align-items: center;
+      }
+    
+      .nav-links {/* File: responsive.css */
+
+        /* General Reset */
+        body, h1, h2, h3, p, ul, li, a, button, input, textarea {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        
+        /* Small devices (max-width: 768px) */
+        @media (max-width: 768px) {
+          /* Navigation Bar */
+          .navbar {
+            flex-direction: column;
+            align-items: center;
+          }
+        
+          .nav-links {
+            display: none;
+            flex-direction: column;
+            text-align: center;
+            background-color: #f9f9f9;
+            width: 100%;
+          }
+        
+          .nav-links.active {
+            display: flex;
+          }
+        
+          .nav-actions {
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+          }
+        
+          /* Dropdown Menu */
+          .dropdown-menu {
+            position: static;
+            display: none;
+            flex-direction: column;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            width: 100%;
+          }
+        
+          .dropdown-menu.show {
+            display: flex;
+          }
+        
+          /* Modals */
+          .modal {
+            width: 90%;
+            margin: 20px auto;
+          }
+        
+          .modal-content {
+            padding: 20px;
+          }
+        
+          /* Forms */
+          form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+          }
+        
+          input, textarea, select, button {
+            font-size: 16px;
+            padding: 10px;
+          }
+        
+          button {
+            width: 100%;
+          }
+        
+          /* Categories */
+          .categories-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+          }
+        
+          .categories-container label {
+            font-size: 14px;
+          }
+        
+          /* Main Content */
+          .main-content {
+            padding: 20px;
+          }
+        
+          .feed h2 {
+            font-size: 18px;
+            text-align: center;
+          }
+        
+          /* Footer */
+          .footer {
+            text-align: center;
+            padding: 10px;
+          }
+        
+          .footer-sections {
+            flex-direction: column;
+            gap: 20px;
+          }
+        
+          .footer-sections div {
+            margin: 10px 0;
+          }
+        }
+        
+        /* Very small devices (max-width: 480px) */
+        @media (max-width: 480px) {
+          h1, h2, h3, p {
+            font-size: smaller;
+          }
+        
+          button {
+            font-size: smaller;
+            padding: 8px;
+          }
+        
+          input, textarea {
+            font-size: 14px;
+          }
+        
+          .modal-content {
+            padding: 15px;
+          }
+        }
+        
+        display: none;
+        flex-direction: column;
+        text-align: center;
+        background-color: #f9f9f9;
+        width: 100%;
+      }
+    
+      .nav-links.active {
+        display: flex;
+      }
+    
+      .nav-actions {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+      }
+    
+      /* Dropdown Menu */
+      .dropdown-menu {
+        position: static;
+        display: none;
+        flex-direction: column;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        width: 100%;
+      }
+    
+      .dropdown-menu.show {
+        display: flex;
+      }
+    
+      /* Modals */
+      .modal {
+        width: 90%;
+        margin: 20px auto;
+      }
+    
+      .modal-content {
+        padding: 20px;
+      }
+    
+      /* Forms */
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+    
+      input, textarea, select, button {
+        font-size: 16px;
+        padding: 10px;
+      }
+    
+      button {
+        width: 100%;
+      }
+    
+      /* Categories */
+      .categories-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+    
+      .categories-container label {
+        font-size: 14px;
+      }
+    
+      /* Main Content */
+      .main-content {
+        padding: 20px;
+      }
+    
+      .feed h2 {
+        font-size: 18px;
+        text-align: center;
+      }
+    
+      /* Footer */
+      .footer {
+        text-align: center;
+        padding: 10px;
+      }
+    
+      .footer-sections {
+        flex-direction: column;
+        gap: 20px;
+      }
+    
+      .footer-sections div {
+        margin: 10px 0;
+      }
+    }
+    
+    /* Very small devices (max-width: 480px) */
+    @media (max-width: 480px) {
+      h1, h2, h3, p {
+        font-size: smaller;
+      }
+    
+      button {
+        font-size: smaller;
+        padding: 8px;
+      }
+    
+      input, textarea {
+        font-size: 14px;
+      }
+    
+      .modal-content {
+        padding: 15px;
+      }
+    }
+    
+    font-size: 18px;
+    text-align: center;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 10px;
+  }
+
+  .footer-sections {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .footer-sections div {
+    margin: 10px 0;
+  }
+}
+
+/* Very small devices (max-width: 480px) */
+@media (max-width: 480px) {
+  h1, h2, h3, p {
+    font-size: smaller;
+  }
+
+  button {
+    font-size: smaller;
+    padding: 8px;
+  }
+
+  input, textarea {
+    font-size: 14px;
+  }
+
+  .modal-content {
+    padding: 15px;
+  }
+}

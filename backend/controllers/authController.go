@@ -12,6 +12,7 @@ var users = map[string]string{} // key: username, value: password
 
 // RegisterUser handles user registration
 func RegisterUser(w http.ResponseWriter, r *http.Request) error {
+	fmt.Println(" r.Method : ", r.Method)
 	if r.Method != http.MethodPost {
 		return errors.New("invalid request method")
 	}

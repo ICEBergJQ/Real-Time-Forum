@@ -3,6 +3,8 @@ const logoutBtn = document.querySelector('button.logout') || ''
 const registerBtn = document.querySelector(".start-topic") || ''
 const loginBtn = document.querySelector("button.login")
 const createPostBtn = document.querySelector("button.createPostBtn")
+const likeBtn = document.querySelector('button.like-btn') 
+
 // const profileName = document.querySelector('.profile')
 
 function createElem(tag, className, content) {

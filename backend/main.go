@@ -15,7 +15,7 @@ func main() {
 	defer db.Close()
 	address := "localhost:8080"
 	// authentication routes
-	routes.AuthRoutes()
+	routes.AuthRoutes(db)
 	// post routes
 	routes.PostRout(db)
 	// comment routes

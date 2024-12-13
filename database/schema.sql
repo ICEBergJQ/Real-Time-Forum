@@ -12,8 +12,8 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS posts (
         post_id TEXT PRIMARY KEY,
-        user_id INTEGER NOT NULL,
-        category_id INTEGER NOT NULL,
+        user_id INTEGER,
+        category_id INTEGER,
         category_name TEXT NOT NULL,
         title TEXT NOT NULL,
         content TEXT NOT NULL,
@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS postsCategories (
 CREATE TABLE
     IF NOT EXISTS comments (
         comment_id TEXT PRIMARY KEY,
-        user_id INTEGER NOT NULL,
-        post_id TEXT NOT NULL,
+        user_id INTEGER,
+        post_id TEXT,
         content TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (user_id),
@@ -50,7 +50,7 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS likeAndDislike (
         likeAndDislike_id TEXT PRIMARY KEY,
-        user_id INTEGER NOT NULL,
+        user_id INTEGER,
         post_id TEXT,
         comment_id TEXT,
         reaction_type TEXT NOT NULL,
@@ -62,11 +62,11 @@ CREATE TABLE
     );
 
 CREATE TABLE IF NOT EXISTS session (
-    user_id INTEGER NOT NULL,
     session_id TEXT PRIMARY KEY,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     expired_at TIMESTAMP NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 INSERT OR IGNORE INTO categories (category_name) VALUES

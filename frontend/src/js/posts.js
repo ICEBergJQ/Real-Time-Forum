@@ -1,11 +1,9 @@
 //import { loginForm } from '../../public/components/login.js'
-import Comment from '../../public/components/comment.js'
+import { Article } from '../../public/components/article.js';
 import Logout from '../../public/components/logout.js'
 import postForm from '../../public/components/postForm.js';
-
 const postsContainer = document.querySelector('main .post-list')
-
-
+let posts = []
 
 document.addEventListener("DOMContentLoaded", () => {
     const likeButtons = document.querySelectorAll(".btn");
@@ -39,7 +37,6 @@ function Reply() {
     });
 }
 
-
 // /LOGIN AND SIGN UP/ 
 
 const showLoginModal = () => {
@@ -50,68 +47,9 @@ const showLoginModal = () => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    const dynamicContent = document.querySelector("#dynamicContent");
-    const anotherDynamic = document.querySelector("#anotherDynamic");
+   
 
-
-
-    const attachModalEventListeners = () => {
-        const buttons = document.querySelectorAll(".like-btn, .dislike-btn, #Like, #DisLike, .send-btn");
-        buttons.forEach((button) => {
-            button.addEventListener("click", (e) => {
-                e.preventDefault();
-                if (!localStorage.getItem("user_id")) {
-                    showLoginModal();
-                } else {
-                    alert("Action successful! You are logged in.");
-                }
-            });
-        });
-    };
-
-    // dynamicContent.innerHTML = loginForm()
-
-    fetch("login.html")
-        .then((response) => {
-            if (!response.ok) throw new Error("Failed to load login modal");
-            return response.text();
-        })
-        .then((html) => {
-            dynamicContent.innerHTML = html;
-
-            const loginModal = document.querySelector("#loginModal");
-            const closeLoginModal = loginModal.querySelector(".close");
-
-            // Show the login modal when the login button is clicked
-            loginBtn.addEventListener("click", showLoginModal);
-
-            // Hide the modal when the close button is clicked
-            closeLoginModal.addEventListener("click", () => {
-                loginModal.classList.add("hidden");
-            });
-
-            // Hide the modal when clicit pull origin developking outside the modal content
-            window.addEventListener("click", (event) => {
-                if (event.target === loginModal) {
-                    loginModal.classList.add("hidden");
-                }
-            });
-
-            // Add event listener for switching to the register modal
-            const openSignUpLink = loginModal.querySelector("#openSignup");
-            openSignUpLink.addEventListener("click", (e) => {
-                e.preventDefault();
-                loginModal.classList.add("hidden"); // Hide login modal
-                const signUpModal = document.querySelector("#signUpModal");
-                if (signUpModal) {
-                    signUpModal.classList.remove("hidden"); // Show register modal
-                }
-            });
-
-            attachModalEventListeners();
-
-        })
-        .catch((error) => console.error(error));
+  
 
 
 
@@ -293,10 +231,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 const category = document.querySelector('.category')
-const createPost = document.querySelector(".create-post-container")
+const createPost = document.querySelector("#dynaicPost")
 
-userId ? createPost.innerHTML = postForm() : null
 
+!userId ? createPost.innerHTML = postForm() : null
 
 // fetch("/get-categories")
 fetch("./posts.json")
@@ -316,32 +254,77 @@ fetch("./posts.json")
 // fetch('/')
 fetch('./posts.json')
     .then(res => res.json())
-    .then(data =>
-        postsContainer.innerHTML += data.posts.length ?
-            data.posts.map(post => `
-  
-    <article class="post-preview">
-      <div class="post-header">
-        <h3><a href="/post/${post.id}">${post.title}</a></h3>
-        <p>By <strong>${post.author}</strong> | Category: <em><span>${post.category}</span></em> | Posted on: ${post.date}</p>
-      </div>
-      <p class="post-snippet">${post.content}</p>
-      <a href="/post/${post.id}" class="btn">Read More</a>
-      <div class="post-details">
-        <button class="btn like-btn"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
-          (<span>${post.likes}</span>)</button>
-        <button class="btn dislike-btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
-          (${post.dislikes})</button>
-        <button class="btn comment-btn" onclick="displayComment(event)">💬 Comment</button>
-      </div>
-      <!-- Comments Section (Initially Hidden) -->
-      <div class="container-comment hidden">
-        <h2><span>${post.comments.length}</span> Comments</h2>
-         ${loadComments(post.comments)}
-      </div>
-    </article> 
-    `) : `<p>No Posts For Now!! </p>`
+    .then(data => {
+        posts = data.posts
+        listPosts(data.posts)
+    }
     )
 
+const listPosts = (posts) => {
+    postsContainer.innerHTML = posts.length ? posts.map(post => Article(post)) : `<p>No Posts For Now!! </p>`
+}
+const dynamicContent = document.querySelector("#dynamicContent");
+const anotherDynamic = document.querySelector("#anotherDynamic");
 
-const loadComments = (comments) => comments.map(com => Comment(com))
+const attachModalEventListeners = () => {
+    const buttons = document.querySelectorAll(".like-btn, .dislike-btn, #Like, #DisLike, .send-btn");
+    buttons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (!localStorage.getItem("user_id")) {
+                showLoginModal();
+            } else {
+                alert("Action successful! You are logged in.");
+            }
+        });
+    });
+};
+function popPost(id) {
+    console.log(posts.find(p => p.id === id))
+}
+
+  // dynamicContent.innerHTML = loginForm()
+
+  fetch("login.html")
+  .then((response) => {
+      if (!response.ok) throw new Error("Failed to load login modal");
+      return response.text();
+  })
+  .then((html) => {
+      dynamicContent.innerHTML = html;
+
+      const loginModal = document.querySelector("#loginModal");
+      const closeLoginModal = loginModal.querySelector(".close");
+
+      // Show the login modal when the login button is clicked
+      loginBtn.addEventListener("click", showLoginModal);
+
+      // Hide the modal when the close button is clicked
+      closeLoginModal.addEventListener("click", () => {
+          loginModal.classList.add("hidden");
+      });
+
+      // Hide the modal when clicit pull origin developking outside the modal content
+      window.addEventListener("click", (event) => {
+          if (event.target === loginModal) {
+              loginModal.classList.add("hidden");
+          }
+      });
+
+      // Add event listener for switching to the register modal
+      const openSignUpLink = loginModal.querySelector("#openSignup");
+      openSignUpLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          loginModal.classList.add("hidden"); // Hide login modal
+          const signUpModal = document.querySelector("#signUpModal");
+          if (signUpModal) {
+              signUpModal.classList.remove("hidden"); // Show register modal
+          }
+      });
+
+      attachModalEventListeners();
+
+  })
+  .catch((error) => console.error(error));
+
+window.popPost = popPost

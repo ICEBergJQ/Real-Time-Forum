@@ -2,7 +2,7 @@ PRAGMA foreign_keys = ON;
 
 CREATE TABLE
     IF NOT EXISTS users (
-        user_id TEXT NOT NULL UNIQUE,
+        user_id INTEGER NOT NULL UNIQUE,
         username TEXT NOT NULL UNIQUE,
         email TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
@@ -13,8 +13,8 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS posts (
         post_id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        category_id INTEGER NOT NULL,
+        user_id INTEGER,
+        category_id INTEGER,
         category_name TEXT NOT NULL,
         title TEXT NOT NULL,
         content TEXT NOT NULL,
@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS postsCategories (
 CREATE TABLE
     IF NOT EXISTS comments (
         comment_id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        post_id TEXT NOT NULL,
+        user_id INTEGER,
+        post_id TEXT,
         content TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (user_id),
@@ -51,7 +51,7 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS likeAndDislike (
         likeAndDislike_id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
+        user_id INTEGER,
         post_id TEXT,
         comment_id TEXT,
         reaction_type TEXT NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE
     );
 
 CREATE TABLE IF NOT EXISTS session (
-    user_id TEXT NOT NULL,
+    user_id INTEGER,
     session_id TEXT PRIMARY KEY,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expired_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

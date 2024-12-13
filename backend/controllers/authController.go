@@ -67,6 +67,12 @@ func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		if err == sql.ErrNoRows{
 			response.Message = "no user found with this username"
+			response_encoding, err := json.Marshal(response)
+			if err != nil {
+			return fmt.Errorf("invalid payload: %w", err)
+		  }
+		  w.WriteHeader(http.StatusNoContent)
+		  w.Write(response_encoding)
 		}
 		return fmt.Errorf("invalid payload: %w", err)
 	}

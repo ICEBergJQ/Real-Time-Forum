@@ -11,9 +11,11 @@ func SeesionCreation(user_id int, db *sql.DB) (string ,error){
 	if err != nil {
 		return "error",fmt.Errorf("invalid payload: %w", err)
 	}
-	query := "INSERT INTO session (session_id, user_id, expired_at) VALUES (?, ?, ?)"
-	_, err := db.Exec(query, token.String(), user_id, )
-	if err != nil {
-		
-	}
+	query := `INSERT INTO session (session_id, user_id, expired_at) 
+    VALUES (?, ?, datetime(datetime('now', '+1hour'),'+5day'))`
+    _, err = db.Exec(query, token.String(), user_id)
+    if err != nil {
+        return "error", fmt.Errorf("invalid payload: %w", err)
+    }
+    return token.String(), nil
 }

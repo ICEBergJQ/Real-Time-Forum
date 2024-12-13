@@ -1,10 +1,13 @@
 package utils
 
-import "net/http"
+import (
+	"database/sql"
+	"net/http"
+)
 
-func HandlerWithError(f func(http.ResponseWriter, *http.Request) error) http.HandlerFunc {
+func HandlerWithError(f func(*sql.DB, http.ResponseWriter, *http.Request) error, db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if err := f(w, r); err != nil {
+		if err := f(db, w, r); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
 	}

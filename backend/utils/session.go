@@ -1,9 +1,11 @@
 package utils
 
 import (
-	"github.com/gofrs/uuid"
-	"fmt"
 	"database/sql"
+	"fmt"
+	"net/http"
+
+	"github.com/gofrs/uuid"
 )
 func SeesionCreation(user_id int, db *sql.DB) (string ,error){
 
@@ -18,4 +20,14 @@ func SeesionCreation(user_id int, db *sql.DB) (string ,error){
         return "error", fmt.Errorf("invalid payload: %w", err)
     }
     return token.String(), nil
+}
+
+func TokenCheck(user_id int, r *http.Request, db *sql.DB) bool{
+	cookie, err := r.Cookie("session_token")
+	if err != nil {
+		return false
+	}
+	var dbCookie string
+	query := "SELECT session_id FROM session WHERE us" 
+	return false
 }

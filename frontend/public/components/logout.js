@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../src/css/style.css">
-    <link rel="stylesheet" href="../src/css/responsive.css">
-    <title>Logout</title>
-</head>
-<body>
-    <!-- Logout Modal -->
-    <div id="logoutModal" class="modal hidden">
+export default function Logout(){
+    return `
+     <div id="logoutModal" class="modal hidden">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2 class="log">Logout</h2>
@@ -20,5 +11,5 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+    `
+}

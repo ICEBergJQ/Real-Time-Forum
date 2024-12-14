@@ -1,7 +1,10 @@
 const userId = localStorage.getItem("user_id");
 const logoutBtn = document.querySelector('button.logout') || ''
-const registerBtn = document.querySelector(".start-topic")
+const registerBtn = document.querySelector(".start-topic") || ''
 const loginBtn = document.querySelector("button.login")
+const createPostBtn = document.querySelector("button.createPostBtn")
+const likeBtn = document.querySelector('button.like-btn') 
+
 // const profileName = document.querySelector('.profile')
 
 function createElem(tag, className, content) {
@@ -12,6 +15,7 @@ function createElem(tag, className, content) {
 }
 if (userId) {
     logoutBtn.style.display = "inline-block"
+    createPostBtn.style.display = "inline-block"
     // profileName.textContent = localStorage.getItem("username")
     // profileName.style.display = 'inline-block'
 
@@ -22,19 +26,25 @@ if (userId) {
 } else{
     loginBtn.style.display = "inline-block"
     registerBtn.style.display = "inline-block"
+   logoutBtn.style.display = "none"
+    createPostBtn.style.display = "none"
+
 //hide profile
 // profileName.style.display = 'none':
 
 }  
-logoutBtn ? 
 
-logoutBtn.addEventListener("click", function () {
-    // Clear user data from localStorage
+// logoutBtn.onclick =  function () {
+//     // Clear user data from localStorage
 
-    confirm("Logout Confirmation") ? (
+//     confirm("Logout Confirmation") ? (
 
-        localStorage.clear(),
-        // Redirect to the login page
-        window.location.href = "/"
-    ) : null
-}):null
+//         localStorage.clear(),
+//         // Redirect to the login page
+//         window.location.href = "/"
+//     ) : null
+// }
+
+function displayComment(e) {
+    e.target.parentElement.nextElementSibling.classList.toggle("hidden")
+}

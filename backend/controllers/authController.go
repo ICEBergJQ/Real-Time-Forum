@@ -1,61 +1,84 @@
 package controllers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"forum/models"
+	"forum/utils"
 	"net/http"
 )
 
-// Mock database for users
-var users = map[string]string{} // key: username, value: password
-
 // RegisterUser handles user registration
-func RegisterUser(w http.ResponseWriter, r *http.Request) error {
-	fmt.Println(" r.Method : ", r.Method)
+func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
 		return errors.New("invalid request method")
 	}
+	var user models.User
+	var response models.Response
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		return fmt.Errorf("invalid payload: %w", err)
+	}
+	fmt.Println("r.Method : ", json.NewDecoder(r.Body).Decode(&user))
 
-	var payload map[string]string
-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+	if err := utils.Validation(user); err != nil {
 		return fmt.Errorf("invalid payload: %w", err)
 	}
 
-	username := payload["username"]
-	password := payload["password"]
-	if username == "" || password == "" {
-		return errors.New("username and password are required")
+	if err := utils.Hash(&user.Password); err != nil {
+		return fmt.Errorf("invalid payload: %w", err)
 	}
 
-	if _, exists := users[username]; exists {
-		return errors.New("user already exists")
+	query := "INSERT INTO users (username, email, password) VALUES (?, ?, ?)"
+	_, err := db.Exec(query, user.Username, user.Email, user.Password)
+	if err != nil {
+		return err
 	}
-
-	users[username] = password
+	response.Message = "user created successfully"
+	response_encoding, err := json.Marshal(response)
+	if err != nil {
+		return fmt.Errorf("invalid payload: %w", err)
+	}
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintf(w, "User %s registered successfully", username)
+	w.Write(response_encoding)
 	return nil
 }
 
 // LoginUser handles user login
-func LoginUser(w http.ResponseWriter, r *http.Request) error {
+func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
 		return errors.New("invalid request method")
 	}
-
-	var payload map[string]string
-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+	var user models.User
+	var userFromDb models.User
+	var response models.Response
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		return fmt.Errorf("invalid payload: %w", err)
+	}
+	if err := utils.Validation(user); err != nil {
 		return fmt.Errorf("invalid payload: %w", err)
 	}
 
-	username := payload["username"]
-	password := payload["password"]
-	if storedPassword, exists := users[username]; !exists || storedPassword != password {
-		return errors.New("invalid username or password")
+	query := "SELECT username, email, password FROM users WHERE username = ?"
+	row := db.QueryRow(query, user.Username)
+	err := row.Scan(&userFromDb.ID, &userFromDb.Username, &userFromDb.Email, &userFromDb.Password)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			response.Message = "no user found with this username"
+			response_encoding, err := json.Marshal(response)
+			if err != nil {
+				return fmt.Errorf("invalid payload: %w", err)
+			}
+			w.WriteHeader(http.StatusNoContent)
+			w.Write(response_encoding)
+		}
+		return fmt.Errorf("invalid payload: %w", err)
 	}
 
-	token := "mock-token-for-" + username // Mock token
+	token, err := utils.SeesionCreation(userFromDb.ID, db)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"token": token})
 	return nil

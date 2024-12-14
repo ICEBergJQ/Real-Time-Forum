@@ -1,4 +1,4 @@
-//import { loginForm } from '../../public/components/login.js'
+import { loginForm } from '../../public/components/login.js'
 import { Article } from '../../public/components/article.js';
 import Logout from '../../public/components/logout.js'
 import postForm from '../../public/components/postForm.js';
@@ -47,13 +47,8 @@ const showLoginModal = () => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-   
 
-  
-
-
-
-
+    //TODO : Add register comp
     // Load the register modal from register.html
     fetch("register.html")
         .then((response) => {
@@ -224,6 +219,8 @@ document.addEventListener("DOMContentLoaded", () => {
     cancelLogout.addEventListener("click", () => {
         logoutModal.classList.add("hidden");
     });
+
+
 })
 //         .catch((error) => console.error(error));
 // });
@@ -262,15 +259,54 @@ fetch('./posts.json')
 
 const listPosts = (posts) => {
     postsContainer.innerHTML = posts.length ? posts.map(post => Article(post)) : `<p>No Posts For Now!! </p>`
+    attachModalEventListeners()
+
 }
 const dynamicContent = document.querySelector("#dynamicContent");
 const anotherDynamic = document.querySelector("#anotherDynamic");
 
+function popPost(id) {
+    console.log(posts.find(p => p.id === id))
+}
+
+dynamicContent.innerHTML = loginForm() 
+window.popPost = popPost
+// Show the login modal when the login button is clicked
+loginBtn.addEventListener("click", showLoginModal);
+
+// Hide the modal when clicit pull origin developking outside the modal content
+window.addEventListener("click", (event) => {
+
+    if (event.target === loginModal) {
+        loginModal.classList.add("hidden");
+    }
+});
+const closeLoginModal = loginModal.querySelector(".close");
+
+// Hide the modal when the close button is clicked
+closeLoginModal.addEventListener("click", () => {
+    loginModal.classList.add("hidden");
+});
+
+// Add event listener for switching to the register modal
+const openSignUpLink = loginModal.querySelector("#openSignup");
+openSignUpLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    loginModal.classList.add("hidden"); // Hide login modal
+    const signUpModal = document.querySelector("#signUpModal");
+    if (signUpModal) {
+        signUpModal.classList.remove("hidden"); // Show register modal
+    }
+});
 const attachModalEventListeners = () => {
+
     const buttons = document.querySelectorAll(".like-btn, .dislike-btn, #Like, #DisLike, .send-btn");
+    console.log(buttons);
+
     buttons.forEach((button) => {
         button.addEventListener("click", (e) => {
             e.preventDefault();
+            console.log(123);
             if (!localStorage.getItem("user_id")) {
                 showLoginModal();
             } else {
@@ -279,52 +315,3 @@ const attachModalEventListeners = () => {
         });
     });
 };
-function popPost(id) {
-    console.log(posts.find(p => p.id === id))
-}
-
-  // dynamicContent.innerHTML = loginForm()
-
-  fetch("login.html")
-  .then((response) => {
-      if (!response.ok) throw new Error("Failed to load login modal");
-      return response.text();
-  })
-  .then((html) => {
-      dynamicContent.innerHTML = html;
-
-      const loginModal = document.querySelector("#loginModal");
-      const closeLoginModal = loginModal.querySelector(".close");
-
-      // Show the login modal when the login button is clicked
-      loginBtn.addEventListener("click", showLoginModal);
-
-      // Hide the modal when the close button is clicked
-      closeLoginModal.addEventListener("click", () => {
-          loginModal.classList.add("hidden");
-      });
-
-      // Hide the modal when clicit pull origin developking outside the modal content
-      window.addEventListener("click", (event) => {
-          if (event.target === loginModal) {
-              loginModal.classList.add("hidden");
-          }
-      });
-
-      // Add event listener for switching to the register modal
-      const openSignUpLink = loginModal.querySelector("#openSignup");
-      openSignUpLink.addEventListener("click", (e) => {
-          e.preventDefault();
-          loginModal.classList.add("hidden"); // Hide login modal
-          const signUpModal = document.querySelector("#signUpModal");
-          if (signUpModal) {
-              signUpModal.classList.remove("hidden"); // Show register modal
-          }
-      });
-
-      attachModalEventListeners();
-
-  })
-  .catch((error) => console.error(error));
-
-window.popPost = popPost

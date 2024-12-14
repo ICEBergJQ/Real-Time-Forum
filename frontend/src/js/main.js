@@ -48,3 +48,4 @@ if (userId) {
 function displayComment(e) {
     e.target.parentElement.nextElementSibling.classList.toggle("hidden")
 }
+

@@ -1,14 +1,3 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    color: #333;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    /* for dev  */
-    /* background-color: #101020; */
-}
-
 .container {
     width: 90%;
     max-width: 1200px;
@@ -130,7 +119,7 @@ body {
     border: 1px solid #ccc;
     background: #f9f9f9;
     /* for dev  */
-    background: #aaa;
+    /* background: #aaa; */
     margin-bottom: 1rem;
 }
 

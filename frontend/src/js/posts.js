@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
             openLoginLink.addEventListener("click", (e) => {
                 e.preventDefault();
                 registerModal.classList.add("hidden"); // Hide register modal
-                const loginModal = document.querySelector("#loginModal");
+                // const loginModal = document.querySelector("#loginModal");
                 if (loginModal) {
                     loginModal.classList.remove("hidden"); // Show login modal
                 }
@@ -92,10 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch((error) => console.error(error));
 });
 
-
-
 // create post
-
 document.addEventListener("DOMContentLoaded", () => {
     const createPostBtn = document.querySelector(".btn.createPostBtn");
 
@@ -109,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then((html) => {
 
-            dynaicPost.innerHTML = html;
+            dynaicPost.innerHTML += html;
             const popupOverlay = document.querySelector("#popupOverlay");
             const closePopupBtn = document.querySelector("#closePopup");
             const createPostForm = document.querySelector("#createPostForm");
@@ -163,75 +160,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// logout
-
-document.addEventListener("DOMContentLoaded", () => {
-    const logoutBtn = document.querySelector(".btn.logout");
-    const logoutDynamic = document.querySelector("#logoutdynamic");
-
-    const showLogoutModal = () => {
-        const logoutModal = document.querySelector("#logoutModal");
-        if (logoutModal) {
-            logoutModal.classList.remove("hidden");
-        }
-    };
-
-    // Load the logout modal from logout.html
-    logoutDynamic.innerHTML = Logout()
-
-    // fetch("logout.html")
-    //     .then((response) => {
-    //         if (!response.ok) throw new Error("Failed to load logout modal");
-    //         return response.text();
-    //     })
-    //     .then((html) => {
-    //         logoutDynamic.innerHTML = html;
-
-    const logoutModal = document.querySelector("#logoutModal");
-    const closeLogoutModal = logoutModal.querySelector(".close");
-    const confirmLogout = logoutModal.querySelector("#confirmLogout");
-    const cancelLogout = logoutModal.querySelector("#cancelLogout");
-
-    // Show the logout modal when the logout button is clicked
-    logoutBtn.addEventListener("click", showLogoutModal);
-
-    // Hide the modal when the close button is clicked
-    closeLogoutModal.addEventListener("click", () => {
-        logoutModal.classList.add("hidden");
-    });
-
-    // Hide the modal when clicking outside the modal content
-    window.addEventListener("click", (event) => {
-        if (event.target === logoutModal) {
-            logoutModal.classList.add("hidden");
-        }
-    });
-
-    // Handle logout confirmation
-    confirmLogout.addEventListener("click", () => {
-        localStorage.removeItem("user_id"); // Clear user data from localStorage
-        alert("You have been logged out!");
-        logoutModal.classList.add("hidden");
-        window.location.reload(); // Optionally refresh the page or redirect to login
-    });
-
-    // Handle logout cancellation
-    cancelLogout.addEventListener("click", () => {
-        logoutModal.classList.add("hidden");
-    });
-
-
-})
-//         .catch((error) => console.error(error));
-// });
-
-
-
 const category = document.querySelector('.category')
 const createPost = document.querySelector("#dynaicPost")
 
-
-!userId ? createPost.innerHTML = postForm() : null
+userId ? createPost.innerHTML += postForm() : null
 
 // fetch("/get-categories")
 fetch("./posts.json")
@@ -258,7 +190,9 @@ fetch('./posts.json')
     )
 
 const listPosts = (posts) => {
+
     postsContainer.innerHTML = posts.length ? posts.map(post => Article(post)) : `<p>No Posts For Now!! </p>`
+    ///get elems after comp load
     attachModalEventListeners()
 
 }
@@ -269,7 +203,7 @@ function popPost(id) {
     console.log(posts.find(p => p.id === id))
 }
 
-dynamicContent.innerHTML = loginForm() 
+dynamicContent.innerHTML = loginForm()
 window.popPost = popPost
 // Show the login modal when the login button is clicked
 loginBtn.addEventListener("click", showLoginModal);
@@ -315,3 +249,5 @@ const attachModalEventListeners = () => {
         });
     });
 };
+// Load the logout modal from logout.html
+logoutDynamic.innerHTML = Logout()

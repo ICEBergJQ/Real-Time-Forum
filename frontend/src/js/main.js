@@ -3,8 +3,9 @@ const logoutBtn = document.querySelector('button.logout') || ''
 const registerBtn = document.querySelector(".start-topic") || ''
 const loginBtn = document.querySelector("button.login")
 const createPostBtn = document.querySelector("button.createPostBtn")
-const likeBtn = document.querySelector('button.like-btn') 
+const likeBtn = document.querySelector('button.like-btn')
 
+const logoutDynamic = document.querySelector("#logoutdynamic");
 // const profileName = document.querySelector('.profile')
 
 function createElem(tag, className, content) {
@@ -23,16 +24,16 @@ if (userId) {
     loginBtn.style.display = "none"
     registerBtn.style.display = "none"
 
-} else{
+} else {
     loginBtn.style.display = "inline-block"
     registerBtn.style.display = "inline-block"
-   logoutBtn.style.display = "none"
+    logoutBtn.style.display = "none"
     createPostBtn.style.display = "none"
 
-//hide profile
-// profileName.style.display = 'none':
+    //hide profile
+    // profileName.style.display = 'none':
 
-}  
+}
 
 // logoutBtn.onclick =  function () {
 //     // Clear user data from localStorage
@@ -48,3 +49,4 @@ if (userId) {
 function displayComment(e) {
     e.target.parentElement.nextElementSibling.classList.toggle("hidden")
 }
+

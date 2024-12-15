@@ -1,7 +1,11 @@
 const userId = localStorage.getItem("user_id");
 const logoutBtn = document.querySelector('button.logout') || ''
-const registerBtn = document.querySelector("button.register")
+const registerBtn = document.querySelector(".start-topic") || ''
 const loginBtn = document.querySelector("button.login")
+const createPostBtn = document.querySelector("button.createPostBtn")
+const likeBtn = document.querySelector('button.like-btn')
+
+const logoutDynamic = document.querySelector("#logoutdynamic");
 // const profileName = document.querySelector('.profile')
 
 function createElem(tag, className, content) {
@@ -12,6 +16,7 @@ function createElem(tag, className, content) {
 }
 if (userId) {
     logoutBtn.style.display = "inline-block"
+    createPostBtn.style.display = "inline-block"
     // profileName.textContent = localStorage.getItem("username")
     // profileName.style.display = 'inline-block'
 
@@ -19,22 +24,29 @@ if (userId) {
     loginBtn.style.display = "none"
     registerBtn.style.display = "none"
 
-} else{
+} else {
     loginBtn.style.display = "inline-block"
     registerBtn.style.display = "inline-block"
-//hide profile
-// profileName.style.display = 'none':
+    logoutBtn.style.display = "none"
+    createPostBtn.style.display = "none"
 
-}  
-logoutBtn ? 
+    //hide profile
+    // profileName.style.display = 'none':
 
-logoutBtn.addEventListener("click", function () {
-    // Clear user data from localStorage
+}
 
-    confirm("Logout Confirmation") ? (
+// logoutBtn.onclick =  function () {
+//     // Clear user data from localStorage
 
-        localStorage.clear(),
-        // Redirect to the login page
-        window.location.href = "/"
-    ) : null
-}):null
+//     confirm("Logout Confirmation") ? (
+
+//         localStorage.clear(),
+//         // Redirect to the login page
+//         window.location.href = "/"
+//     ) : null
+// }
+
+function displayComment(e) {
+    e.target.parentElement.nextElementSibling.classList.toggle("hidden")
+}
+

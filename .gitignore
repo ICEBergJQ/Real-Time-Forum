@@ -46,6 +46,7 @@ docker-compose.yml
 # Ignore front-end build artifacts
 /public/js/bundle.js
 /public/css/bundle.css
+*.json
 
 # Ignore unnecessary test or coverage files
 *.test

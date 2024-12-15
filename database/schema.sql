@@ -12,22 +12,23 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS posts (
         post_id TEXT PRIMARY KEY,
-        user_id TEXT,
+        user_id INTEGER,
         category_id INTEGER,
+        category_name TEXT NOT NULL,
         title TEXT NOT NULL,
         content TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (user_id)
+        FOREIGN KEY (user_id) REFERENCES users (user_id),
+        FOREIGN KEY (category_id) REFERENCES categories (category_id)
     );
 
 CREATE TABLE
     IF NOT EXISTS categories (
         category_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL UNIQUE
+        category_name TEXT NOT NULL UNIQUE
     );
 
-CREATE TABLE
-    IF NOT EXISTS postsCategories (
+CREATE TABLE IF NOT EXISTS postsCategories (
         post_id TEXT,
         category_id INTEGER,
         PRIMARY KEY (post_id, category_id),
@@ -38,7 +39,7 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS comments (
         comment_id TEXT PRIMARY KEY,
-        user_id TEXT,
+        user_id INTEGER,
         post_id TEXT,
         content TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -49,7 +50,7 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS likeAndDislike (
         likeAndDislike_id TEXT PRIMARY KEY,
-        user_id TEXT,
+        user_id INTEGER,
         post_id TEXT,
         comment_id TEXT,
         reaction_type TEXT NOT NULL,
@@ -68,7 +69,7 @@ CREATE TABLE IF NOT EXISTS session (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-INSERT OR IGNORE INTO categories (name) VALUES
+INSERT OR IGNORE INTO categories (category_name) VALUES
     ('Technology'),
     ('Sport'),
     ('Health'),

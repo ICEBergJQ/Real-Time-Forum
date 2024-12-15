@@ -78,7 +78,6 @@ func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 		}
 		return fmt.Errorf("invalid payload: %w", err)
 	}
-	fmt.Println(userFromDb)
 	if utils.TokenCheck(userFromDb.ID, r, db){
 		response.Message = "user already logged in"
 		response_encoding, err := json.Marshal(response)
@@ -87,8 +86,13 @@ func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 		}
 		w.WriteHeader(http.StatusNoContent)
 		w.Write(response_encoding)
+		fmt.Println(userFromDb)
+		return fmt.Errorf("user already logged in: %w", err)
 	}
 	token, err := utils.SeesionCreation(userFromDb.ID, db)
+	if err != nil {
+		return fmt.Errorf("invalid payload: %w", err)
+	}
 	cookie := &http.Cookie{
 		Name: "session_token",
 		Value: token,

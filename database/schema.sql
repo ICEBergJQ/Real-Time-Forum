@@ -12,8 +12,8 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS posts (
         post_id TEXT PRIMARY KEY,
-        user_id INTEGER,
-        category_id INTEGER,
+        user_id INTEGER NOT NULL,
+        category_id INTEGER NOT NULL,
         category_name TEXT NOT NULL,
         title TEXT NOT NULL,
         content TEXT NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE
     );
 
 CREATE TABLE IF NOT EXISTS postsCategories (
-        post_id TEXT,
+        post_id TEXT NOT NULL,
         category_id INTEGER,
         PRIMARY KEY (post_id, category_id),
         FOREIGN KEY (post_id) REFERENCES posts (post_id) ON DELETE CASCADE,
@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS postsCategories (
 CREATE TABLE
     IF NOT EXISTS comments (
         comment_id TEXT PRIMARY KEY,
-        user_id INTEGER,
-        post_id TEXT,
+        user_id INTEGER NOT NULL,
+        post_id TEXT NOT NULL,
         content TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (user_id),
@@ -50,21 +50,22 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS likeAndDislike (
         likeAndDislike_id TEXT PRIMARY KEY,
-        user_id INTEGER,
+        user_id INTEGER NOT NULL,
         post_id TEXT,
         comment_id TEXT,
-        reaction_type TEXT NOT NULL,
+        reaction_type TEXT NOT NULL CHECK (reaction_type IN ('like', 'dislike')),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, post_id,  comment_id),
         FOREIGN KEY (user_id) REFERENCES users (user_id),
         FOREIGN KEY (post_id) REFERENCES posts (post_id) ON DELETE CASCADE,
-        FOREIGN KEY (comment_id) REFERENCES comments (comment_id),
-        UNIQUE (user_id, post_id, comment_id)
+        FOREIGN KEY (comment_id) REFERENCES comments (comment_id)
+        -- UNIQUE (user_id, post_id, comment_id)
     );
 
 CREATE TABLE IF NOT EXISTS session (
     session_id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    user_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expired_at TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );

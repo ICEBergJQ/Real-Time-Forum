@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS session (
     session_id TEXT PRIMARY KEY,
     user_id INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expired_at TIMESTAMP NOT NULL,
+    expired_at TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 

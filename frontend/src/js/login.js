@@ -1,8 +1,6 @@
-const form = document.querySelector("form")
-const loginError = document.querySelector('.loginError')
+const loginError = document.querySelector('.authError')
 
-form.addEventListener("submit", function (e) {
-    ///prevent degault page refresh
+function handleLogin(e) {
     e.preventDefault();
 
     ///username or email
@@ -11,15 +9,13 @@ form.addEventListener("submit", function (e) {
     ///    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;  // At least 8 chars, 1 letter, 1 number
 
     if (username == "" || password == "") {
-        loginError.textContent = "fields are required!!"
+        displayError("all fields are required!!")
+        return
     } else if (password.length < 6) {
-        loginError.textContent = "Password must be at least 6 characters long !!"
-    }
-
-    if (loginError.textContent) {
-        loginError.classList.add('display-err')
+        displayError("Invalid credentials")
         return
     }
+
     fetch("/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -27,17 +23,21 @@ form.addEventListener("submit", function (e) {
     })
         .then((res) => {
             if (!res.ok) {
-                loginError.textContent = "Invalid credentials!!"
+
+                displayError(res.statusText)
                 throw new Error("Invalid credentials");
             }
             return res.json();
         })
         .then(data => {
-            console.log(data); 
+            console.log(data);
             ///save username to localstorage to display it in profile section
-            localStorage.setItem("user_id", data.user.id);
-            localStorage.setItem("username", data.user.username);
-            window.location.href = "/";
+            // localStorage.setItem("user_id", data.user.id);
+            // localStorage.setItem("username", data.user.username);
+            // window.location.href = "/";
         })
         .catch((error) => console.error(error));
-})
+}
+
+
+    

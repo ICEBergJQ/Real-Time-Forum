@@ -24,8 +24,6 @@ fetch("/get-post/" + id, {
         console.log(data)
     }).catch(err => alert('something wrong', err))
 
-
-
 ////get post comments
 fetch('/get-comments/' + id)
     .then(res => {
@@ -61,8 +59,6 @@ fetch('/get-comments/' + id)
         }
     )
 
-
-
 submitComment.addEventListener('submit', (e) => {
     e.preventDefault()
 
@@ -83,7 +79,7 @@ submitComment.addEventListener('submit', (e) => {
         })
         .then(data => {
             alert(data)
-            window.location.reload()
+            // window.location.reload()
         })
         .catch(
             (error) => {

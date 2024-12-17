@@ -12,3 +12,5 @@ type Post struct {
 	Category_id []int     `json:"category_id"`
 	CreatedAt   time.Time `json:"createdat"`
 }
+
+

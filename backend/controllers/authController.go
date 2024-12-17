@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"forum/config"
 	"forum/models"
 	"forum/utils"
 	"net/http"
@@ -19,9 +20,7 @@ func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	var user models.User
 	var response models.Response
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		return fmt.Errorf("invalid payload: %w", err)
-	}
+
 	fmt.Println("r.Method : ", json.NewDecoder(r.Body).Decode(&user))
 
 	if err := utils.Validation(user); err != nil {
@@ -84,9 +83,8 @@ func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 		if err != nil {
 			return fmt.Errorf("invalid payload: %w", err)
 		}
-		w.WriteHeader(http.StatusNoContent)
+		w.WriteHeader(http.StatusBadRequest)
 		w.Write(response_encoding)
-		fmt.Println(userFromDb)
 		return fmt.Errorf("user already logged in: %w", err)
 	}
 	token, err := utils.SeesionCreation(userFromDb.ID, db)
@@ -99,7 +97,7 @@ func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 		Path: "/",
 		HttpOnly: true,
 		Secure: false,
-		Expires: time.Now().Add(120 * time.Hour),
+		Expires: time.Now().Add(config.EXPIRING_SESSION_DATE * time.Hour),
 	}
 	response.Message = "user logged-in successfully"
 	response_encoding, err := json.Marshal(response)

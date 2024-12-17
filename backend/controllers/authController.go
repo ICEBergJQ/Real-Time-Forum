@@ -21,8 +21,9 @@ func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	var response models.Response
 	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Println("r.Method : ", json.NewDecoder(r.Body).Decode(&user))
-
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		return fmt.Errorf("invalid payload: %w", err)
+	}
 	if err := utils.Validation(user); err != nil {
 		return fmt.Errorf("invalid payload: %w", err)
 	}

@@ -216,7 +216,7 @@ func GetLikedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := `
-	SELECT p.user_id p.post_id, p.title, p.content, p.created_at
+	SELECT p.user_id, p.post_id, p.title, p.content, p.created_at
 	FROM posts p
 	JOIN likeAndDislike l ON p.post_id = l.post_id
 	WHERE l.reaction_type = 'like' AND l.user_id = ?;

@@ -8,6 +8,7 @@ import (
 	"forum/models"
 	"forum/utils"
 	"net/http"
+	"time"
 )
 
 // RegisterUser handles user registration
@@ -61,8 +62,8 @@ func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	if err := utils.Validation(user); err != nil {
 		return fmt.Errorf("invalid payload: %w", err)
 	}
-
-	query := "SELECT username, email, password FROM users WHERE username = ?"
+	
+	query := "SELECT user_id, username, email, password FROM users WHERE username = ?"
 	row := db.QueryRow(query, user.Username)
 	err := row.Scan(&userFromDb.ID, &userFromDb.Username, &userFromDb.Email, &userFromDb.Password)
 	if err != nil {
@@ -72,14 +73,41 @@ func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 			if err != nil {
 				return fmt.Errorf("invalid payload: %w", err)
 			}
-			w.WriteHeader(http.StatusNoContent)
-			w.Write(response_encoding)
+		  	w.WriteHeader(http.StatusNoContent)
+		  	w.Write(response_encoding)
 		}
 		return fmt.Errorf("invalid payload: %w", err)
 	}
-
+	if utils.TokenCheck(userFromDb.ID, r, db){
+		response.Message = "user already logged in"
+		response_encoding, err := json.Marshal(response)
+		if err != nil {
+			return fmt.Errorf("invalid payload: %w", err)
+		}
+		w.WriteHeader(http.StatusNoContent)
+		w.Write(response_encoding)
+		fmt.Println(userFromDb)
+		return fmt.Errorf("user already logged in: %w", err)
+	}
 	token, err := utils.SeesionCreation(userFromDb.ID, db)
+	if err != nil {
+		return fmt.Errorf("invalid payload: %w", err)
+	}
+	cookie := &http.Cookie{
+		Name: "session_token",
+		Value: token,
+		Path: "/",
+		HttpOnly: true,
+		Secure: false,
+		Expires: time.Now().Add(120 * time.Hour),
+	}
+	response.Message = "user logged-in successfully"
+	response_encoding, err := json.Marshal(response)
+	if err != nil {
+		return fmt.Errorf("invalid payload: %w", err)
+	}
+	http.SetCookie(w, cookie)
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"token": token})
+	w.Write(response_encoding)
 	return nil
 }

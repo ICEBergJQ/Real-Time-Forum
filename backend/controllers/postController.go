@@ -52,11 +52,9 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	newPost.ID = postID.String()
 	newPost.CreatedAt = time.Now()
 
-	// var categoryID int
-	// var validCategories []int
 	for _, categoryName := range newPost.Categories {
 		var categoryID int
-		err := db.QueryRow("SELECT category_id FROM categories WHERE name = ?", categoryName).Scan(&categoryID)
+		err := db.QueryRow("SELECT category_id FROM categories WHERE category_name = ?", categoryName).Scan(&categoryID)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				http.Error(w, "Category does not exist: "+categoryName, http.StatusBadRequest)
@@ -69,15 +67,20 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		newPost.Category_id = append(newPost.Category_id, categoryID)
 	}
 
-	categoriesJSON, err := json.Marshal(newPost.Category_id)
+	category_ids_JSON, err := json.Marshal(newPost.Category_id)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)
+		return
+	}
+	categories_JSON, err := json.Marshal(newPost.Categories)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)
 		return
 	}
 
 	// Insert the post
-	query := "INSERT INTO posts (post_id, user_id, category_id, title, content, created_at) VALUES (?, ?, ?, ?, ?, ?)"
-	_, err = db.Exec(query, newPost.ID, newPost.Author_id, categoriesJSON, newPost.Title, newPost.Content, newPost.CreatedAt)
+	query := "INSERT INTO posts (post_id, user_id, category_name, category_id, title, content, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
+	_, err = db.Exec(query, newPost.ID, newPost.Author_id, categories_JSON, category_ids_JSON, newPost.Title, newPost.Content, newPost.CreatedAt)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error creating post: %v", err), http.StatusInternalServerError)
 		return

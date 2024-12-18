@@ -13,13 +13,11 @@ CREATE TABLE
     IF NOT EXISTS posts (
         post_id TEXT PRIMARY KEY,
         user_id INTEGER NOT NULL,
-        category_id INTEGER NOT NULL,
         category_name TEXT NOT NULL,
         title TEXT NOT NULL,
         content TEXT NOT NULL,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES users (user_id),
-        FOREIGN KEY (category_id) REFERENCES categories (category_id)
+        FOREIGN KEY (user_id) REFERENCES users (user_id)
     );
 
 CREATE TABLE

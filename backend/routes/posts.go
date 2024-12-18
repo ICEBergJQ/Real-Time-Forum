@@ -8,7 +8,7 @@ import (
 )
 
 func PostRoute(db *sql.DB) {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/post", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
 			controllers.CreatePost(db, w, r)
 		} else if r.Method == http.MethodGet {

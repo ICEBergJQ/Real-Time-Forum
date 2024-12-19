@@ -87,7 +87,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-		return
+		return // Fetch ID for each category name
 	}
 
 	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts"
@@ -255,9 +255,9 @@ func GetLikedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 func FetchAndSortCategoriesByID(db *sql.DB, categoryNames []string) ([]int, string, error) {
 	if len(categoryNames) < 1 {
-		return nil,"", fmt.Errorf("no categories provided")
+		return nil, "", fmt.Errorf("no categories provided")
 	}
-	
+
 	type Category struct {
 		ID   int
 		Name string

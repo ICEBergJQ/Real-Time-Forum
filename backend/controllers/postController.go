@@ -22,17 +22,20 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
 	}
-	if r.URL.Path != "/" {
+	if r.URL.Path != "/post" {
 		http.Error(w, "Not found", http.StatusNotFound)
 		return
 	}
-
 	var newPost forum.Post
 	if err := json.NewDecoder(r.Body).Decode(&newPost); err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close()
+	if len(newPost.Title) == 0 || len(newPost.Content) == 0 || len(newPost.Title) > 300 || len(newPost.Content) > 40000 {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
 
 	postID, err := uuid.NewV4()
 	if err != nil {
@@ -251,7 +254,10 @@ func GetLikedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func FetchAndSortCategoriesByID(db *sql.DB, categoryNames []string) ([]int, string, error) {
-	// Struct to hold category data
+	if len(categoryNames) < 1 {
+		return nil,"", fmt.Errorf("no categories provided")
+	}
+	
 	type Category struct {
 		ID   int
 		Name string
@@ -260,7 +266,6 @@ func FetchAndSortCategoriesByID(db *sql.DB, categoryNames []string) ([]int, stri
 	var categories []Category
 	var ids []int
 
-	// Fetch ID for each category name
 	for _, categoryName := range categoryNames {
 		var category Category
 		err := db.QueryRow("SELECT category_id, category_name FROM categories WHERE category_name = ?", categoryName).Scan(&category.ID, &category.Name)

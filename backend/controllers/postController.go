@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -53,7 +52,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	defer tx.Rollback()
 	categories := ""
 
-	newPost.Category_id, categories, err = FetchAndSortCategoriesByID(db, newPost.Categories)
+	newPost.Category_id, categories, err = CategoriesChecker(db, newPost.Categories)
 	if err != nil {
 		http.Error(w, "invalid categories", http.StatusBadRequest)
 		return
@@ -125,13 +124,13 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 		http.Error(w, "categories query parameter is required", http.StatusBadRequest)
 		return
 	}
-	_, categoryNames, err := FetchAndSortCategoriesByID(db, strings.Split(categoryQuery, ","))
+	_, categoryNames, err := CategoriesChecker(db, strings.Split(categoryQuery, ","))
 	if err != nil {
 		http.Error(w, "invalid categories", http.StatusBadRequest)
 		return
 	}
 
-	query := `SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE category_name LIKE ?;`
+	query := createquery(strings.Split(categoryQuery, ","))
 
 	rows, err := db.Query(query, categoryNames)
 	if err != nil {
@@ -253,7 +252,7 @@ func GetLikedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func FetchAndSortCategoriesByID(db *sql.DB, categoryNames []string) ([]int, string, error) {
+func CategoriesChecker(db *sql.DB, categoryNames []string) ([]int, string, error) {
 	if len(categoryNames) < 1 {
 		return nil, "", fmt.Errorf("no categories provided")
 	}
@@ -278,18 +277,25 @@ func FetchAndSortCategoriesByID(db *sql.DB, categoryNames []string) ([]int, stri
 		categories = append(categories, category)
 	}
 
-	// Sort categories by ID
-	sort.Slice(categories, func(i, j int) bool {
-		return categories[i].ID < categories[j].ID
-	})
-
-	// Extract sorted category names
-	var sortedCategoryNames string
-	for _, category := range categories {
-		sortedCategoryNames += category.Name + ","
+	var CategoryNames string
+	for i, category := range categories {
+		if i != len(categories)-1 {
+			CategoryNames += category.Name + ","
+		}
 		ids = append(ids, category.ID)
 	}
-	sortedCategoryNames = strings.TrimRight(sortedCategoryNames, ",")
+	return ids, CategoryNames, nil
+}
 
-	return ids, sortedCategoryNames, nil
+func createquery(categories []string) string {
+	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE category_name LIKE "
+	for i, cat := range categories {
+		if i == 0 {
+			query += "'%" + cat + "%'"
+		} else {
+			query += " AND category_name LIKE '%" + cat + "%'"
+		}
+	}
+	query += ";"
+	return query
 }

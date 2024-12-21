@@ -3,10 +3,9 @@ package models
 import "time"
 
 type LikeOrDislike struct {
-	Author_id  string    `json:"author_id"`
+	User_id  int    `json:"User_id"`
 	Post_id    string    `json:"post_id"`
-	ID         string    `json:"id"`
-	Content    string    `json:"content"`
 	Comment_id string    `json:"comment_id"`
-	CreatedAt  time.Time `json:"createdat"`
+	Reaction_Type string `json:"reaction_type"`
+	CreatedAt  time.Time `json:"created_at"`
 }

@@ -29,7 +29,7 @@ func hasUserReactedToPost(db *sql.DB, userID int, postID string) (bool, string) 
 	return hasReacted, reactionType
 }
 
-func insertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return

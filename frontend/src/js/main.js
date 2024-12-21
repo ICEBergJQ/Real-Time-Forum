@@ -5,7 +5,6 @@ const loginBtn = document.querySelector("button.login")
 const createPostBtn = document.querySelector("button.createPostBtn")
 const likeBtn = document.querySelector('button.like-btn')
 
-const logoutDynamic = document.querySelector("#logoutdynamic");
 // const profileName = document.querySelector('.profile')
 
 function createElem(tag, className, content) {
@@ -50,3 +49,26 @@ function displayComment(e) {
     e.target.parentElement.nextElementSibling.classList.toggle("hidden")
 }
 
+//auth comps errors
+const displayError = (txt) => {
+    authError.textContent = txt
+    authError.style.top = "40px"
+    authError.style.animation = "bounce 0.5s ease-in-out"
+    hideError(authError)
+}
+
+let timer
+const hideError = () => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+        authError.style.animation = "none"
+        authError.style.top = "-55px"
+    }, 3000);
+
+}
+
+///load comps  
+
+
+
+// document.querySelector("#signUpModal form").addEventListener("submit", handleRegister);)

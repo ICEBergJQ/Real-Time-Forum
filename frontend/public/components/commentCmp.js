@@ -19,15 +19,8 @@ return    `
                   (${dislikes})</button>
               </div>
             </div>
-
             <!-- Reply Section -->
-            <div id="Reply-section" class="reply-section">
-              <h3>Reply</h3>
-              <div class="editor">
-                <textarea class="reply-input" placeholder="Add as many details as possible..."></textarea>
-              </div>
-              <button class="btn send-btn">Send</button>
-            </div>
+            
           </section>
   `
 }

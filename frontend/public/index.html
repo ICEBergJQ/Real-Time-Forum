@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Community Page</title>
-  <link rel="shortcut icon" href="https://www.youtube.com/s/desktop/4981804c/img/logos/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="../src/css/main.css">
   <link rel="stylesheet" href="../src/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -15,6 +14,9 @@
 </head>
 
 <body>
+  <span class="authError"></span>
+
+ 
   <!-- Navigation Bar -->
   <header class="navbar">
     <div class="container">
@@ -27,11 +29,11 @@
           <li class="dropdown">
             <a href="/categories">Categories</a>
             <ul class="dropdown-menu">
-              <li><span class="cat" >Technology</span></li>
-              <li><span class="cat" >Science</span></li>
-              <li><span class="cat" >Health</span></li>
-              <li><span class="cat" >Sports</span></li>
-              <li><span class="cat" >Art</span></li>
+              <li><span class="cat">Technology</span></li>
+              <li><span class="cat">Science</span></li>
+              <li><span class="cat">Health</span></li>
+              <li><span class="cat">Sports</span></li>
+              <li><span class="cat">Art</span></li>
             </ul>
           </li>
           <li><a href="/my-posts">My Posts</a></li>
@@ -39,7 +41,7 @@
           <li><a href="/help"><i class="fa fa-question-circle" style="font-size:18px"></i> Help</a></li>
         </ul>
       </nav>
-      
+
       <div class="nav-actions">
         <button class="btn login">Login</button>
         <button class="btn start-topic">Sign Up</button>
@@ -70,14 +72,12 @@
     <section class="feed">
       <h2>Recent Posts</h2>
       <div class="post-list">
-         
+
       </div>
     </section>
 
-
-  </main><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-
+  </main>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
   <!-- Footer -->
   <footer class="footer">
@@ -109,14 +109,20 @@
       <p>&copy; 2024 My Forum. All rights reserved.</p>
     </div>
   </footer>
+
+
+  <!-- scriptsss -->
+  <script src="../src/js/main.js"></script>
+  <script src="../src/js/login.js"></script>
   <script type="module" src="../src/js/posts.js"></script>
   <script src="../src/js/likeDislike.js"></script>
-  <script src="../src/js/createPost.js"></script> 
-  <script src="../src/js/main.js"></script>
+  <script src="../src/js/register.js" defer></script>
+  <script src="../src/js/createPost.js"></script>
   <script src="../src/js/logout.js"></script>
   <script>
-   
+ 
     document.addEventListener("DOMContentLoaded", () => {
+
       const commentBtns = document.querySelectorAll(".comment-btn");
 
       commentBtns.forEach((btn, index) => {
@@ -130,18 +136,18 @@
           }
         });
       });
-    });
+    }); 
   </script>
   <script>
     document.querySelectorAll('.dropdown > a').forEach(item => {
-  item.addEventListener('click', function (e) {
-    e.preventDefault(); // Prevent default link behavior
-    const dropdownMenu = this.nextElementSibling; // Get the sibling <ul>
-    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-  });
-});
+      item.addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+        console.log(e)
 
-
+        const dropdownMenu = this.nextElementSibling; // Get the sibling <ul>
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+      });
+    });
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 

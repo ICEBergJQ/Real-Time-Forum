@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"os"
 
-	"forum/routes"
+	"forum/config"
 	database "forum/config"
+	"forum/routes"
 )
 
 func main() {
@@ -14,6 +15,9 @@ func main() {
 	database.CreateDatabaseTables(db, "../database/schema.sql")
 	defer db.Close()
 	address := "localhost:8080"
+	config.ServeFiles()
+	// home routes
+	routes.HomeRoute()
 	// authentication routes
 	routes.AuthRoutes(db)
 	// post routes

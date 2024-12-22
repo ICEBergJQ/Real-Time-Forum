@@ -27,7 +27,7 @@ createPostForm.onsubmit = (e) => {
         .then(res => res.json())
         .then(data => {
             alert(data.message)
-            Window.location.reload()
+            // Window.location.reload()
         })
         .catch((error) => alert("creating post Error : " + error.message));
 }

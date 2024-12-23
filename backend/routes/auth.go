@@ -2,9 +2,10 @@ package routes
 
 import (
 	"database/sql"
+	"net/http"
+
 	"forum/controllers"
 	"forum/utils"
-	"net/http"
 )
 
 // RegisterAuthRoutes sets up authentication-related routes

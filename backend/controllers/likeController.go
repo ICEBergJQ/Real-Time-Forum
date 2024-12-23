@@ -30,6 +30,7 @@ func hasUserReactedToPost(db *sql.DB, userID int, postID string) (bool, string) 
 }
 
 func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
@@ -74,19 +75,11 @@ func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			UPADTE likeAndDislike SET reaction_type = ? WHERE user_id = ? AND post_id = ? AND comment_id IS NULL;
 			`, newLike.Reaction_Type, newLike.User_id, newLike.Post_id, newLike.Comment_id)
 			if err != nil {
+				http.Error(w, "Failed to update reaction", http.StatusInternalServerError)
+				fmt.Println("Error updating reaction: ", err)
+				return
 			}
 		}
-		_, err := db.Exec(`
-		UPDATE likeAndDislike
-		SET reaction_type = ?
-		WHERE user_id = ? AND post_id = ? AND comment_id IS NULL;`,
-			newLike.Reaction_Type, newLike.User_id, newLike.Post_id)
-		if err != nil {
-			http.Error(w, "Failed to update reaction", http.StatusInternalServerError)
-			fmt.Println("Error updating reaction: ", err)
-			return
-		}
-
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, "Reaction updated successfully")
 
@@ -101,7 +94,6 @@ func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			fmt.Println("Error inserting reaction: ", err)
 			return
 		}
-
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, "Reaction added successfully")
 	}

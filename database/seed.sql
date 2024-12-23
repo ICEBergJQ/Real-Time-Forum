@@ -1,11 +1,11 @@
 -- add sample users
 INSERT INTO users (user_id, username, email, password) VALUES
-('user1', 'abdeladim', 'abdeladim@hotmail.com', 'Talent01'),
-('user2', 'lazy', 'lazy@gmail.com', 'Lazyzone01'),
-('user3', 'lmodir', 'lmodir@outlook.com', 'Manager789'),
-('user4', 'mohcine', 'mohcineDEV@gmail.com', 'MohcineDEVErrachidia97'),
-('user5', 'ali', 'aliEss@gmail.com', 'ESS1234ali'),
-('user6', 'mohammed', 'mohammedGH@yahoo.com', 'Agadir2002');
+(1, 'abdeladim', 'abdeladim@hotmail.com', 'Talent01'),
+(2, 'lazy', 'lazy@gmail.com', 'Lazyzone01'),
+(3, 'lmodir', 'lmodir@outlook.com', 'Manager789'),
+(4, 'mohcine', 'mohcineDEV@gmail.com', 'MohcineDEVErrachidia97'),
+(5, 'ali', 'aliEss@gmail.com', 'ESS1234ali'),
+(6, 'mohammed', 'mohammedGH@yahoo.com', 'Agadir2002');
 
 -- --- I ADD THIS IN SCHEMA.SQL FOR TESTING ----
 -- add sample categories

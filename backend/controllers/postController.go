@@ -88,9 +88,12 @@ func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return // Fetch ID for each category name
 	}
+	offset := 0
 
-	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts"
-	rows, err := db.Query(query)
+	limit := offset + 20
+
+	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts ORDER BY created_at DESC LIMIT ? OFFSET ? ;"
+	rows, err := db.Query(query,limit,offset)
 	if err != nil {
 		http.Error(w, "internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return

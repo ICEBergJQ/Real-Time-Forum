@@ -9,41 +9,66 @@ import (
 	forum "forum/models"
 )
 
-func hasUserReactedToPost(db *sql.DB, userID int, postID string) (bool, string) {
+func hasUserReacted(db *sql.DB, userID int, postID string, commentID *string) (bool, string) {
 	var hasReacted bool
 	var reactionType string
-	query := `SELECT EXISTS (
-		SELECT 1
-		FROM likeAndDislike
-		WHERE user_id = ? AND post_id = ? AND comment_id IS NULL
-	) AS has_reacted, reaction_type
-	 FROM likeAndDislike
-	 WHERE user_id = ? AND post_id = ? AND comment_id IS NULL;`
 
-	err := db.QueryRow(query, userID, postID).Scan(&hasReacted, &reactionType)
-	if err != nil {
-		fmt.Println("Error checking user reactions: ", err)
-		return false, ""
+	var query string
+	// case Reaction to a post
+	if commentID == nil {
+		query = `
+			SELECT EXISTS (
+				SELECT 1
+				FROM Reactions
+				WHERE user_id = ? AND post_id = ? AND comment_id IS NULL
+			), COALESCE(
+				(SELECT reaction_type
+				FROM Reactions
+				WHERE user_id = ? AND post_id = ? AND comment_id IS NULL), ''
+			);
+		`
+		err := db.QueryRow(query, userID, postID, userID, postID).Scan(&hasReacted, &reactionType)
+		if err != nil {
+			fmt.Println("Error checking user reactions to post: ", err)
+			return false, ""
+		}
+	} else {
+		// case Reaction to a comment
+		query = `
+			SELECT EXISTS (
+				SELECT 1
+				FROM Reactions
+				WHERE user_id = ? AND post_id = ? AND comment_id = ?
+			), COALESCE(
+				(SELECT reaction_type
+				FROM Reactions
+				WHERE user_id = ? AND post_id = ? AND comment_id = ?), ''
+			);
+		`
+		err := db.QueryRow(query, userID, postID, *commentID, userID, postID, *commentID).Scan(&hasReacted, &reactionType)
+		if err != nil {
+			fmt.Println("Error checking user reactions to comment: ", err)
+			return false, ""
+		}
 	}
 
 	return hasReacted, reactionType
 }
 
 func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
 	}
 
 	if r.URL.Path != "/post" {
-		http.Error(w, "not found", http.StatusNotFound)
+		http.Error(w, "Not found", http.StatusNotFound)
 		return
 	}
 
-	newLike := forum.LikeOrDislike{}
-	if err := json.NewDecoder(r.Body).Decode(&newLike); err != nil {
-		http.Error(w, "Invalid action", http.StatusBadRequest)
+	newReaction := forum.Reactions{}
+	if err := json.NewDecoder(r.Body).Decode(&newReaction); err != nil {
+		http.Error(w, "Failed to decode newReaction", http.StatusBadRequest)
 		fmt.Println("Error decoding request: ", err)
 		return
 	}
@@ -55,46 +80,48 @@ func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Reacted, Exist := hasUserReactedToPost(db, newLike.User_id, newLike.Post_id)
+	Reacted, currentReaction := hasUserReacted(db, newReaction.User_id, newReaction.Post_id, &newReaction.Comment_id)
 	if Reacted {
-		// case : user already reacted
-		// check this reaction
-		if Exist == newLike.Reaction_Type {
+		if currentReaction == newReaction.Reaction_Type {
+			// Remove the reaction
 			_, err := db.Exec(`
-			DELETE FROM likeAndDislike WHERE user_id = ? AND post_id = ? AND comment_id IS NULL;`,
-				newLike.User_id, newLike.Post_id, newLike.Comment_id)
+				DELETE FROM Reactions
+				WHERE user_id = ? AND post_id = ? AND comment_id IS ?;`,
+				newReaction.User_id, newReaction.Post_id, newReaction.Comment_id)
 			if err != nil {
-				http.Error(w, "Failed to delet reaction", http.StatusInternalServerError)
+				http.Error(w, "Failed to delete reaction", http.StatusInternalServerError)
 				fmt.Println("Error deleting reaction: ", err)
 				return
 			}
 			w.WriteHeader(http.StatusOK)
-			fmt.Fprintf(w, "Reaction removed successfully")
+			fmt.Fprint(w, "Reaction removed successfully")
 		} else {
+			// Update the reaction type
 			_, err := db.Exec(`
-			UPADTE likeAndDislike SET reaction_type = ? WHERE user_id = ? AND post_id = ? AND comment_id IS NULL;
-			`, newLike.Reaction_Type, newLike.User_id, newLike.Post_id, newLike.Comment_id)
+				UPDATE Reactions
+				SET reaction_type = ?
+				WHERE user_id = ? AND post_id = ? AND comment_id IS ?;`,
+				newReaction.Reaction_Type, newReaction.User_id, newReaction.Post_id, newReaction.Comment_id)
 			if err != nil {
 				http.Error(w, "Failed to update reaction", http.StatusInternalServerError)
 				fmt.Println("Error updating reaction: ", err)
 				return
 			}
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, "Reaction updated successfully")
 		}
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, "Reaction updated successfully")
-
 	} else {
-		// case : user first reaction
+		// Add a new reaction
 		_, err := db.Exec(`
-		INSERT INTO likeAndDislike (user_id, post_id, comment_id, reaction_type)
-		VALUES (?, ?, NULL, ?);`,
-			newLike.User_id, newLike.Post_id, newLike.Reaction_Type)
+			INSERT INTO Reactions (user_id, post_id, comment_id, reaction_type)
+			VALUES (?, ?, ?, ?);`,
+			newReaction.User_id, newReaction.Post_id, newReaction.Comment_id, newReaction.Reaction_Type)
 		if err != nil {
 			http.Error(w, "Failed to insert reaction", http.StatusInternalServerError)
 			fmt.Println("Error inserting reaction: ", err)
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, "Reaction added successfully")
+		fmt.Fprint(w, "Reaction added successfully")
 	}
 }

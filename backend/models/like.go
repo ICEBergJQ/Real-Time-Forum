@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type LikeOrDislike struct {
+type Reactions struct {
 	User_id  int    `json:"User_id"`
 	Post_id    string    `json:"post_id"`
 	Comment_id string    `json:"comment_id"`

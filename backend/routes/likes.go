@@ -7,8 +7,8 @@ import (
 	"forum/controllers"
 )
 
-func LikeAndDislikeRoute(db *sql.DB) {
-	http.HandleFunc("/post", func(w http.ResponseWriter, r *http.Request) {
+func ReactionsRoute(db *sql.DB) {
+	http.HandleFunc("/reaction", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
 			controllers.InsertOrUpdate(db, w, r)
 		} else {

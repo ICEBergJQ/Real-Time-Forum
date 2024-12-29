@@ -61,7 +61,7 @@ func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.URL.Path != "/post" {
+	if r.URL.Path != "/reaction" {
 		http.Error(w, "Not found", http.StatusNotFound)
 		return
 	}

@@ -1,6 +1,9 @@
 const loginError = document.querySelector('.authError')
 
-function handleLogin(e) {
+const form = document.querySelector('#loginModal form')
+
+form.addEventListener('submit', (e) => {
+
     e.preventDefault();
 
     ///username or email
@@ -24,7 +27,7 @@ function handleLogin(e) {
         .then((res) => {
             if (!res.ok) {
 
-                displayError(res.statusText)
+                displayError("qsd :"+res.statusText)
                 throw new Error("Invalid credentials");
             }
             return res.json();
@@ -39,5 +42,4 @@ function handleLogin(e) {
         .catch((error) => console.error(error));
 }
 
-
-    
+)

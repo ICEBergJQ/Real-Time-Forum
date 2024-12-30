@@ -1,11 +1,10 @@
 const authError = document.querySelector('.authError')
 
+
+
 document.querySelector('#signUpModal .btn_s').addEventListener('click', function handleRegister(a) {
-    console.log('Form submission event:', a);
 
     a.preventDefault();
-
-    console.log('Prevented form submission');
 
     // a.stopImmediatePropagation();
     const username = document.querySelector("#signUpModal #username").value.trim()
@@ -26,7 +25,7 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
         return
     }
 
-    fetch("http://localhost:8080/auth/register", {
+    fetch("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
@@ -39,11 +38,12 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
             }
             res.json()
         })
-        .then(data => {
-            console.log(data) // For debugging purposes
-            alert('registered')
+        .then(() => {
+            //display a popup
+            alert('registered, please login')
             ///redirect to login page
-            // window.location.href = "/login"
+            // window.location.href = "/"
+            displayPopup("openLogin")
         })
         .catch((error) => console.error("- ", error))
 

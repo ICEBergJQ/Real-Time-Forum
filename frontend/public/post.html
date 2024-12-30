@@ -1,47 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/src/css/style.css">
-    <link rel="stylesheet" href="static/src/css/responsive.css">
-    <title>post</title>
-</head>
-<body>
-    <div class="popup-overlay hidden" id="popupOverlay">
-        <div class="popup">
-            <button class="close-btn" id="closePopup">X</button>
-            <h2>Create a Post</h2>
-            <form id="createPostForm">
-                <label for="title">Title</label>
-                <input type="text" id="title" name="title" placeholder="Enter post title" required>
-    
-                <label for="content">Content</label>
-                <textarea id="content" name="content" rows="5" placeholder="Enter post content" required></textarea>
-    
-                <label for="categories">Categories:</label><br>
-                <div class="categories-container">
-                    <input type="checkbox" id="tech" name="categories" value="Technology">
-                    <label for="tech">Technology</label>
+<div class="popup-overlay hidden" id="popupOverlay">
+    <div class="popup">
+        <button class="close-btn" id="closePopup">X</button>
+        <h2>Create a Post</h2>
+        <form id="createPostForm">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" placeholder="Enter post title" required>
 
-                    <input type="checkbox" id="science" name="categories" value="Science">
-                    <label for="science">Lifestyle</label>
+            <label for="content">Content</label>
+            <textarea id="content" name="content" rows="5" placeholder="Enter post content" required></textarea>
 
-                    <input type="checkbox" id="health" name="categories" value="Health">
-                    <label for="health">Health</label>
+            <label for="categories">Categories:</label><br>
+            <div class="categories-container">
+                <input type="checkbox" id="tech" name="categories" value="Technology">
+                <label for="tech">Technology</label>
 
-                    <input type="checkbox" id="sports" name="categories" value="Sports">
-                    <label for="sports">Sports</label>
+                <input type="checkbox" id="science" name="categories" value="Science">
+                <label for="science">Lifestyle</label>
 
-                    <input type="checkbox" id="art" name="categories" value="Art">
-                    <label for="art">Education</label>
-                </div>
+                <input type="checkbox" id="health" name="categories" value="Health">
+                <label for="health">Health</label>
+
+                <input type="checkbox" id="sports" name="categories" value="Sports">
+                <label for="sports">Sports</label>
+
+                <input type="checkbox" id="art" name="categories" value="Art">
+                <label for="art">Education</label>
+            </div>
 
 
-                <button class="sbtn" type="submit">Submit</button>
-            </form>
-        </div>
+            <button class="sbtn" type="submit">Submit</button>
+        </form>
     </div>
-    <script src="static/src/js/posts.js"></script>
-</body>
-</html>
+</div>

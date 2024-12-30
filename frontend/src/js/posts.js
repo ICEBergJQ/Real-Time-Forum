@@ -1,5 +1,5 @@
 import { loginForm, teeeeeesloginForm } from '../../public/components/loginCmp.js'
-import { registerForm, tessssstregisterForm } from '../../public/components/registerCmp.js'
+import registerForm from '../../public/components/registerCmp.js'
 import { Article } from '../../public/components/articleCmp.js'
 import Logout from '../../public/components/logoutCmp.js'
 import postForm from '../../public/components/postFormCmp.js'
@@ -7,11 +7,10 @@ const postsContainer = document.querySelector('main .post-list')
 let posts = []
 const dynamicContent = document.querySelector("#dynamicContent")
 const anotherDynamic = document.querySelector("#anotherDynamic")
-const logoutDynamic = document.querySelector("#logoutdynamic"); 
- 
+const logoutDynamic = document.querySelector("#logoutdynamic");
 
-anotherDynamic.innerHTML = tessssstregisterForm()
-// anotherDynamic.innerHTML = registerForm()
+
+anotherDynamic.innerHTML = registerForm()
 dynamicContent.innerHTML = teeeeeesloginForm()
 logoutDynamic.innerHTML = Logout()
 
@@ -69,13 +68,14 @@ const displayPopup = (target) => {
     }
 }
 // create post
+
 document.addEventListener("DOMContentLoaded", () => {
     const createPostBtn = document.querySelector(".btn.createPostBtn")
 
     const dynaicPost = document.querySelector("#dynaicPost")
 
     // Load the create post modal from post.html
-    fetch("post.html")
+    fetch("./static/public/post.html")
         .then((response) => {
             if (!response.ok) throw new Error("Failed to load create post modal")
             return response.text()
@@ -94,10 +94,10 @@ document.addEventListener("DOMContentLoaded", () => {
             })
 
             // Close popup
-            closePopupBtn.addEventListener("click", () => {
+            /*closePopupBtn.addEventListener("click", () => {
                 popupOverlay.classList.add("hidden")
                 dynaicPost.style.display = "none"
-            })
+            })*/
 
             // Close popup when clicking outside
             window.addEventListener("click", (event) => {
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const category = document.querySelector('.category')
 const createPost = document.querySelector("#dynaicPost")
 
-userId ? createPost.innerHTML += postForm() : null
+// userId ? createPost.innerHTML += postForm() : null
 
 const listPosts = (posts) => {
     postsContainer.innerHTML = posts.length ? posts.map(post => Article(post)) : `<p>No Posts For Now!! </p>`
@@ -190,13 +190,15 @@ const attachModalEventListeners = () => {
 }
 
 // Show the login modal when the login button is clicked
+console.log(loginBtn);
+
 loginBtn.addEventListener("click", showLoginModal)
 registerBtn.onclick = () => showRegisterModal()
 ///get data
 
 //get poosts
 // fetch('/')
-fetch('./posts.json')
+fetch('./static/public/posts.json')
     .then(res => res.json())
     .then(data => {
         posts = data.posts
@@ -206,7 +208,7 @@ fetch('./posts.json')
 
 
 
-
+/*
 // fetch("/get-categories")
 fetch("./posts.json")
     .then(res => res.json())
@@ -219,7 +221,7 @@ fetch("./posts.json")
         // category.appendChild(option)
     })
     .catch((err) => console.log("can't get categories", err))
-
+*/
 window.popPost = popPost
 window.closeModal = closeModal
 window.displayPopup = displayPopup

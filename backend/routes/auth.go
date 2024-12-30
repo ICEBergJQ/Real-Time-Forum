@@ -11,4 +11,5 @@ import (
 func AuthRoutes(db *sql.DB) {
 	http.HandleFunc("/auth/register", controllers.RegisterUser)
 	http.HandleFunc("/auth/login", controllers.LoginUser)
+	http.HandleFunc("/auth/logout", controllers.Logout)
 }

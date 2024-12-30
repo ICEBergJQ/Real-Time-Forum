@@ -110,7 +110,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request){
 
 // LogoutUser handles user logout
 
-func Logout(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+func Logout(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		//call error func
 	}

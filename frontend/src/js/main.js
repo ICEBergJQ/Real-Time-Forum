@@ -1,4 +1,4 @@
-const userId = localStorage.getItem("user_id");
+const logged = localStorage.getItem("logged");
 const logoutBtn = document.querySelector('button.logout') || ''
 const registerBtn = document.querySelector(".start-topic") || ''
 const loginBtn = document.querySelector("button.login")
@@ -13,7 +13,8 @@ function createElem(tag, className, content) {
     element.textContent = content
     return element
 }
-if (userId) {
+
+if (logged) {
     logoutBtn.style.display = "inline-block"
     createPostBtn.style.display = "inline-block"
     // profileName.textContent = localStorage.getItem("username")

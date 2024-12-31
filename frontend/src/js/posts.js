@@ -179,8 +179,7 @@ const attachModalEventListeners = () => {
     buttons.forEach((button) => {
         button.addEventListener("click", (e) => {
             e.preventDefault()
-            console.log(123)
-            if (!localStorage.getItem("user_id")) {
+            if (!localStorage.getItem("logged")) {
                 showLoginModal()
             } else {
                 alert("Action successful! You are logged in.")
@@ -197,13 +196,14 @@ registerBtn.onclick = () => showRegisterModal()
 ///get data
 
 //get poosts
-// fetch('/')
-fetch('./static/public/posts.json')
+fetch('/posts')
+// fetch('./static/public/posts.json')
     .then(res => res.json())
     .then(data => {
+        console.log("11313")
         posts = data.posts
         listPosts(data.posts)
-    })
+    }).catch(err=> console.log(err))
 
 
 

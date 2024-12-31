@@ -45,7 +45,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // LoginUser handles user login
-func LoginUser(w http.ResponseWriter, r *http.Request){
+func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		//call error func
 	}
@@ -59,7 +59,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request){
 	if err := utils.Validation(user); err != nil {
 		//call error func
 	}
-	
+
 	query := "SELECT user_id, username, email, password FROM users WHERE username = ?"
 	row := config.DB.QueryRow(query, user.Username)
 	err := row.Scan(&userFromDb.ID, &userFromDb.Username, &userFromDb.Email, &userFromDb.Password)
@@ -71,12 +71,12 @@ func LoginUser(w http.ResponseWriter, r *http.Request){
 			if err != nil {
 				//call error func
 			}
-		  	w.WriteHeader(http.StatusNoContent)
-		  	w.Write(response_encoding)
+			w.WriteHeader(http.StatusNoContent)
+			w.Write(response_encoding)
 		}
 		//call error func
 	}
-	if utils.TokenCheck(userFromDb.ID, r, config.DB){
+	if utils.TokenCheck(userFromDb.ID, r, config.DB) {
 		response.Message = "user already logged in"
 		response_encoding, err := json.Marshal(response)
 		if err != nil {
@@ -92,12 +92,12 @@ func LoginUser(w http.ResponseWriter, r *http.Request){
 		//call error func
 	}
 	cookie := &http.Cookie{
-		Name: "session_token",
-		Value: token,
-		Path: "/",
+		Name:     "session_token",
+		Value:    token,
+		Path:     "/",
 		HttpOnly: true,
-		Secure: false,
-		Expires: time.Now().Add(config.EXPIRING_SESSION_DATE * time.Hour),
+		Secure:   false,
+		Expires:  time.Now().Add(config.EXPIRING_SESSION_DATE * time.Hour),
 	}
 	response.Message = "user logged-in successfully"
 	response_encoding, err := json.Marshal(response)
@@ -118,7 +118,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	var response models.Response
 	w.Header().Set("Content-Type", "application/json")
 	cookie, err := r.Cookie("session_token")
-	if err != nil{
+	if err != nil {
 		//call error func
 	}
 	query := "DELETE FROM sesions WHERE session_id = ?"
@@ -126,7 +126,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		//call error func
 	}
-	response.Message  = "user logged-out successfully"
+	response.Message = "user logged-out successfully"
 	response_encoding, err := json.Marshal(response)
 	if err != nil {
 		//call error func

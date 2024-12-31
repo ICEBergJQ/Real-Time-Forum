@@ -85,6 +85,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request){
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(response_encoding)
 		//call error func
+		return
 	}
 	token, err := utils.SeesionCreation(userFromDb.ID, config.DB)
 	if err != nil {

@@ -35,9 +35,10 @@ form.addEventListener('submit', (e) => {
         .then(data => {
             console.log(data);
             ///save username to localstorage to display it in profile section
-            // localStorage.setItem("user_id", data.user.id);
+            ///testing TODO use cookie
+            localStorage.setItem("logged", "true");
             // localStorage.setItem("username", data.user.username);
-            // window.location.href = "/";
+            window.location.href = "/";
         })
         .catch((error) => console.error(error));
 }

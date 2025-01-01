@@ -86,11 +86,7 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	offset := 0
-
-	limit := offset + 20
-
-	rows, err := db.Query("SELECT comment_id, user_id, post_id, content, created_at FROM comments WHERE post_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ? ;", postID,limit,offset)
+	rows, err := db.Query("SELECT comment_id, user_id, post_id, content, created_at FROM comments WHERE post_id = ? ORDER BY created_at DESC;", postID)
 	if err != nil {
 		http.Error(w, "internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return

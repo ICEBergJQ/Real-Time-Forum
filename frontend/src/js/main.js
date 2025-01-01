@@ -1,5 +1,5 @@
 const logged = localStorage.getItem("logged");
-const logoutBtn = document.querySelector('button.logout') || ''
+const navLogoutBtn = document.querySelector('button.logout')
 const registerBtn = document.querySelector(".start-topic") || ''
 const loginBtn = document.querySelector("button.login")
 const createPostBtn = document.querySelector("button.createPostBtn")
@@ -14,8 +14,10 @@ function createElem(tag, className, content) {
     return element
 }
 
+
 if (logged) {
-    logoutBtn.style.display = "inline-block"
+    ///nav btns
+    navLogoutBtn.style.display = "inline-block"
     createPostBtn.style.display = "inline-block"
     // profileName.textContent = localStorage.getItem("username")
     // profileName.style.display = 'inline-block'
@@ -27,7 +29,7 @@ if (logged) {
 } else {
     loginBtn.style.display = "inline-block"
     registerBtn.style.display = "inline-block"
-    logoutBtn.style.display = "none"
+    navLogoutBtn.style.display = "none"
     createPostBtn.style.display = "none"
 
     //hide profile

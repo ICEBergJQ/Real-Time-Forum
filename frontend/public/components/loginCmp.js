@@ -27,7 +27,7 @@ export  function teeeeeesloginForm() {
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" placeholder="Enter your username" >
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" >
+                <input type="password" id="password" name="password" value="123456" placeholder="Enter your password" >
                 <button type="submit" class="btn_s">Login</button>
             </form>
             <p class="sign-up-text">

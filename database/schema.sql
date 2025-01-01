@@ -46,7 +46,7 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    IF NOT EXISTS likeAndDislike (
+    IF NOT EXISTS Reactions (
         user_id INTEGER NOT NULL,
         post_id TEXT,
         comment_id TEXT,

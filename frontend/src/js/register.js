@@ -1,51 +1,50 @@
-const form = document.querySelector("form")
-const registerError = document.querySelector('.registerError')
+const authError = document.querySelector('.authError')
 
-form.addEventListener("submit", function (event) {
-    event.preventDefault()
 
-    const fullname = document.querySelector("#fullname").value.trim()
+
+document.querySelector('#signUpModal .btn_s').addEventListener('click', function handleRegister(a) {
+
+    a.preventDefault();
+
+    // a.stopImmediatePropagation();
+    const username = document.querySelector("#signUpModal #username").value.trim()
     const email = document.querySelector("#email").value.trim()
-    const password = document.querySelector("#password").value.trim()
+    const password = document.querySelector("#signUpModal #password").value.trim()
     const confirmPassword = document.querySelector("#confirm-password").value.trim()
     ///add confirm password input
-    /* */
-    if (fullname == "" || email == "" || password == "" || confirmPassword == "") {
-        loginError.textContent = "all fields are required!!"
+
+    if (username == "" || email == "" || password == "" || confirmPassword == "") {
+        displayError("all fields are required!!")
+        return
     } else if (password.length < 6) {
-        loginError.textContent = "Password must be at least 6 characters long !!"
+        displayError("Password must be at least 6 characters long !!")
+        return
     }
     else if (password !== confirmPassword) {
-        loginError.textContent = "Password and Confirm Password do not match"
-    }
-
-    ///display error toast
-    if (registerError.textContent) {
-        registerError.classList.add('display-err')
+        displayError("Password mismatch")
         return
     }
 
-    ///check if the fullname / email is already taken
-    if (fullname == "" || email == "" || password == "") {
-        alert('all fields are required!!!!!!')
-        return
-    }
     fetch("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullname, email, password }),
+        body: JSON.stringify({ username, email, password }),
     })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Invalid credentials")
+        .then(res => {
+            console.log('Response status:', res.status);
+            if (!res.ok) {
+                displayError(res.statusText)
+                throw new Error("something went wrong!")
             }
-            return response.json()
+            res.json()
         })
-        .then((data) => {
-            console.log(data) // For debugging purposes
-
+        .then(() => {
+            //display a popup
+            alert('registered, please login')
             ///redirect to login page
-            window.location.href = "/login"
+            // window.location.href = "/"
+            displayPopup("openLogin")
         })
-        .catch((error) => console.error(error))
+        .catch((error) => console.error("- ", error))
+
 })

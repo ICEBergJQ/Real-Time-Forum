@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle logout confirmation
     confirmLogout.addEventListener("click", () => {
-        localStorage.removeItem("user_id"); // Clear user data from localStorage
+        localStorage.removeItem("logged"); // Clear user data from localStorage
         alert("You have been logged out!");
         logoutModal.classList.add("hidden");
         window.location.reload(); // Optionally refresh the page or redirect to login

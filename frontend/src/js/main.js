@@ -1,11 +1,10 @@
-const userId = localStorage.getItem("user_id");
+const logged = localStorage.getItem("logged");
 const logoutBtn = document.querySelector('button.logout') || ''
 const registerBtn = document.querySelector(".start-topic") || ''
 const loginBtn = document.querySelector("button.login")
 const createPostBtn = document.querySelector("button.createPostBtn")
 const likeBtn = document.querySelector('button.like-btn')
 
-const logoutDynamic = document.querySelector("#logoutdynamic");
 // const profileName = document.querySelector('.profile')
 
 function createElem(tag, className, content) {
@@ -14,7 +13,8 @@ function createElem(tag, className, content) {
     element.textContent = content
     return element
 }
-if (userId) {
+
+if (logged) {
     logoutBtn.style.display = "inline-block"
     createPostBtn.style.display = "inline-block"
     // profileName.textContent = localStorage.getItem("username")
@@ -50,3 +50,26 @@ function displayComment(e) {
     e.target.parentElement.nextElementSibling.classList.toggle("hidden")
 }
 
+//auth comps errors
+const displayError = (txt) => {
+    authError.textContent = txt
+    authError.style.top = "40px"
+    authError.style.animation = "bounce 0.5s ease-in-out"
+    hideError(authError)
+}
+
+let timer
+const hideError = () => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+        authError.style.animation = "none"
+        authError.style.top = "-55px"
+    }, 3000);
+
+}
+
+///load comps  
+
+
+
+// document.querySelector("#signUpModal form").addEventListener("submit", handleRegister);)

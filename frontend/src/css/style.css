@@ -1,3 +1,49 @@
+.authError {
+    background-color: crimson;
+    color: #fff;
+    position: absolute;
+    z-index: 10;
+    top: -55px;
+    padding: 15px 35px;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: top 0.3s ease-in-out;
+}
+
+.post-snippet button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+@keyframes bounce {
+    0% {
+        top: -55px;
+    }
+
+    20% {
+        top: 10px;
+    }
+
+    40% {
+        top: -10px;
+    }
+
+    60% {
+        top: 5px;
+    }
+
+    80% {
+        top: -5px;
+    }
+
+    100% {
+        top: 40px;
+    }
+}
+
 .container {
     width: 90%;
     max-width: 1200px;
@@ -27,8 +73,8 @@
 }
 
 /* .nav-links { */
-     /* Ensures the dropdown menu is positioned relative to its parent */
-  /* } */
+/* Ensures the dropdown menu is positioned relative to its parent */
+/* } */
 
 .nav-links li a {
     color: #fff;
@@ -45,38 +91,40 @@
     padding: 0;
     margin: 0;
     position: absolute;
-    top: 100%; /* Position below the parent item */
-     left: 0;
-    background-color: #00aaff; 
-     display: none;  /* Hidden by default */
-     border-radius: 5px;
+    top: 100%;
+    /* Position below the parent item */
+    left: 0;
+    background-color: #00aaff;
+    display: none;
+    /* Hidden by default */
+    border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-  }
-  
-   .dropdown-menu li {
+}
+
+.dropdown-menu li {
     width: 150px;
-  }
-  
-  .dropdown-menu span {
+}
+
+.dropdown-menu span {
     display: block;
     padding: 10px 15px;
     color: #fff;
     text-decoration: none;
     font-size: 16px;
     transition: background-color 0.3s ease;
-  }
-  
-  .dropdown-menu .cat:hover {
-    background-color: #4495ca;
-  }
+}
 
-   /* Show dropdown menu on hover */
-   .dropdown:hover .dropdown-menu {
+.dropdown-menu .cat:hover {
+    background-color: #4495ca;
+}
+
+/* Show dropdown menu on hover */
+.dropdown:hover .dropdown-menu {
     display: block;
-  } 
-  
-  
+}
+
+
 
 
 .nav-actions .btn {
@@ -119,7 +167,7 @@
     border: 1px solid #ccc;
     background: #f9f9f9;
     /* for dev  */
-    /* background: #aaa; */
+    /* background: #aaa;     */
     margin-bottom: 1rem;
 }
 
@@ -317,7 +365,7 @@
     justify-content: center;
     align-items: center;
     position: fixed;
-    z-index: 1000;
+    z-index: 4;
     left: 0;
     top: 0;
     width: 100%;
@@ -408,6 +456,7 @@
 .sign-up-link {
     color: #000;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .sign-up-link:hover {
@@ -426,7 +475,7 @@
     justify-content: center;
     align-items: center;
     position: fixed;
-    z-index: 1000;
+    z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
@@ -534,7 +583,7 @@ form input:focus {
     justify-content: center;
     align-items: center;
     position: fixed;
-    z-index: 1000;
+    z-index: 4;
     left: 0;
     top: 0;
     width: 100%;
@@ -582,17 +631,17 @@ form input:focus {
 
 textarea {
     resize: none;
-  }
+}
 
 /* categories css */
 
 /* Hide the native checkbox */
-  .categories-container input[type="checkbox"] {
+.categories-container input[type="checkbox"] {
     display: none;
-  }
-  
-  /* Label styled as a button */
-  .categories-container label {
+}
+
+/* Label styled as a button */
+.categories-container label {
     display: inline-block;
     padding: 8px 16px;
     font-size: 16px;
@@ -600,25 +649,26 @@ textarea {
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
-    user-select: none; /* Prevent text selection */
+    user-select: none;
+    /* Prevent text selection */
     text-align: center;
     outline: none;
-  }
-  
-  /* Default state */
-  .categories-container label {
+}
+
+/* Default state */
+.categories-container label {
     background-color: white;
     color: black;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Checked state */
-  .categories-container input[type="checkbox"]:checked + label {
+}
+
+/* Checked state */
+.categories-container input[type="checkbox"]:checked+label {
     background-color: #00aaff;
     color: white;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-  }
-  
+}
+
 
 .sbtn {
     margin-top: 50px;
@@ -650,7 +700,7 @@ textarea {
     justify-content: center;
     align-items: center;
     position: fixed;
-    z-index: 1000;
+    z-index: 5;
     left: 0;
     top: 0;
     width: 100%;
@@ -756,35 +806,35 @@ textarea {
 }
 
 @media (max-width: 480px) { */
-    /* Adjust container padding and margin */
-    /* .container {
+/* Adjust container padding and margin */
+/* .container {
         width: 100%;
         padding: 0 10px;
     } */
 
-    /* Navbar adjustments */
-    /* .navbar .container {
+/* Navbar adjustments */
+/* .navbar .container {
         flex-direction: column;
         text-align: center;
     } */
 
-    /* .nav-links {
+/* .nav-links {
         flex-direction: column;
         gap: 0.5rem;
     } */
 
-    /* Main content */
-    /* .main-content {
+/* Main content */
+/* .main-content {
         padding: 1rem;
     } */
 
-    /* Feed adjustments */
-    /* .feed {
+/* Feed adjustments */
+/* .feed {
         margin: 0;
     } */
 
-    /* Post previews */
-    /* .post-preview {
+/* Post previews */
+/* .post-preview {
         font-size: 14px;
     }
 
@@ -800,15 +850,15 @@ textarea {
         font-size: 12px;
     } */
 
-    /* Buttons */
-    /* .nav-actions .btn,
+/* Buttons */
+/* .nav-actions .btn,
     .post-details .btn {
         font-size: 14px;
         padding: 0.3rem 0.5rem;
     } */
 
-    /* Footer adjustments */
-    /* .footer {
+/* Footer adjustments */
+/* .footer {
         text-align: center;
     }
 
@@ -817,14 +867,14 @@ textarea {
         gap: 1rem;
     } */
 
-    /* Modal adjustments */
-    /* .modal-content {
+/* Modal adjustments */
+/* .modal-content {
         width: 90%;
         padding: 1rem;
     } */
 
-    /* Categories */
-    /* .categories-container label {
+/* Categories */
+/* .categories-container label {
         font-size: 12px;
         padding: 6px 10px;
     } */

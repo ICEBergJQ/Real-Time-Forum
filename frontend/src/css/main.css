@@ -10,8 +10,8 @@ body {
     display: flex;
     flex-direction: column;
     /* for dev  */
-    /* background-color: var(--dark);
-    color: #333; */
+    background-color: var(--dark);
+    color: #333;
 }
 
 a{

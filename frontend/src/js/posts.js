@@ -142,8 +142,8 @@ createPostBtn.onclick = () => showCreatePostModal()
 ///get data
 
 //get poosts
-fetch('/posts')
-    // fetch('./static/public/posts.json')
+// fetch('/posts')
+    fetch('./static/public/posts.json')
     .then(res => res.json())
     .then(data => {
         console.log("11313")
@@ -154,9 +154,9 @@ fetch('/posts')
 
 
 
-/*
+
 // fetch("/get-categories")
-fetch("./posts.json")
+/*fetch("./posts.json")
     .then(res => res.json())
     .then(catesss => {
         console.log(catesss)

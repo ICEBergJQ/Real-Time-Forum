@@ -16,7 +16,6 @@ function createElem(tag, className, content) {
 }
 
 
-
 if (logged) {
     ///nav btns
     navLogoutBtn.style.display = "inline-block"

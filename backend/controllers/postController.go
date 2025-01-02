@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"time"
 
 	uuid "github.com/gofrs/uuid"
 
@@ -22,27 +21,21 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
 	}
-	if r.URL.Path != "/" {
-		http.Error(w, "not found", http.StatusNotFound)
+	if r.URL.Path != "/post" {
+		http.Error(w, "Not found", http.StatusNotFound)
 		return
 	}
-
+	fmt.Println(r.Body)
 	var newPost forum.Post
-
 	if err := json.NewDecoder(r.Body).Decode(&newPost); err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close()
-
-	_, err := db.Exec("PRAGMA foreign_keys = ON;")
-	if err != nil {
-		http.Error(w, "Failed to enable foreign keys", http.StatusInternalServerError)
+	if len(newPost.Title) == 0 || len(newPost.Content) == 0 || len(newPost.Title) > 300 || len(newPost.Content) > 40000 {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return
 	}
-
-	mu.Lock()
-	defer mu.Unlock()
 
 	postID, err := uuid.NewV4()
 	if err != nil {
@@ -50,46 +43,41 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	newPost.ID = postID.String()
-	newPost.CreatedAt = time.Now()
 
-	// var categoryID int
-	// var validCategories []int
-	for _, categoryName := range newPost.Categories {
-		var categoryID int
-		err := db.QueryRow("SELECT category_id FROM categories WHERE name = ?", categoryName).Scan(&categoryID)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				http.Error(w, "Category does not exist: "+categoryName, http.StatusBadRequest)
-				return
-			} else {
-				http.Error(w, fmt.Sprintf("Error checking category: %v", err), http.StatusInternalServerError)
-				return
-			}
-		}
-		newPost.Category_id = append(newPost.Category_id, categoryID)
-	}
-
-	categoriesJSON, err := json.Marshal(newPost.Category_id)
+	// Begin transaction
+	tx, err := db.Begin()
 	if err != nil {
-		http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)
+		http.Error(w, "Failed to start transaction", http.StatusInternalServerError)
+		return
+	}
+	defer tx.Rollback()
+	categories := ""
+
+	newPost.Category_id, categories, err = CategoriesChecker(db, newPost.Categories)
+	if err != nil {
+		http.Error(w, "invalid categories", http.StatusBadRequest)
 		return
 	}
 
-	// Insert the post
-	query := "INSERT INTO posts (post_id, user_id, category_id, title, content, created_at) VALUES (?, ?, ?, ?, ?, ?)"
-	_, err = db.Exec(query, newPost.ID, newPost.Author_id, categoriesJSON, newPost.Title, newPost.Content, newPost.CreatedAt)
+	query := "INSERT INTO posts (post_id, user_id, category_name, title, content) VALUES (?, ?, ?, ?, ?)"
+	_, err = tx.Exec(query, newPost.ID, newPost.Author_id, categories, newPost.Title, newPost.Content)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error creating post: %v", err), http.StatusInternalServerError)
 		return
 	}
 
-	// Insert the relationships into postsCategories
+	// Link categories to the post
 	for _, categoryID := range newPost.Category_id {
-		_, err := db.Exec("INSERT INTO postsCategories (post_id, category_id) VALUES (?, ?)", newPost.ID, categoryID)
+		_, err := tx.Exec("INSERT INTO postsCategories (post_id, category_id) VALUES (?, ?)", newPost.ID, categoryID)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Error linking post to category: %v", err), http.StatusInternalServerError)
 			return
 		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		http.Error(w, "Failed to commit transaction", http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
@@ -99,10 +87,10 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-		return
+		return // Fetch ID for each category name
 	}
 
-	query := "SELECT post_id, user_id, category_id,title, content, created_at FROM posts"
+	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts ORDER BY created_at DESC;"
 	rows, err := db.Query(query)
 	if err != nil {
 		http.Error(w, "internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
@@ -111,20 +99,15 @@ func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 
 	var posts []forum.Post
-	var categoryJSON []byte
+	category := ""
 	for rows.Next() {
 		var post forum.Post
-		err := rows.Scan(&post.ID, &post.Author_id, &categoryJSON, &post.Title, &post.Content, &post.CreatedAt)
+		err := rows.Scan(&post.ID, &post.Author_id, &category, &post.Title, &post.Content, &post.CreatedAt)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("internal server error x: %v", err), http.StatusInternalServerError)
 			return
 		}
-		err = json.Unmarshal(categoryJSON, &post.Category_id)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)
-			return
-		}
-
+		post.Categories = strings.Split(category, ",")
 		posts = append(posts, post)
 	}
 
@@ -142,76 +125,123 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 		http.Error(w, "categories query parameter is required", http.StatusBadRequest)
 		return
 	}
-	categoryNames := strings.Split(categoryQuery, ",")
-
-	placeholders := strings.Repeat("?,", len(categoryNames))
-	placeholders = strings.TrimRight(placeholders, ",")
-
-	query := fmt.Sprintf(`
-		SELECT 
-			p.post_id, 
-			p.title, 
-			p.content, 
-			p.created_at, 
-			p.user_id, 
-			GROUP_CONCAT(c.category_id) AS category_ids, 
-			GROUP_CONCAT(c.name) AS category_names
-		FROM 
-			posts AS p
-		JOIN 
-			postsCategories AS pc ON p.post_id = pc.post_id
-		JOIN 
-			categories AS c ON pc.category_id = c.category_id
-		WHERE 
-			c.name IN (%s)
-		GROUP BY 
-			p.post_id;
-	`, placeholders)
-
-	args := make([]interface{}, len(categoryNames))
-	for i, v := range categoryNames {
-		args[i] = v
+	_, categoryNames, err := CategoriesChecker(db, strings.Split(categoryQuery, ","))
+	if err != nil {
+		http.Error(w, "invalid categories", http.StatusBadRequest)
+		return
 	}
 
-	rows, err := db.Query(query, args...)
+	query := createquery(strings.Split(categoryQuery, ","))
+
+	rows, err := db.Query(query, categoryNames)
 	if err != nil {
 		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
 
-	// Collect the posts
 	var posts []forum.Post
 	for rows.Next() {
 		var post forum.Post
-		var categoryIDs, categoryNames string
-		err := rows.Scan(
-			&post.ID,
-			&post.Title,
-			&post.Content,
-			&post.CreatedAt,
-			&post.Author_id,
-			&categoryIDs,
-			&categoryNames,
-		)
+		var categoryNames string
+		err := rows.Scan(&post.ID, &post.Author_id, &categoryNames, &post.Title, &post.Content, &post.CreatedAt)
+		if err != nil {
+			http.Error(w, "Internal server error (scan): "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+			return
+		}
+		post.Categories = strings.Split(categoryNames, ",")
+
+		posts = append(posts, post)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(posts); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+	}
+}
+
+func GetCreatedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userID := r.URL.Query().Get("user_id")
+	if userID == "" {
+		http.Error(w, "user_id query parameter is required", http.StatusBadRequest)
+		return
+	}
+	ID, err := strconv.Atoi(userID)
+	if err != nil {
+		http.Error(w, "invalid user_id", http.StatusBadRequest)
+		return
+	}
+
+	query := `SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE user_id = ?`
+	rows, err := db.Query(query, ID)
+	if err != nil {
+		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var posts []forum.Post
+	for rows.Next() {
+		var post forum.Post
+		var categoryNames string
+
+		err := rows.Scan(&post.ID, &post.Author_id, &categoryNames, &post.Title, &post.Content, &post.CreatedAt)
 		if err != nil {
 			http.Error(w, "Internal server error (scan): "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 			return
 		}
 
-		categoryIDList := strings.Split(categoryIDs, ",")
-		categoryNameList := strings.Split(categoryNames, ",")
+		post.Categories = strings.Split(categoryNames, ",")
+		posts = append(posts, post)
+	}
 
-		for _, idStr := range categoryIDList {
-			id, convErr := strconv.Atoi(idStr)
-			if convErr != nil {
-				http.Error(w, "Internal server error (category ID conversion): "+fmt.Sprintf("%v", convErr), http.StatusInternalServerError)
-				return
-			}
-			post.Category_id = append(post.Category_id, id)
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(posts); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+	}
+}
+
+func GetLikedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userID := r.URL.Query().Get("liked_user")
+	if userID == "" {
+		http.Error(w, "user_id query parameter is required", http.StatusBadRequest)
+		return
+	}
+
+	query := `
+	SELECT p.user_id, p.post_id, p.title, p.content, p.created_at
+	FROM posts p
+	JOIN likeAndDislike l ON p.post_id = l.post_id
+	WHERE l.reaction_type = 'like' AND l.user_id = ?;
+	`
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var posts []forum.Post
+	for rows.Next() {
+		var post forum.Post
+		var categoryNames string
+
+		err := rows.Scan(&post.Author_id, &post.ID, &post.Title, &post.Content, &post.CreatedAt)
+		if err != nil {
+			http.Error(w, "Internal server error (scan): "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+			return
 		}
-
-		// Assign category names
+		categoryNameList := strings.Split(categoryNames, ",")
 		post.Categories = categoryNameList
 
 		posts = append(posts, post)
@@ -223,95 +253,50 @@ func GetFilteredPostsByCategory(db *sql.DB, w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func GetcreatedPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-		return
+func CategoriesChecker(db *sql.DB, categoryNames []string) ([]int, string, error) {
+	if len(categoryNames) < 1 {
+		return nil, "", fmt.Errorf("no categories provided")
 	}
 
-	// Get user_id from query parameters
-	userID := r.URL.Query().Get("user_id")
-	if userID == "" {
-		http.Error(w, "user_id query parameter is required", http.StatusBadRequest)
-		return
+	type Category struct {
+		ID   int
+		Name string
 	}
 
-	// Query to fetch posts by user_id, including category information
-	query := `
-			SELECT 
-				p.post_id, 
-				p.title, 
-				p.content, 
-				p.created_at, 
-				p.user_id, 
-				GROUP_CONCAT(c.category_id) AS category_ids, 
-				GROUP_CONCAT(c.name) AS category_names
-			FROM 
-				posts AS p
-			LEFT JOIN 
-				postsCategories AS pc ON p.post_id = pc.post_id
-			LEFT JOIN 
-				categories AS c ON pc.category_id = c.category_id
-			WHERE 
-				p.user_id = ?
-			GROUP BY 
-				p.post_id;
-		`
+	var categories []Category
+	var ids []int
 
-	// Execute the query
-	rows, err := db.Query(query, userID)
-	if err != nil {
-		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
-		return
-	}
-	defer rows.Close()
-
-	// Collect the posts
-	var posts []forum.Post
-	for rows.Next() {
-		var post forum.Post
-		var categoryIDs, categoryNames string
-
-		err := rows.Scan(
-			&post.ID,
-			&post.Title,
-			&post.Content,
-			&post.CreatedAt,
-			&post.Author_id,
-			&categoryIDs,
-			&categoryNames,
-		)
+	for _, categoryName := range categoryNames {
+		var category Category
+		err := db.QueryRow("SELECT category_id, category_name FROM categories WHERE category_name = ?", categoryName).Scan(&category.ID, &category.Name)
 		if err != nil {
-			http.Error(w, "Internal server error (scan): "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
-			return
-		}
-
-		// Parse aggregated category IDs and names
-		categoryIDList := strings.Split(categoryIDs, ",")
-		categoryNameList := strings.Split(categoryNames, ",")
-
-		// Convert category IDs to []int
-		for _, idStr := range categoryIDList {
-			if idStr == "" {
-				continue // Skip empty entries if there are no categories
+			if err == sql.ErrNoRows {
+				return nil, "", fmt.Errorf("category not found: %s", categoryName)
 			}
-			id, convErr := strconv.Atoi(idStr)
-			if convErr != nil {
-				http.Error(w, "Internal server error (category ID conversion): "+fmt.Sprintf("%v", convErr), http.StatusInternalServerError)
-				return
-			}
-			post.Category_id = append(post.Category_id, id)
+			return nil, "", fmt.Errorf("error fetching category: %w", err)
 		}
-
-		// Assign category names
-		post.Categories = categoryNameList
-
-		posts = append(posts, post)
+		categories = append(categories, category)
 	}
 
-	// Encode the posts to JSON and send the response
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(posts); err != nil {
-		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+	var CategoryNames string
+	for i, category := range categories {
+		if i != len(categories)-1 {
+			CategoryNames += category.Name + ","
+		}
+		ids = append(ids, category.ID)
 	}
+	return ids, CategoryNames, nil
+}
+
+func createquery(categories []string) string {
+	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE category_name LIKE "
+	for i, cat := range categories {
+		if i == 0 {
+			query += "'%" + cat + "%'"
+		} else {
+			query += " AND category_name LIKE '%" + cat + "%'"
+		}
+	}
+	query += ";"
+	return query
 }

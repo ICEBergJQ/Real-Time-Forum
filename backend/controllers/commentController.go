@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
 	forum "forum/models"
 
@@ -47,7 +46,6 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	newComment.ID = commentID.String()
-	newComment.CreatedAt = time.Now()
 
 	if !postExists(db, newComment.Post_id) {
 		http.Error(w, "Post does not exist Bad request", http.StatusBadRequest)
@@ -55,8 +53,8 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Insert the post
-	query := "INSERT INTO comments (comment_id, user_id, post_id, content, created_at) VALUES (?, ?, ?, ?, ?)"
-	_, err = db.Exec(query, newComment.ID, newComment.Author_id, newComment.Post_id, newComment.Content, newComment.CreatedAt)
+	query := "INSERT INTO comments (comment_id, user_id, post_id, content) VALUES (?, ?, ?, ?)"
+	_, err = db.Exec(query, newComment.ID, newComment.Author_id, newComment.Post_id, newComment.Content)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error creating comment: %v", err), http.StatusInternalServerError)
 		return
@@ -84,17 +82,17 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	var comments []forum.Comment
 	postID := r.URL.Query().Get("id")
 	if postID == "" {
-        http.Error(w, "Missing id parameter", http.StatusBadRequest)
-        return
-    }
+		http.Error(w, "Missing id parameter", http.StatusBadRequest)
+		return
+	}
 
-	rows, err := db.Query("SELECT comment_id, user_id, post_id, content, created_at FROM comments WHERE post_id = ?", postID)
+	rows, err := db.Query("SELECT comment_id, user_id, post_id, content, created_at FROM comments WHERE post_id = ? ORDER BY created_at DESC;", postID)
 	if err != nil {
 		http.Error(w, "internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
-	
+
 	for rows.Next() {
 		var comment forum.Comment
 		err := rows.Scan(&comment.ID, &comment.Author_id, &comment.Post_id, &comment.Content, &comment.CreatedAt)

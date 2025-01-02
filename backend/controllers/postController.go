@@ -25,6 +25,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not found", http.StatusNotFound)
 		return
 	}
+	fmt.Println(r.Body)
 	var newPost forum.Post
 	if err := json.NewDecoder(r.Body).Decode(&newPost); err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)

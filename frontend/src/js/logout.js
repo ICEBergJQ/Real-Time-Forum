@@ -1,52 +1,47 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const logoutBtn = document.querySelector(".btn.logout");
+const logoutBtn = document.querySelector(".btn.logout");
+const logoutModal = document.querySelector("#logoutModal");
+const closeLogoutModal = logoutModal.querySelector(".close");
+const confirmLogout = logoutModal.querySelector("#confirmLogout");
 
-    const showLogoutModal = () => {
-        const logoutModal = document.querySelector("#logoutModal");
-        if (logoutModal) {
-            logoutModal.classList.remove("hidden");
-        }
-    };
-
-
-    // fetch("logout.html")
-    //     .then((response) => {
-    //         if (!response.ok) throw new Error("Failed to load logout modal");
-    //         return response.text();
-    //     })
-    //     .then((html) => {
-    //         logoutDynamic.innerHTML = html;
-
+const showLogoutModal = () => {
     const logoutModal = document.querySelector("#logoutModal");
-    const closeLogoutModal = logoutModal.querySelector(".close");
-    const confirmLogout = logoutModal.querySelector("#confirmLogout");
-    const cancelLogout = logoutModal.querySelector("#cancelLogout");
+    if (logoutModal) {
+        logoutModal.classList.remove("hidden");
+    }
+};
 
-    // Show the logout modal when the logout button is clicked
-    logoutBtn.addEventListener("click", showLogoutModal);
 
-    // Hide the modal when the close button is clicked
-    closeLogoutModal.addEventListener("click", () => {
-        logoutModal.classList.add("hidden");
-    });
-
-    // Hide the modal when clicking outside the modal content
-    window.addEventListener("click", (event) => {
-        if (event.target === logoutModal) {
+//check if it's logged in alreadty bedore access logout
+// Handle logout confirmation
+confirmLogout.onclick = () => {
+    fetch('/auth/logout', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(res => {
+            if (!res.ok) throw new Error("Failed to load logout modal")
+            return res.json()
+        })
+        .then(data => {
+            data?.Message ?
+                alert(data.Message)
+                :
+                alert("You are logged out")
+            localStorage.removeItem("logged") // Clear user data from localStorage
             logoutModal.classList.add("hidden");
-        }
-    });
+            //document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.href = "/"
+        }).catch(err => console.log("logout Error : ", err))
+}
 
-    // Handle logout confirmation
-    confirmLogout.addEventListener("click", () => {
-        localStorage.removeItem("logged"); // Clear user data from localStorage
-        alert("You have been logged out!");
-        logoutModal.classList.add("hidden");
-        window.location.reload(); // Optionally refresh the page or redirect to login
-    });
+// Show the logout modal when the logout button is clicked
+logoutBtn.addEventListener("click", showLogoutModal);
 
-    // Handle logout cancellation
-    cancelLogout.addEventListener("click", () => {
+// Hide the modal when clicking outside the modal content
+window.addEventListener("click", (e) => {
+
+    if (e.target === logoutModal || e.target.id === 'cancelLogout' || e.target === closeLogoutModal) {
         logoutModal.classList.add("hidden");
-    });
-})
+    }
+});
+

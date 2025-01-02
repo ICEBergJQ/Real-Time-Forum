@@ -27,7 +27,7 @@ form.addEventListener('submit', (e) => {
         .then((res) => {
             if (!res.ok) {
 
-                displayError("qsd :"+res.statusText)
+                displayError(res.statusText)
                 throw new Error("Invalid credentials");
             }
             return res.json();
@@ -40,7 +40,5 @@ form.addEventListener('submit', (e) => {
             // localStorage.setItem("username", data.user.username);
             window.location.href = "/";
         })
-        .catch((error) => console.error(error));
-}
-
-)
+        .catch(error => console.error(error));
+})

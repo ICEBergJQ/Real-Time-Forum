@@ -4,7 +4,7 @@ import { Article } from '../../public/components/articleCmp.js'
 import Logout from '../../public/components/logoutCmp.js'
 import postForm from '../../public/components/postFormCmp.js'
 const postsContainer = document.querySelector('main .post-list')
-let posts = []
+let articles = []
 const dynamicContent = document.querySelector("#dynamicContent")
 const anotherDynamic = document.querySelector("#anotherDynamic")
 const dynaicPost = document.querySelector("#dynaicPost")
@@ -57,6 +57,7 @@ const showLoginModal = () => {
         loginModal.classList.remove("hidden")
     }
 }
+
 const showRegisterModal = () => {
     registerModal ?
         registerModal.classList.remove("hidden") : null
@@ -80,17 +81,20 @@ const displayPopup = (target) => {
 }
 
 const listPosts = (posts) => {
+    articles = posts
     postsContainer.innerHTML = posts.length ? posts.map(post => Article(post)) : `<p>No Posts For Now!! </p>`
     ///get elems after comp load
     attachModalEventListeners()
     //after comp loaded
     registerModal = document.querySelector("#signUpModal")
-}
-function popPost(e, id) {
-    const post = posts.find(p => p.id === id)
-    e.target.parentElement.textContent = post.content
+    console.log(articles)
 }
 
+
+function popPost(e, id) {
+    const post = articles.find(p => p.id == id)
+    e.target.parentElement.textContent = post.content
+}
 // Hide the modal when clicit pull origin developking outside the modal content
 window.addEventListener("click", (event) => {
 
@@ -144,20 +148,18 @@ createPostBtn.onclick = () => showCreatePostModal()
 //get poosts
 
 
-// fetch('/posts')
-fetch('./static/public/posts.json')
+fetch('/post')
+    // fetch('./static/public/posts.json')
     .then(res => res.json())
-    .then(data => {
-        console.log("11313")
-        posts = data.posts
-        listPosts(data.posts)
-    }).catch(err => console.log(err))
+    .then(posts => {
+        listPosts(posts)
+    }).catch(err => console.log("get posts : ", err))
 
 
 fetch("/categories")
     .then(res => res.json())
     .then(categories => {
-           
+
         document.querySelector('#createPostForm .categories-container').innerHTML = categories.map(cat => `<input type="checkbox" id="${cat.category_name}" name="categories" value="${cat.category_name}">
             <label for="${cat.category_name}">${cat.category_name}</label> `).join('')
     })

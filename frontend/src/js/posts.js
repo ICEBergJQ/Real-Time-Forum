@@ -10,11 +10,11 @@ const anotherDynamic = document.querySelector("#anotherDynamic")
 const dynaicPost = document.querySelector("#dynaicPost")
 const logoutDynamic = document.querySelector("#logoutdynamic");
 
-
 anotherDynamic.innerHTML = registerForm()
 dynamicContent.innerHTML = teeeeeesloginForm()
 logoutDynamic.innerHTML = Logout()
 dynaicPost.innerHTML = postForm()
+
 
 let registerModal = document.querySelector("#signUpModal")
 const createPost = document.querySelector("#popupOverlay")
@@ -142,8 +142,10 @@ createPostBtn.onclick = () => showCreatePostModal()
 ///get data
 
 //get poosts
+
+
 // fetch('/posts')
-    fetch('./static/public/posts.json')
+fetch('./static/public/posts.json')
     .then(res => res.json())
     .then(data => {
         console.log("11313")
@@ -152,22 +154,18 @@ createPostBtn.onclick = () => showCreatePostModal()
     }).catch(err => console.log(err))
 
 
-
-
-
-// fetch("/get-categories")
-/*fetch("./posts.json")
+fetch("/categories")
     .then(res => res.json())
-    .then(catesss => {
-        console.log(catesss)
-
-        // const option = document.createElement('option')
-        // option.value = catesss.id
-        // option.textConten = catesss.name
-        // category.appendChild(option)
+    .then(categories => {
+           
+        document.querySelector('#createPostForm .categories-container').innerHTML = categories.map(cat => `<input type="checkbox" id="${cat.category_name}" name="categories" value="${cat.category_name}">
+            <label for="${cat.category_name}">${cat.category_name}</label> `).join('')
     })
-    .catch((err) => console.log("can't get categories", err))
-*/
+    .catch(err => console.log("can't get categories", err))
+
+
+
+
 window.popPost = popPost
 window.closeModal = closeModal
 window.displayPopup = displayPopup

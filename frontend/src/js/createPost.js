@@ -1,7 +1,8 @@
+
+
 const createPostForm = document.querySelector('#createPostForm')
 const postTitle = createPostForm.querySelector('input[type=text]')
 const postContent = createPostForm.querySelector('textarea')
-
 
 createPostForm.onsubmit = (e) => {
     e.preventDefault()
@@ -34,11 +35,11 @@ createPostForm.onsubmit = (e) => {
             /*
                // Placeholder for post creation
                 alert(`Post Created:\nTitle: ${title}\nCategory: ${category}`)
-
+ 
                 // Close the modal
                 popupOverlay.classList.add("hidden")
                 dynaicPost.style.display = "none"
-
+ 
                 // Reset form
                 createPostForm.reset()
             */

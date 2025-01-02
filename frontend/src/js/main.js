@@ -6,6 +6,7 @@ const createPostBtn = document.querySelector("button.createPostBtn")
 const likeBtn = document.querySelector('button.like-btn')
 
 // const profileName = document.querySelector('.profile')
+let categories = []
 
 function createElem(tag, className, content) {
     const element = document.createElement(tag)
@@ -13,6 +14,7 @@ function createElem(tag, className, content) {
     element.textContent = content
     return element
 }
+
 
 
 if (logged) {

@@ -1,4 +1,4 @@
-export default function postForm(){
+export default function postForm() {
     return `
     <div class="popup-overlay hidden" id="popupOverlay">
     <div class="popup">
@@ -13,23 +13,7 @@ export default function postForm(){
 
             <label for="categories">Categories:</label><br>
             <div class="categories-container">
-                <input type="checkbox" id="tech" name="categories" value="Technology">
-                <label for="tech">Technology</label>
-
-                <input type="checkbox" id="science" name="categories" checked value="Science">
-                <label for="science">Lifestyle</label>
-
-                <input type="checkbox" id="health" name="categories" value="Health">
-                <label for="health">Health</label>
-
-                <input type="checkbox" id="sports" name="categories" value="Sports">
-                <label for="sports">Sports</label>
-
-                <input type="checkbox" id="art" name="categories" value="Art">
-                <label for="art">Education</label>
             </div>
-
-
             <button class="sbtn" type="submit">Submit</button>
         </form>
     </div>

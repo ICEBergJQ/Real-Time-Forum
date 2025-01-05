@@ -193,7 +193,6 @@ func CreateQuery(categories []string) string {
 			query += " AND category_name LIKE '%" + cat + "%'"
 		}
 	}
-	query += ";"
 	return query
 }
 

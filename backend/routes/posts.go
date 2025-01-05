@@ -3,7 +3,6 @@ package routes
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -28,7 +27,6 @@ func FilterRoute(db *sql.DB) {
 		if r.Method == http.MethodGet {
 			var req models.FilterRequest
 			if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-				fmt.Println(err)
 				http.Error(w, "Invalid input", http.StatusBadRequest)
 				return
 			}
@@ -38,8 +36,8 @@ func FilterRoute(db *sql.DB) {
 				query = `SELECT p.post_id, p.user_id, p.category_name, p.title, p.content, p.created_at
 						FROM posts p
 						JOIN Reactions l ON p.post_id = l.post_id
-						WHERE l.reaction_type = 'like' AND l.user_id = ` + strconv.Itoa(req.Id) + 
-						` AND p.created_at < ? ORDER BY p.created_at DESC limit ?`
+						WHERE l.reaction_type = 'like' AND l.user_id = ` + strconv.Itoa(req.Id) +
+					` AND p.created_at < ? ORDER BY p.created_at DESC limit ?`
 
 				controllers.FilterPosts(query, req.Cursor, db, w, r)
 			case "filterbycategories":

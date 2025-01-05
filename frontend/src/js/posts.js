@@ -9,6 +9,7 @@ const dynamicContent = document.querySelector("#dynamicContent")
 const anotherDynamic = document.querySelector("#anotherDynamic")
 const dynaicPost = document.querySelector("#dynaicPost")
 const logoutDynamic = document.querySelector("#logoutdynamic");
+const loadMore = document.querySelector('main>button')
 
 anotherDynamic.innerHTML = registerForm()
 dynamicContent.innerHTML = teeeeeesloginForm()
@@ -80,17 +81,6 @@ const displayPopup = (target) => {
     }
 }
 
-const listPosts = (posts) => {
-    articles = posts
-    postsContainer.innerHTML = posts.length ? posts.map(post => Article(post)) : `<p>No Posts For Now!! </p>`
-    ///get elems after comp load
-    attachModalEventListeners()
-    //after comp loaded
-    registerModal = document.querySelector("#signUpModal")
-    console.log(articles)
-}
-
-
 function popPost(e, id) {
     const post = articles.find(p => p.id == id)
     e.target.parentElement.textContent = post.content
@@ -147,14 +137,54 @@ createPostBtn.onclick = () => showCreatePostModal()
 
 //get poosts
 
+let cursor = new Date();   
 
+const listPosts = (posts) => {
+    articles = posts
+    postsContainer.innerHTML += posts.length ? posts.map(post => Article(post)) : `<p>No Posts For Now!! </p>`
+    ///get elems after comp load
+    attachModalEventListeners()
+    //after comp loaded
+    registerModal = document.querySelector("#signUpModal")
+    console.log(articles)
+    
+}
+loadMore.onclick = () => {
+    fetchPosts();
+}
+/*
 fetch('/post')
     // fetch('./static/public/posts.json')
     .then(res => res.json())
     .then(posts => {
+        console.log(posts)
         listPosts(posts)
     }).catch(err => console.log("get posts : ", err))
 
+*/
+// Function to fetch posts
+function fetchPosts() {
+    let url = '/post';  // Start with the basic URL
+
+    // if (cursor) {
+        url += `?cursor=${cursor}`;  // Add the cursor if it's available (for subsequent requests)
+    // }
+
+    fetch(url)
+        .then(res => res.json())
+        .then(posts => {
+            if (posts && posts.length > 0) {
+                listPosts(posts);  // Display posts on the page
+
+                // Update the cursor to the timestamp of the last post
+                cursor = posts[posts.length - 1].createdat;
+            } else{
+                alert("NO More POsts!!")
+            }
+        }).catch(err => console.log("get posts : ", err));
+}
+
+fetchPosts();
 
 fetch("/categories")
     .then(res => res.json())

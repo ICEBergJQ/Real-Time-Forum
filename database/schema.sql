@@ -59,7 +59,7 @@ CREATE TABLE
         -- UNIQUE (user_id, post_id, comment_id)
     );
 
-CREATE TABLE IF NOT EXISTS session (
+CREATE TABLE IF NOT EXISTS sessions (
     session_id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,

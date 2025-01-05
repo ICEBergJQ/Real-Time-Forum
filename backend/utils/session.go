@@ -15,7 +15,7 @@ func SeesionCreation(user_id int, db *sql.DB) (string, error) {
 	if err != nil {
 		return "error", fmt.Errorf("invalid payload: %w", err)
 	}
-	query := `INSERT INTO session (session_id, user_id, expired_at) 
+	query := `INSERT INTO sessions (session_id, user_id, expired_at) 
           VALUES (?, ?, datetime('now', '+1 hour', '+5 days'))`
 	_, err = db.Exec(query, token.String(), user_id)
 	if err != nil {
@@ -31,7 +31,7 @@ func TokenCheck(user_id int, r *http.Request, db *sql.DB) bool {
 		return false
 	}
 	var dbToken string
-	query := "SELECT session_id FROM session WHERE user_id = ?"
+	query := "SELECT session_id FROM sessions WHERE user_id = ?"
 	row := db.QueryRow(query, user_id)
 	err = row.Scan(&dbToken)
 	if err != nil {
@@ -43,7 +43,7 @@ func TokenCheck(user_id int, r *http.Request, db *sql.DB) bool {
 	if cookie.Value == dbToken {
 		return true
 	} else if cookie.Value != dbToken {
-		query := "DELETE FROM session WHERE session_id = ?"
+		query := "DELETE FROM sessions WHERE session_id = ?"
 		_, err = config.DB.Exec(query, dbToken)
 		if err != nil {
 			// call error func

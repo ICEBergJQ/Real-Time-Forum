@@ -122,7 +122,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// call error func
 	}
-	query := "DELETE FROM session WHERE session_id = ?"
+	query := "DELETE FROM sessions WHERE session_id = ?"
 	_, err = config.DB.Exec(query, cookie.Value)
 	if err != nil {
 		// call error func

@@ -137,17 +137,29 @@ createPostBtn.onclick = () => showCreatePostModal()
 
 //get poosts
 
-let cursor = new Date();   
+let cursor = new Date();
 
 const listPosts = (posts) => {
     articles = posts
-    postsContainer.innerHTML += posts.length ? posts.map(post => Article(post)) : `<p>No Posts For Now!! </p>`
+
+
+    posts.forEach(async post => {
+        const comments = await getComment(post.id)
+        postsContainer.innerHTML += Article(post, comments)
+    }
+    )
+    // postsContainer.innerHTML += posts.length ? posts.map(async post => {
+    //     const comments = await getComment(post.id)
+    //     Article(post, comments)
+    // }
+
+    // ) : `<p>No Posts For Now!! </p>`
     ///get elems after comp load
     attachModalEventListeners()
     //after comp loaded
     registerModal = document.querySelector("#signUpModal")
     console.log(articles)
-    
+
 }
 loadMore.onclick = () => {
     fetchPosts();
@@ -167,18 +179,19 @@ function fetchPosts() {
     let url = '/post';  // Start with the basic URL
 
     // if (cursor) {
-        url += `?cursor=${cursor}`;  // Add the cursor if it's available (for subsequent requests)
+    url += `?cursor=${cursor}`;  // Add the cursor if it's available (for subsequent requests)
     // }
 
     fetch(url)
         .then(res => res.json())
         .then(posts => {
             if (posts && posts.length > 0) {
+
                 listPosts(posts);  // Display posts on the page
 
                 // Update the cursor to the timestamp of the last post
                 cursor = posts[posts.length - 1].createdat;
-            } else{
+            } else {
                 alert("NO More POsts!!")
             }
         }).catch(err => console.log("get posts : ", err));
@@ -196,11 +209,28 @@ fetch("/categories")
     .catch(err => console.log("can't get categories", err))
 
 
+async function getComment(id) {
+    let url = `/comment?id=${id}`
+    try {
+        const res = await fetch(url)
+        const coms = await res.json()
+        console.log(coms)
+        return coms
 
+    } catch (err) {
+        console.log("can't get comment", err)
+    }
+
+}
+
+function displayComment(e) {
+    e.target.parentElement.nextElementSibling.classList.toggle("hidden")
+}
 
 window.popPost = popPost
 window.closeModal = closeModal
 window.displayPopup = displayPopup
+window.displayComment = displayComment
 
 
 

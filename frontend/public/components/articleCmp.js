@@ -1,11 +1,11 @@
 import Comment from './commentCmp.js'
 
-export function Article(post) {
+export function Article(post, comments) {
   return `
     <article class="post-preview">
       <div class="post-header">
         <h3><a href="#">${post.title}</a></h3>
-        <p>By <strong>post.author</strong> | Category: <em>${categories.map(cat =>
+        <p>By <strong>${post.author}</strong> | Category: <em>${post.categories.map(cat =>
     ` <span> ${cat}</span>`
   )}
         </em> 
@@ -29,7 +29,7 @@ export function Article(post) {
       <!-- Comments Section (Initially Hidden) -->
       <div class="container-comment hidden">
         <h2><span>${post.comments_count}</span> Comments</h2>
-         {loadComments(post.comments)}
+         ${loadComments(comments)}
          <div id="Reply-section" class="reply-section">
               <h3>Reply</h3>
               <div class="editor">
@@ -42,3 +42,7 @@ export function Article(post) {
 }
 
 const loadComments = (comments) => comments.map(com => Comment(com))
+// function loadComments(comments) {
+//   console.log(comments)
+//   return comments.map(com => Comment(com))
+// } 

@@ -49,9 +49,6 @@ if (logged) {
 //     ) : null
 // }
 
-function displayComment(e) {
-    e.target.parentElement.nextElementSibling.classList.toggle("hidden")
-}
 
 //auth comps errors
 const displayError = (txt) => {

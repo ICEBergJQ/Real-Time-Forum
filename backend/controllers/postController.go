@@ -6,14 +6,12 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"sync"
+	"forum/utils"
 
 	uuid "github.com/gofrs/uuid"
 
 	forum "forum/models"
 )
-
-var mu sync.Mutex
 
 func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/post" {
@@ -47,7 +45,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	defer tx.Rollback()
 	categories := ""
 
-	newPost.Category_id, categories, err = CategoriesChecker(db, newPost.Categories)
+	newPost.Category_id, categories, err = utils.CategoriesChecker(db, newPost.Categories)
 	if err != nil {
 		http.Error(w, "invalid categories", http.StatusBadRequest)
 		return
@@ -76,7 +74,9 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(newPost)
+	if err := json.NewEncoder(w).Encode(newPost); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+	}
 }
 
 func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {

@@ -8,6 +8,7 @@ import (
 
 	"forum/controllers"
 	"forum/models"
+	"forum/utils"
 )
 
 func PostRoute(db *sql.DB) {
@@ -41,7 +42,7 @@ func FilterRoute(db *sql.DB) {
 
 				controllers.FilterPosts(query, req.Cursor, db, w, r)
 			case "filterbycategories":
-				_, _, err := controllers.CategoriesChecker(db, req.Categories)
+				_, _, err := utils.CategoriesChecker(db, req.Categories)
 				if err != nil {
 					http.Error(w, "Invalid Categories", http.StatusBadRequest)
 					return

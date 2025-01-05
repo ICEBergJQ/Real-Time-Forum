@@ -10,40 +10,7 @@ import (
 	forum "forum/models"
 )
 
-func CategoriesChecker(db *sql.DB, categoryNames []string) ([]int, string, error) {
-	if len(categoryNames) < 1 {
-		return nil, "", fmt.Errorf("no categories provided")
-	}
 
-	type Category struct {
-		ID   int
-		Name string
-	}
-
-	var categories []Category
-	var ids []int
-
-	for _, categoryName := range categoryNames {
-		var category Category
-		err := db.QueryRow("SELECT category_id, category_name FROM categories WHERE category_name = ?", categoryName).Scan(&category.ID, &category.Name)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				return nil, "", fmt.Errorf("category not found: %s", categoryName)
-			}
-			return nil, "", fmt.Errorf("error fetching category: %w", err)
-		}
-		categories = append(categories, category)
-	}
-
-	var CategoryNames string
-	for i, category := range categories {
-		if i != len(categories)-1 {
-			CategoryNames += category.Name + ","
-		}
-		ids = append(ids, category.ID)
-	}
-	return ids, CategoryNames, nil
-}
 
 func CreateQuery(categories []string) string {
 	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE category_name LIKE "

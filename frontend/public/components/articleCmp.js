@@ -21,14 +21,14 @@ export function Article(post) {
       </p>
       <div class="post-details">
         <button class="btn like-btn"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
-          (<span>$post.likes</span>)</button>
+          (<span>${post.likes_count}</span>)</button>
         <button class="btn dislike-btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
-          ($post.dislikes)</button>
+          ${(post.dislikes_count)}</button>
         <button class="btn comment-btn" onclick="displayComment(event)">💬 Comment</button>
       </div>
       <!-- Comments Section (Initially Hidden) -->
       <div class="container-comment hidden">
-        <h2><span>$post.comments.length</span> Comments</h2>
+        <h2><span>${post.comments_count}</span> Comments</h2>
          {loadComments(post.comments)}
          <div id="Reply-section" class="reply-section">
               <h3>Reply</h3>

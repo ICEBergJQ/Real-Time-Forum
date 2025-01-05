@@ -16,15 +16,10 @@ import (
 var mu sync.Mutex
 
 func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-		return
-	}
 	if r.URL.Path != "/post" {
 		http.Error(w, "Not found", http.StatusNotFound)
 		return
 	}
-	fmt.Println(r.Body)
 	var newPost forum.Post
 	if err := json.NewDecoder(r.Body).Decode(&newPost); err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
@@ -130,7 +125,9 @@ func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(posts)
+	if err := json.NewEncoder(w).Encode(posts); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+	}
 }
 
 func RowCounter(query string, ID string, db *sql.DB) int {

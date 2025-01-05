@@ -2,9 +2,13 @@ package routes
 
 import (
 	"database/sql"
+	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"forum/controllers"
+	"forum/models"
 )
 
 func PostRoute(db *sql.DB) {
@@ -22,34 +26,35 @@ func PostRoute(db *sql.DB) {
 func FilterRoute(db *sql.DB) {
 	http.HandleFunc("/filter", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			query := r.URL.Query()
+			var req models.FilterRequest
+			if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+				fmt.Println(err)
+				http.Error(w, "Invalid input", http.StatusBadRequest)
+				return
+			}
+			query := ""
+			switch req.FilterMethod {
+			case "getlikedposts":
+				query = `SELECT p.post_id, p.user_id, p.category_name, p.title, p.content, p.created_at
+						FROM posts p
+						JOIN Reactions l ON p.post_id = l.post_id
+						WHERE l.reaction_type = 'like' AND l.user_id = ` + strconv.Itoa(req.Id) + 
+						` AND p.created_at < ? ORDER BY p.created_at DESC limit ?`
 
-			allowedParams := []string{"user_id", "categories", "liked_user"}
-			foundParams := []string{}
-			for _, param := range allowedParams {
-				if value := query.Get(param); value != "" {
-					foundParams = append(foundParams, param)
+				controllers.FilterPosts(query, req.Cursor, db, w, r)
+			case "filterbycategories":
+				_, _, err := controllers.CategoriesChecker(db, req.Categories)
+				if err != nil {
+					http.Error(w, "Invalid Categories", http.StatusBadRequest)
+					return
 				}
-			}
-
-			if len(foundParams) > 1 {
-				http.Error(w, "page not found", http.StatusNotFound)
-				return
-			}
-
-			if len(foundParams) == 0 {
-				http.Error(w, "No valid query parameter provided", http.StatusBadRequest)
-				return
-			}
-			switch foundParams[0] {
-			case "user_id":
-				controllers.GetCreatedPosts(db, w, r)
-			case "categories":
-				controllers.GetFilteredPostsByCategory(db, w, r)
-			case "liked_user":
-				controllers.GetLikedPosts(db, w, r)
+				query = controllers.CreateQuery(req.Categories) + ` AND created_at < ? ORDER BY created_at DESC limit ?`
+				controllers.FilterPosts(query, req.Cursor, db, w, r)
+			case "getcreatedposts":
+				query = `SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE user_id = ` + strconv.Itoa(req.Id)
+				controllers.FilterPosts(query, req.Cursor, db, w, r)
 			default:
-				http.Error(w, "Unsupported query parameter", http.StatusNotFound)
+				http.Error(w, "Unsupported filter method", http.StatusBadRequest)
 			}
 		} else {
 			http.Error(w, "Invalid method", http.StatusMethodNotAllowed)

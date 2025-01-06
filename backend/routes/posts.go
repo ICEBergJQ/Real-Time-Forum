@@ -18,7 +18,6 @@ func PostRoute(db *sql.DB) {
 		} else if r.Method == http.MethodGet {
 			var req models.Request
 			if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-				fmt.Println(err)
 				http.Error(w, "Invalid input", http.StatusBadRequest)
 				return
 			}

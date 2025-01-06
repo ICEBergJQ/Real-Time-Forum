@@ -51,6 +51,8 @@ func CategoriesChecker(db *sql.DB, categoryNames []string) ([]int, string, error
 	for i, category := range categories {
 		if i != len(categories)-1 {
 			CategoryNames += category.Name + ","
+		} else {
+			CategoryNames += category.Name
 		}
 		ids = append(ids, category.ID)
 	}

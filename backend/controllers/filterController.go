@@ -61,5 +61,6 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(posts); err != nil {
 		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		return
 	}
 }

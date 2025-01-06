@@ -5,8 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"forum/utils"
+
 	forum "forum/models"
+	"forum/utils"
 
 	uuid "github.com/gofrs/uuid"
 )
@@ -16,7 +17,6 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&newComment); err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 	defer r.Body.Close()
@@ -48,8 +48,17 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := tx.Commit(); err != nil {
+		http.Error(w, "Failed to commit transaction", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(newComment)
+	if err := json.NewEncoder(w).Encode(newComment); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		return
+	}
 }
 
 func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
@@ -82,5 +91,9 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		comments = append(comments, comment)
 	}
 
-	json.NewEncoder(w).Encode(comments)
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(comments); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		return
+	}
 }

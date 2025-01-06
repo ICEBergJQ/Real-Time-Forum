@@ -3,7 +3,6 @@ package routes
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"forum/controllers"

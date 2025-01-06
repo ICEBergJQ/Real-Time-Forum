@@ -5,17 +5,22 @@ const dislikeCounter = document.querySelector('.dislike-btn span')
 ///if the user is logged
 // const userId = localStorage.getItem("user_id");
 /// else hide like/dislike btns
- 
 
-function interact(e, action) {
+
+function interact(e, user_id, post_id, comment_id, reaction_type) {
 
     ///there will be a data attribbute in the like btn
     const postId = e.dataset.postId
     console.log('10')
-    fetch(`/${action}`, {
+    fetch(`/reaction`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userId, post_id: postId }),
+        body: JSON.stringify({
+            user_id,
+            post_id,
+            comment_id,
+            reaction_type
+        }),
     })
         .then((res) => res.json())
         .then((data) => {
@@ -32,8 +37,6 @@ function interact(e, action) {
             // window.location.reload();
         })
         .catch((error) => alert("post interaction Error : " + error.message))
-
-
 }
 
 function handleInteraction(action) {

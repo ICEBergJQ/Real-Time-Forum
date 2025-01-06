@@ -2,7 +2,6 @@ package models
 
 type PaginationRequest struct {
 	Cursor string `json:"cursor"`
-	Limit  int    `json:"limit"`
 }
 
 type PaginationResponse struct {

@@ -37,7 +37,7 @@ form.addEventListener('submit', (e) => {
             return res.json();
         })
         .then(data => {
-            console.log(data);
+            console.log("dddd : ", data);
             ///save username to localstorage to display it in profile section
             ///testing TODO use cookie
             localStorage.setItem("logged", "true");

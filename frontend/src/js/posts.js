@@ -179,17 +179,20 @@ function fetchPosts() {
     let url = '/post';  // Start with the basic URL
 
     // if (cursor) {
-    url += `?cursor=${cursor}`;  // Add the cursor if it's available (for subsequent requests)
+    //    url += `?cursor=${cursor}`;  // Add the cursor if it's available (for subsequent requests)
     // }
 
-    fetch(url)
+    fetch(url, {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cursor: "2025-01-06 01:27:33" }),
+    })
         .then(res => res.json())
         .then(posts => {
             if (posts && posts.length > 0) {
-
-                listPosts(posts);  // Display posts on the page
-
-                // Update the cursor to the timestamp of the last post
+                loadMore.style.display = 'block'
+                listPosts(posts);  
+ 
                 cursor = posts[posts.length - 1].createdat;
             } else {
                 alert("NO More POsts!!")
@@ -197,17 +200,18 @@ function fetchPosts() {
         }).catch(err => console.log("get posts : ", err));
 }
 
-fetchPosts();
 
 fetch("/categories")
     .then(res => res.json())
     .then(categories => {
+        console.log(categories);
 
         document.querySelector('#createPostForm .categories-container').innerHTML = categories.map(cat => `<input type="checkbox" id="${cat.category_name}" name="categories" value="${cat.category_name}">
             <label for="${cat.category_name}">${cat.category_name}</label> `).join('')
     })
     .catch(err => console.log("can't get categories", err))
 
+//    fetchPosts();
 
 async function getComment(id) {
     let url = `/comment?id=${id}`

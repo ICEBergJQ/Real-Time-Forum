@@ -1,5 +1,3 @@
-
-
 const createPostForm = document.querySelector('#createPostForm')
 const postTitle = createPostForm.querySelector('input[type=text]')
 const postContent = createPostForm.querySelector('textarea')
@@ -9,24 +7,28 @@ createPostForm.onsubmit = (e) => {
 
     const title = postTitle.value.trim()
     const content = postContent.value.trim()
-    const postCategory = Array.from(document.querySelectorAll('input[type=checkbox]:checked'), elem => elem.value)
+    const Categories = Array.from(document.querySelectorAll('input[type=checkbox]:checked'), elem => elem.value)
 
     console.log(title)
     console.log(content)
-    console.log(postCategory)
+    console.log(Categories)
+    const category_id = [1]
+    const Author_id = 1;
 
     if (!title || !content) {
         alert('all fields are required!')
         return
     }
 
-    fetch('/posts', {
-        method: 'post',
+    fetch('/post', {
+        method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+            Author_id,
             title,
             content,
-            postCategory
+            Categories,
+            category_id
         })
     })
         .then(res => res.json())
@@ -43,8 +45,11 @@ createPostForm.onsubmit = (e) => {
                 // Reset form
                 createPostForm.reset()
             */
+            console.log(data)
             alert(data.message)
-            // Window.location.reload()
+            // fetchPosts();
+
+             location.href ='/'
         })
         .catch((error) => alert("creating post Error : " + error.message));
 }

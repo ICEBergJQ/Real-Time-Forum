@@ -179,10 +179,14 @@ function fetchPosts() {
     let url = '/post';  // Start with the basic URL
 
     // if (cursor) {
-    url += `?cursor=${cursor}`;  // Add the cursor if it's available (for subsequent requests)
+//    url += `?cursor=${cursor}`;  // Add the cursor if it's available (for subsequent requests)
     // }
 
-    fetch(url)
+    fetch(url, {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cursor:"2025-01-06 01:27:33" }),
+    })
         .then(res => res.json())
         .then(posts => {
             if (posts && posts.length > 0) {

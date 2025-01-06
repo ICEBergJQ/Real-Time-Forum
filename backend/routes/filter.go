@@ -13,7 +13,7 @@ import (
 
 func FilterRoute(db *sql.DB) {
 	http.HandleFunc("/filter", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodGet {
+		if r.Method == http.MethodPost {
 			var req models.Request
 			if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 				http.Error(w, "Invalid input", http.StatusBadRequest)

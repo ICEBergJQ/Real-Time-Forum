@@ -179,7 +179,7 @@ function fetchPosts() {
     let url = '/post';  // Start with the basic URL
 
     // if (cursor) {
-     url += `?cursor=${cursor}`;  // Add the cursor if it's available (for subsequent requests)
+    url += `?cursor=${cursor}`;  // Add the cursor if it's available (for subsequent requests)
     // }
 
     fetch(url, {
@@ -192,7 +192,7 @@ function fetchPosts() {
             if (posts && posts.length > 0) {
                 loadMore.style.display = 'block'
                 listPosts(posts);
- 
+
                 cursor = posts[posts.length - 1].createdat;
             } else {
                 alert("NO More POsts!!")
@@ -211,7 +211,7 @@ fetch("/categories")
     })
     .catch(err => console.log("can't get categories", err))
 
-//    fetchPosts();
+// fetchPosts();
 
 async function getComment(id) {
     let url = `/comment?id=${id}`

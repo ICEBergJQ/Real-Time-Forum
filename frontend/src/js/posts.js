@@ -136,8 +136,18 @@ createPostBtn.onclick = () => showCreatePostModal()
 ///get data
 
 //get poosts
+const formatDate = (date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')  
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const seconds = String(date.getSeconds()).padStart(2, '0')
+console.log(year)
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
 
-let cursor = new Date();
+let cursor = formatDate(new Date())
 
 const listPosts = (posts) => {
     articles = posts
@@ -193,7 +203,7 @@ function fetchPosts() {
                 loadMore.style.display = 'block'
                 listPosts(posts);
 
-                cursor = posts[posts.length - 1].createdat;
+                cursor = formatDate(new Date(posts[posts.length - 1].createdat))
             } else {
                 alert("NO More POsts!!")
             }
@@ -211,15 +221,14 @@ fetch("/categories")
     })
     .catch(err => console.log("can't get categories", err))
 
-// fetchPosts();
+fetchPosts();
 
 async function getComment(id) {
     let url = `/comment?id=${id}`
     try {
         const res = await fetch(url)
         const coms = await res.json()
-        console.log(coms)
-        return coms
+        return coms || []
 
     } catch (err) {
         console.log("can't get comment", err)

@@ -41,6 +41,7 @@ form.addEventListener('submit', (e) => {
             ///save username to localstorage to display it in profile section
             ///testing TODO use cookie
             localStorage.setItem("logged", "true");
+            
             // localStorage.setItem("username", data.user.username);
             window.location.href = "/";
         })

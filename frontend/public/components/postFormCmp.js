@@ -6,10 +6,10 @@ export default function postForm() {
         <h2>Create a Post</h2>
         <form id="createPostForm">
             <label for="title">Title</label>
-            <input type="text" id="title" name="title" placeholder="Enter post title" value="tetst title" required>
+            <input type="text" id="title" name="title" placeholder="Enter post title"  required>
 
             <label for="content">Content</label>
-            <textarea id="content" name="content" rows="5" placeholder="Enter post content"  required> test content</textarea>
+            <textarea id="content" name="content" rows="5" placeholder="Enter post content"  required></textarea>
 
             <label for="categories">Categories:</label><br>
             <div class="categories-container">

@@ -153,6 +153,7 @@ const listPosts = (posts) => {
 
     posts.forEach(async post => {
         const comments = await getComment(post.id)
+        console.log('comments : ', comments)
         postsContainer.innerHTML += Article(post, comments)
     })
 
@@ -205,8 +206,8 @@ fetch("/categories")
 
 fetchPosts();
 
-async function getComment(id) {
-    let url = `/comment?id=${id}`
+async function getComment(postId) {
+    let url = `/comment?id=${postId}`
     try {
         const res = await fetch(url)
         const coms = await res.json()

@@ -58,3 +58,12 @@ func CategoriesChecker(db *sql.DB, categoryNames []string) ([]int, string, error
 	}
 	return ids, CategoryNames, nil
 }
+
+func GetUserName(userid int, db *sql.DB) (string, error) {
+	username := ""
+	err := db.QueryRow(`SELECT username FROM users WHERE user_id = ?;`, userid).Scan(&username)
+	if err != nil {
+		return "", err
+	}
+	return username, nil
+}

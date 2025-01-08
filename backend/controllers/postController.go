@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
 	"forum/utils"
 
 	uuid "github.com/gofrs/uuid"
@@ -35,6 +36,11 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	newPost.ID = postID.String()
+	newPost.Author_name, err = utils.GetUserName(newPost.Author_id, db)
+	if err != nil {
+		http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
+		return
+	}
 
 	// Begin transaction
 	tx, err := db.Begin()
@@ -95,6 +101,11 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 		err := rows.Scan(&post.ID, &post.Author_id, &category, &post.Title, &post.Content, &post.CreatedAt)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)
+			return
+		}
+		post.Author_name, err = utils.GetUserName(post.Author_id, db)
+		if err != nil {
+			http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
 			return
 		}
 		post.Likes_Counter = RowCounter(`

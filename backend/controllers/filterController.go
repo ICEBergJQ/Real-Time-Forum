@@ -8,9 +8,8 @@ import (
 	"strings"
 
 	forum "forum/models"
+	"forum/utils"
 )
-
-
 
 func CreateQuery(categories []string) string {
 	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE category_name LIKE "
@@ -25,7 +24,7 @@ func CreateQuery(categories []string) string {
 }
 
 func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	rows, err := db.Query(query , cursor, 20)
+	rows, err := db.Query(query, cursor, 20)
 	if err != nil {
 		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
@@ -39,6 +38,11 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 		err := rows.Scan(&post.ID, &post.Author_id, &category, &post.Title, &post.Content, &post.CreatedAt)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)
+			return
+		}
+		post.Author_name, err = utils.GetUserName(post.Author_id, db)
+		if err != nil {
+			http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
 			return
 		}
 		post.Likes_Counter = RowCounter(`

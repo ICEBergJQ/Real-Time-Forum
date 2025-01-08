@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	forum "forum/models"
+	"forum/utils"
 )
 
 func hasUserReacted(db *sql.DB, userID int, postID string, commentID *string) (bool, string) {
@@ -74,12 +75,12 @@ func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	_, err := db.Exec("PRAGMA foreign_keys = ON;")
-	if err != nil {
-		http.Error(w, "Failed to enable foreign keys", http.StatusInternalServerError)
-		return
+	PostExist := utils.PostExists(db, newReaction.Post_id)
+	if !PostExist {
+		fmt.Println("Error, Post does not exist!!")
+		http.Error(w, "Post Does not Exist", http.StatusBadRequest)
+		return 
 	}
-
 	Reacted, currentReaction := hasUserReacted(db, newReaction.User_id, newReaction.Post_id, &newReaction.Comment_id)
 	if Reacted {
 		if currentReaction == newReaction.Reaction_Type {

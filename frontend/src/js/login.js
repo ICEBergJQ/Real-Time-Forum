@@ -15,6 +15,7 @@ form.addEventListener('submit', (e) => {
         displayError("all fields are required!!")
         return
     } else if (password.length < 6) {
+        //Password should be at least 6 characters long
         displayError("Invalid credentials")
         return
     }
@@ -26,19 +27,23 @@ form.addEventListener('submit', (e) => {
     })
         .then((res) => {
             if (!res.ok) {
-
-                displayError(res.statusText)
-                throw new Error("Invalid credentials");
+                return res.json().then(data => {
+                    displayError(data.Message || "Something went wrong!");
+                    throw new Error(data.Message || "Invalid credentials");
+                });
+                // displayError(res.statusText)
+                // throw new Error("Invalid credentials");
             }
             return res.json();
         })
         .then(data => {
-            console.log(data);
+            console.log("dddd : ", data);
             ///save username to localstorage to display it in profile section
             ///testing TODO use cookie
             localStorage.setItem("logged", "true");
+            
             // localStorage.setItem("username", data.user.username);
             window.location.href = "/";
         })
-        .catch(error => console.error(error));
+        .catch(error => console.error("login errror  : ", error));
 })

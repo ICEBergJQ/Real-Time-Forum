@@ -1,11 +1,11 @@
 import Comment from './commentCmp.js'
 
-export function Article(post) {
+export function Article(post, comments) {
   return `
     <article class="post-preview">
       <div class="post-header">
         <h3><a href="#">${post.title}</a></h3>
-        <p>By <strong>post.author</strong> | Category: <em>${categories.map(cat =>
+        <p>By <strong>${post.author}</strong> | Category: <em>${post.categories.map(cat =>
     ` <span> ${cat}</span>`
   )}
         </em> 
@@ -21,24 +21,28 @@ export function Article(post) {
       </p>
       <div class="post-details">
         <button class="btn like-btn"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
-          (<span>$post.likes</span>)</button>
+          (<span>${post.likes_count}</span>)</button>
         <button class="btn dislike-btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
-          ($post.dislikes)</button>
+          ${(post.dislikes_count)}</button>
         <button class="btn comment-btn" onclick="displayComment(event)">💬 Comment</button>
       </div>
       <!-- Comments Section (Initially Hidden) -->
       <div class="container-comment hidden">
-        <h2><span>$post.comments.length</span> Comments</h2>
-         {loadComments(post.comments)}
+        <h2><span>${post.comments_count}</span> Comments</h2>
+         ${loadComments(comments)}
          <div id="Reply-section" class="reply-section">
               <h3>Reply</h3>
               <div class="editor">
                 <textarea class="reply-input" placeholder="Add as many details as possible..."></textarea>
               </div>
-              <button class="btn send-btn">Send</button>
+              <button class="btn send-btn" onclick="postComment(event, '${post.id}')">Send</button>
             </div>
       </div>
     </article>`
 }
 
 const loadComments = (comments) => comments.map(com => Comment(com))
+// function loadComments(comments) {
+//   console.log(comments)
+//   return comments.map(com => Comment(com))
+// } 

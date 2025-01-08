@@ -2,11 +2,9 @@ package routes
 
 import (
 	"database/sql"
-	"encoding/json"
 	"net/http"
 
 	"forum/controllers"
-	"forum/models"
 	"forum/utils"
 )
 
@@ -15,16 +13,12 @@ func PostRoute(db *sql.DB) {
 		if r.Method == http.MethodPost {
 			controllers.CreatePost(db, w, r)
 		} else if r.Method == http.MethodGet {
-			var req models.Request
-			if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-				http.Error(w, "Invalid input", http.StatusBadRequest)
-				return
-			}
-			if !utils.IsTimestamp(req.Cursor) {
+			cursor := r.URL.Query().Get("cursor")
+			if !utils.IsTimestamp(cursor) {
 				http.Error(w, "Invalid Cursor", http.StatusBadRequest)
 				return
 			}
-			controllers.GetPosts(req.Cursor, db, w, r)
+			controllers.GetPosts(cursor, db, w, r)
 		} else {
 			http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		}

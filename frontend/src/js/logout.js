@@ -27,9 +27,10 @@ confirmLogout.onclick = () => {
                 alert(data.Message)
                 :
                 alert("You are logged out")
-            localStorage.removeItem("logged") // Clear user data from localStorage
             logoutModal.classList.add("hidden");
-            //document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            localStorage.setItem("logged", "false");
+            
+            document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             window.location.href = "/"
         }).catch(err => console.log("logout Error : ", err))
 }

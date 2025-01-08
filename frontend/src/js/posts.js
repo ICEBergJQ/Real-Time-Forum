@@ -4,17 +4,16 @@ import { Article } from '../../public/components/articleCmp.js'
 import Logout from '../../public/components/logoutCmp.js'
 import postForm from '../../public/components/postFormCmp.js'
 const postsContainer = document.querySelector('main .post-list')
-let articles = []
 const dynamicContent = document.querySelector("#dynamicContent")
 const anotherDynamic = document.querySelector("#anotherDynamic")
 const dynaicPost = document.querySelector("#dynaicPost")
 const logoutDynamic = document.querySelector("#logoutdynamic");
+const loadMore = document.querySelector('main>button')
 
 anotherDynamic.innerHTML = registerForm()
 dynamicContent.innerHTML = teeeeeesloginForm()
 logoutDynamic.innerHTML = Logout()
 dynaicPost.innerHTML = postForm()
-
 
 let registerModal = document.querySelector("#signUpModal")
 const createPost = document.querySelector("#popupOverlay")
@@ -80,17 +79,6 @@ const displayPopup = (target) => {
     }
 }
 
-const listPosts = (posts) => {
-    articles = posts
-    postsContainer.innerHTML = posts.length ? posts.map(post => Article(post)) : `<p>No Posts For Now!! </p>`
-    ///get elems after comp load
-    attachModalEventListeners()
-    //after comp loaded
-    registerModal = document.querySelector("#signUpModal")
-    console.log(articles)
-}
-
-
 function popPost(e, id) {
     const post = articles.find(p => p.id == id)
     e.target.parentElement.textContent = post.content
@@ -146,31 +134,100 @@ createPostBtn.onclick = () => showCreatePostModal()
 ///get data
 
 //get poosts
+const formatDate = (date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const seconds = String(date.getSeconds()).padStart(2, '0')
+    console.log(year)
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
 
+let cursor = formatDate(new Date())
 
-fetch('/post')
-    // fetch('./static/public/posts.json')
-    .then(res => res.json())
-    .then(posts => {
-        listPosts(posts)
-    }).catch(err => console.log("get posts : ", err))
+const listPosts = (posts) => {
+    postsContainer.innerHTML = ''
+    articles = posts
+
+    posts.forEach(async post => {
+        const comments = await getComment(post.id)
+        postsContainer.innerHTML += Article(post, comments)
+    })
+
+    attachModalEventListeners()
+    //after comp loaded
+    registerModal = document.querySelector("#signUpModal")
+    console.log(articles)
+}
+
+loadMore.onclick = () => {
+    cursor = formatDate(new Date(articles[articles.length - 1].createdat))
+    fetchPosts();
+}
+
+// Function to fetch posts
+function fetchPosts() {
+    let url = '/post';
+
+    // if (cursor) {
+    url += `?cursor=${cursor}`
+    // }
+
+    fetch(url, {
+        // method: 'GET',
+        // headers: { "Content-Type": "application/json" },
+        // body: JSON.stringify({ cursor: "2025-01-06 01:27:33" }),
+    })
+        .then(res => res.json())
+        .then(posts => {
+            if (posts && posts.length > 0) {
+                loadMore.style.display = 'block'
+                listPosts(posts);
+
+            } else {
+                alert("NO More POsts!!")
+            }
+        }).catch(err => console.log("get posts : ", err));
+}
 
 
 fetch("/categories")
     .then(res => res.json())
     .then(categories => {
+        console.log(categories);
 
         document.querySelector('#createPostForm .categories-container').innerHTML = categories.map(cat => `<input type="checkbox" id="${cat.category_name}" name="categories" value="${cat.category_name}">
             <label for="${cat.category_name}">${cat.category_name}</label> `).join('')
     })
     .catch(err => console.log("can't get categories", err))
 
+fetchPosts();
 
+async function getComment(id) {
+    let url = `/comment?id=${id}`
+    try {
+        const res = await fetch(url)
+        const coms = await res.json()
+        return coms || []
 
+    } catch (err) {
+        console.log("can't get comment", err)
+    }
+
+}
+
+function displayComment(e) {
+    e.target.parentElement.nextElementSibling.classList.toggle("hidden")
+}
 
 window.popPost = popPost
 window.closeModal = closeModal
 window.displayPopup = displayPopup
+window.listPosts = listPosts
+window.fetchPosts = fetchPosts
+window.displayComment = displayComment
 
 
 

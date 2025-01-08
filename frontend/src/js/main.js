@@ -7,6 +7,7 @@ const likeBtn = document.querySelector('button.like-btn')
 
 // const profileName = document.querySelector('.profile')
 let categories = []
+let articles = []
 
 function createElem(tag, className, content) {
     const element = document.createElement(tag)
@@ -16,7 +17,7 @@ function createElem(tag, className, content) {
 }
 
 
-if (logged) {
+if (logged === 'true') {
     ///nav btns
     navLogoutBtn.style.display = "inline-block"
     createPostBtn.style.display = "inline-block"
@@ -49,9 +50,6 @@ if (logged) {
 //     ) : null
 // }
 
-function displayComment(e) {
-    e.target.parentElement.nextElementSibling.classList.toggle("hidden")
-}
 
 //auth comps errors
 const displayError = (txt) => {

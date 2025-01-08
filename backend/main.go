@@ -20,6 +20,8 @@ func main() {
 	routes.AuthRoutes(config.DB)
 	// post routes
 	routes.PostRoute(config.DB)
+	// like routes
+	routes.ReactionsRoute(config.DB)
 	// comment routes
 	routes.CommentsRoute(config.DB)
 	//categoeies routes

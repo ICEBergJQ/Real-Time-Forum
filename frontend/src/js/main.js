@@ -7,6 +7,7 @@ const likeBtn = document.querySelector('button.like-btn')
 
 // const profileName = document.querySelector('.profile')
 let categories = []
+let articles = []
 
 function createElem(tag, className, content) {
     const element = document.createElement(tag)

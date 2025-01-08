@@ -1,7 +1,6 @@
 import Comment from './commentCmp.js'
 
 export function Article(post, comments) {
-  console.log(comments)
   return `
     <article class="post-preview">
       <div class="post-header">
@@ -36,7 +35,7 @@ export function Article(post, comments) {
               <div class="editor">
                 <textarea class="reply-input" placeholder="Add as many details as possible..."></textarea>
               </div>
-              <button class="btn send-btn">Send</button>
+              <button class="btn send-btn" onclick="postComment(event, '${post.id}')">Send</button>
             </div>
       </div>
     </article>`

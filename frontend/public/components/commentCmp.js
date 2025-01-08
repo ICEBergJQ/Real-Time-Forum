@@ -1,4 +1,4 @@
-export default function Comment(postID, { id, author, createdat, content, likes, replycount, likesCount, dislikes }) {
+export default function Comment(postID, { id, author, createdat, content, likes, replycount, likescount, dislikescount }) {
   return `
     <section class="comments">
             <div class="comment">
@@ -13,11 +13,11 @@ export default function Comment(postID, { id, author, createdat, content, likes,
                 <p>${content}</p>
               </div>
               <div id="Comment-footer" class="comment-footer">
-                <p>${likesCount} person likes this</p>
+                <p>${likescount} person likes this</p>
                 <button id="Like"  onclick="interact(event,'${postID}', '${id}', 'like')" class="btn"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
-                (${likes})</button>
+                (${likescount})</button>
                 <button id="DisLike" onclick="interact(event, '${postID}',' ${id}', 'dislike')" class="btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
-                  (${dislikes})</button>
+                  (${dislikescount})</button>
               </div>
             </div>
             <!-- Reply Section -->

@@ -62,10 +62,6 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-		return
-	}
 	var comments []forum.Comment
 	postID := r.URL.Query().Get("id")
 	if postID == "" {
@@ -87,7 +83,16 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("internal server error x: %v", err), http.StatusInternalServerError)
 			return
 		}
-
+		comment.LikesCount =  RowCounter(`
+		SELECT COUNT(*) AS count
+		FROM Reactions
+		WHERE reaction_type = 'like'
+		AND comment_id = ?;`, comment.ID, db)
+		comment.DislikesCount = RowCounter(`
+		SELECT COUNT(*) AS count
+		FROM Reactions
+		WHERE reaction_type = 'dislike'
+		AND comment_id = ?;`, comment.ID, db)
 		comments = append(comments, comment)
 	}
 

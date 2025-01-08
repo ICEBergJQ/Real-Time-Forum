@@ -61,7 +61,7 @@ func CategoriesChecker(db *sql.DB, categoryNames []string) ([]int, string, error
 
 func GetUserName(userid int, db *sql.DB) (string, error) {
 	username := ""
-	err := db.QueryRow(`SELECT username FROM user WHERE user_id = ?;`, userid).Scan(&username)
+	err := db.QueryRow(`SELECT username FROM users WHERE user_id = ?;`, userid).Scan(&username)
 	if err != nil {
 		return "", err
 	}

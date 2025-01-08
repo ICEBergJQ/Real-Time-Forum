@@ -20,16 +20,16 @@ export function Article(post, comments) {
       : post.content}
       </p>
       <div class="post-details">
-        <button class="btn like-btn"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
+        <button class="btn like-btn" onclick="interact(event,'${post.id}', null, 'like')"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
           (<span>${post.likes_count}</span>)</button>
-        <button class="btn dislike-btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
+        <button class="btn dislike-btn" onclick="interact(event,'${post.id}', null, 'dislike')"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
           ${(post.dislikes_count)}</button>
         <button class="btn comment-btn" onclick="displayComment(event)">💬 Comment</button>
       </div>
       <!-- Comments Section (Initially Hidden) -->
       <div class="container-comment hidden">
         <h2><span>${post.comments_count}</span> Comments</h2>
-         ${loadComments(comments)}
+         ${loadComments(post.id, comments)}
          <div id="Reply-section" class="reply-section">
               <h3>Reply</h3>
               <div class="editor">
@@ -41,7 +41,7 @@ export function Article(post, comments) {
     </article>`
 }
 
-const loadComments = (comments) => comments.map(com => Comment(com))
+const loadComments = (postID, comments) => comments.map(com => Comment(postID, com))
 // function loadComments(comments) {
 //   console.log(comments)
 //   return comments.map(com => Comment(com))

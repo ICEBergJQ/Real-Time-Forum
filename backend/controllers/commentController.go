@@ -39,6 +39,11 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Post does not exist Bad request", http.StatusBadRequest)
 		return
 	}
+	newComment.Author_name, err = utils.GetUserName(newComment.Author_id,db)
+	if err != nil {
+		http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
+		return
+	} 
 
 	// Insert the post
 	query := "INSERT INTO comments (comment_id, user_id, post_id, content) VALUES (?, ?, ?, ?)"

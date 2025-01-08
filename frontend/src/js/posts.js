@@ -4,7 +4,6 @@ import { Article } from '../../public/components/articleCmp.js'
 import Logout from '../../public/components/logoutCmp.js'
 import postForm from '../../public/components/postFormCmp.js'
 const postsContainer = document.querySelector('main .post-list')
-let articles = []
 const dynamicContent = document.querySelector("#dynamicContent")
 const anotherDynamic = document.querySelector("#anotherDynamic")
 const dynaicPost = document.querySelector("#dynaicPost")
@@ -15,7 +14,6 @@ anotherDynamic.innerHTML = registerForm()
 dynamicContent.innerHTML = teeeeeesloginForm()
 logoutDynamic.innerHTML = Logout()
 dynaicPost.innerHTML = postForm()
-
 
 let registerModal = document.querySelector("#signUpModal")
 const createPost = document.querySelector("#popupOverlay")
@@ -138,58 +136,43 @@ createPostBtn.onclick = () => showCreatePostModal()
 //get poosts
 const formatDate = (date) => {
     const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')  
+    const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
     const hours = String(date.getHours()).padStart(2, '0')
     const minutes = String(date.getMinutes()).padStart(2, '0')
     const seconds = String(date.getSeconds()).padStart(2, '0')
-console.log(year)
+    console.log(year)
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 
 let cursor = formatDate(new Date())
 
 const listPosts = (posts) => {
+    postsContainer.innerHTML = ''
     articles = posts
-
 
     posts.forEach(async post => {
         const comments = await getComment(post.id)
         postsContainer.innerHTML += Article(post, comments)
-    }
-    )
-    // postsContainer.innerHTML += posts.length ? posts.map(async post => {
-    //     const comments = await getComment(post.id)
-    //     Article(post, comments)
-    // }
+    })
 
-    // ) : `<p>No Posts For Now!! </p>`
-    ///get elems after comp load
     attachModalEventListeners()
     //after comp loaded
     registerModal = document.querySelector("#signUpModal")
     console.log(articles)
-
 }
+
 loadMore.onclick = () => {
+    cursor = formatDate(new Date(articles[articles.length - 1].createdat))
     fetchPosts();
 }
-/*
-fetch('/post')
-    // fetch('./static/public/posts.json')
-    .then(res => res.json())
-    .then(posts => {
-        console.log(posts)
-        listPosts(posts)
-    }).catch(err => console.log("get posts : ", err))
 
-*/
 // Function to fetch posts
 function fetchPosts() {
-    let url = '/post';  // Start with the basic URL
+    let url = '/post';
 
     // if (cursor) {
-    url += `?cursor=${cursor}`;  // Add the cursor if it's available (for subsequent requests)
+    url += `?cursor=${cursor}`
     // }
 
     fetch(url, {
@@ -203,7 +186,6 @@ function fetchPosts() {
                 loadMore.style.display = 'block'
                 listPosts(posts);
 
-                cursor = formatDate(new Date(posts[posts.length - 1].createdat))
             } else {
                 alert("NO More POsts!!")
             }
@@ -243,6 +225,8 @@ function displayComment(e) {
 window.popPost = popPost
 window.closeModal = closeModal
 window.displayPopup = displayPopup
+window.listPosts = listPosts
+window.fetchPosts = fetchPosts
 window.displayComment = displayComment
 
 

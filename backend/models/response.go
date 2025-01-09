@@ -1,5 +1,6 @@
 package models
 
 type Response struct {
-	Message string 
+	Message string
+	Id int
 }

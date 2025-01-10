@@ -9,7 +9,12 @@ const dislikeCounter = document.querySelector('.dislike-btn span')
 
 function interact(post_id, comment_id, reaction_type) {
     ///post likecount also count comments
-
+    
+    if (!checkId()) {
+        console.log(checkId)
+        alert("you need to login!")
+        return
+    }
     ///    const postId = e.dataset.postId
     fetch(`/reaction`, {
         method: "POST",
@@ -19,7 +24,6 @@ function interact(post_id, comment_id, reaction_type) {
         }),
     })
         .then(res => {
-            console.log(res)
             if (!res.ok)
                 throw new Error('post interaction Error ' + res.status + " " + res.statusText)
 

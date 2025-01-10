@@ -39,6 +39,14 @@ if (user_id) {
 
 }
 
+const showPopup = (elem) => {
+    if (elem) {
+        elem.classList.remove("hidden");
+    }
+};
+
+const checkId = ()=>     user_id ? true : false
+
 // logoutBtn.onclick =  function () {
 //     // Clear user data from localStorage
 

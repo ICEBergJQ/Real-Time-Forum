@@ -2,11 +2,11 @@ package models
 
 type PaginationRequest struct {
 	Cursor string `json:"cursor"`
-	Limit  int    `json:"limit"`
 }
 
 type PaginationResponse struct {
 	Author_id        int      `json:"author_id"`
+	Author_name      string   `json:"author"`
 	ID               string   `json:"id"`
 	Title            string   `json:"title"`
 	Content          string   `json:"content"`

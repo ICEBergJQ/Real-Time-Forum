@@ -6,25 +6,19 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"sync"
+
+	"forum/utils"
 
 	uuid "github.com/gofrs/uuid"
 
 	forum "forum/models"
 )
 
-var mu sync.Mutex
-
 func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-		return
-	}
 	if r.URL.Path != "/post" {
 		http.Error(w, "Not found", http.StatusNotFound)
 		return
 	}
-	fmt.Println(r.Body)
 	var newPost forum.Post
 	if err := json.NewDecoder(r.Body).Decode(&newPost); err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
@@ -42,6 +36,11 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	newPost.ID = postID.String()
+	newPost.Author_name, err = utils.GetUserName(newPost.Author_id, db)
+	if err != nil {
+		http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
+		return
+	}
 
 	// Begin transaction
 	tx, err := db.Begin()
@@ -52,7 +51,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	defer tx.Rollback()
 	categories := ""
 
-	newPost.Category_id, categories, err = CategoriesChecker(db, newPost.Categories)
+	newPost.Category_id, categories, err = utils.CategoriesChecker(db, newPost.Categories)
 	if err != nil {
 		http.Error(w, "invalid categories", http.StatusBadRequest)
 		return
@@ -81,22 +80,14 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(newPost)
+	if err := json.NewEncoder(w).Encode(newPost); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+	}
 }
 
-func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	var Req forum.PaginationRequest
-
-	Req.Cursor = r.URL.Query().Get("cursor")
-	if Req.Cursor == "" {
-		http.Error(w, "user_id query parameter is required", http.StatusBadRequest)
-		return
-	}
-
-	Req.Limit = 20
-
+func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE created_at < ? ORDER BY created_at DESC limit ?;"
-	rows, err := db.Query(query, Req.Cursor, Req.Limit)
+	rows, err := db.Query(query, cursor, 20)
 	if err != nil {
 		http.Error(w, "internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
@@ -110,6 +101,11 @@ func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		err := rows.Scan(&post.ID, &post.Author_id, &category, &post.Title, &post.Content, &post.CreatedAt)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)
+			return
+		}
+		post.Author_name, err = utils.GetUserName(post.Author_id, db)
+		if err != nil {
+			http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
 			return
 		}
 		post.Likes_Counter = RowCounter(`
@@ -130,7 +126,9 @@ func GetPosts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(posts)
+	if err := json.NewEncoder(w).Encode(posts); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+	}
 }
 
 func RowCounter(query string, ID string, db *sql.DB) int {

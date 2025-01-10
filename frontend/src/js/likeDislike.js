@@ -5,35 +5,42 @@ const dislikeCounter = document.querySelector('.dislike-btn span')
 ///if the user is logged
 // const userId = localStorage.getItem("user_id");
 /// else hide like/dislike btns
- 
 
-function interact(e, action) {
 
-    ///there will be a data attribbute in the like btn
-    const postId = e.dataset.postId
-    console.log('10')
-    fetch(`/${action}`, {
+function interact(post_id, comment_id, reaction_type) {
+    ///post likecount also count comments
+
+    ///    const postId = e.dataset.postId
+    fetch(`/reaction`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userId, post_id: postId }),
+        body: JSON.stringify({
+            user_id, post_id, comment_id, reaction_type
+        }),
     })
-        .then((res) => res.json())
-        .then((data) => {
+        .then(res => {
+            console.log(res)
+            if (!res.ok)
+                throw new Error('post interaction Error ' + res.status + " " + res.statusText)
+
+            res.json()
+
+        })
+        .then(data => {
+            fetchPosts()
             ///check if there is row in the like table with the userid and postid
             ///chech the response for the value of case
-
-            if (data.msg == 'Done') {
-                alert(`${action}d...`);
-                handleInteraction(action)
-            } else {
-                alert(`already ${action}d...`)
-            }
+            // console.log(data)
+            // if (data.msg == 'Done') {
+            //     alert(`${action}d...`);
+            //     //handleInteraction(action)
+            // } else {
+            //     alert(`already ${action}d...`)
+            // }
 
             // window.location.reload();
         })
-        .catch((error) => alert("post interaction Error : " + error.message))
-
-
+        .catch(error => alert(error))
 }
 
 function handleInteraction(action) {

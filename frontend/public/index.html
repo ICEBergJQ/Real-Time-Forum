@@ -16,7 +16,6 @@
 <body>
   <span class="authError"></span>
 
-
   <!-- Navigation Bar -->
   <header class="navbar">
     <div class="container">
@@ -72,10 +71,11 @@
     <section class="feed">
       <h2>Posts</h2>
       <div class="post-list">
+        <div id="spinner"></div>
 
       </div>
     </section>
-<button>Load More</button>
+    <button class="load-more">Load More</button>
   </main>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
@@ -114,11 +114,12 @@
   <!-- scriptsss -->
   <script src="static/src/js/main.js"></script>
   <script type="module" src="static/src/js/posts.js"></script>
-  <script src="static/src/js/likeDislike.js"></script>
+  <script src="static/src/js/likeDislike.js" defer></script>
   <script src="static/src/js/register.js" defer></script>
   <script src="static/src/js/login.js" defer></script>
   <script src="static/src/js/createPost.js" defer></script>
   <script src="static/src/js/logout.js" defer></script>
+  <script src="static/src/js/getPost.js" ></script>
   <script>
 
     document.addEventListener("DOMContentLoaded", () => {

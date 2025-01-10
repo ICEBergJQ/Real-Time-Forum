@@ -7,38 +7,26 @@ import (
 	"net/http"
 
 	forum "forum/models"
+	"forum/utils"
 
 	uuid "github.com/gofrs/uuid"
 )
 
 func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-		return
-	}
-
-	if r.URL.Path != "/post" {
-		http.Error(w, "not found", http.StatusNotFound)
-		return
-	}
-
 	var newComment forum.Comment
 
 	if err := json.NewDecoder(r.Body).Decode(&newComment); err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 	defer r.Body.Close()
 
-	_, err := db.Exec("PRAGMA foreign_keys = ON;")
+	tx, err := db.Begin()
 	if err != nil {
-		http.Error(w, "Failed to enable foreign keys", http.StatusInternalServerError)
+		http.Error(w, "Failed to start transaction", http.StatusInternalServerError)
 		return
 	}
-
-	mu.Lock()
-	defer mu.Unlock()
+	defer tx.Rollback()
 
 	commentID, err := uuid.NewV4()
 	if err != nil {
@@ -47,38 +35,38 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 	newComment.ID = commentID.String()
 
-	if !postExists(db, newComment.Post_id) {
+	if !utils.PostExists(db, newComment.Post_id) {
 		http.Error(w, "Post does not exist Bad request", http.StatusBadRequest)
 		return
 	}
+	newComment.Author_name, err = utils.GetUserName(newComment.Author_id,db)
+	if err != nil {
+		http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
+		return
+	} 
 
 	// Insert the post
 	query := "INSERT INTO comments (comment_id, user_id, post_id, content) VALUES (?, ?, ?, ?)"
-	_, err = db.Exec(query, newComment.ID, newComment.Author_id, newComment.Post_id, newComment.Content)
+	_, err = tx.Exec(query, newComment.ID, newComment.Author_id, newComment.Post_id, newComment.Content)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error creating comment: %v", err), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(newComment)
-}
-
-func postExists(db *sql.DB, postID string) bool {
-	var exists bool
-	query := `SELECT EXISTS(SELECT 1 FROM posts WHERE post_id = ?)`
-	err := db.QueryRow(query, postID).Scan(&exists)
-	if err != nil {
-		return false
+	if err := tx.Commit(); err != nil {
+		http.Error(w, "Failed to commit transaction", http.StatusInternalServerError)
+		return
 	}
-	return exists
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	if err := json.NewEncoder(w).Encode(newComment); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		return
+	}
 }
 
 func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-		return
-	}
 	var comments []forum.Comment
 	postID := r.URL.Query().Get("id")
 	if postID == "" {
@@ -100,9 +88,22 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("internal server error x: %v", err), http.StatusInternalServerError)
 			return
 		}
-
+		comment.LikesCount =  RowCounter(`
+		SELECT COUNT(*) AS count
+		FROM Reactions
+		WHERE reaction_type = 'like'
+		AND comment_id = ?;`, comment.ID, db)
+		comment.DislikesCount = RowCounter(`
+		SELECT COUNT(*) AS count
+		FROM Reactions
+		WHERE reaction_type = 'dislike'
+		AND comment_id = ?;`, comment.ID, db)
 		comments = append(comments, comment)
 	}
 
-	json.NewEncoder(w).Encode(comments)
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(comments); err != nil {
+		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		return
+	}
 }

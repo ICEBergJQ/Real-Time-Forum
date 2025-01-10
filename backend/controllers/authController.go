@@ -68,7 +68,6 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		// call error func
 		if err == sql.ErrNoRows {
 			response.Message = "no user found with this username"
-			response.Id = 0
 			response_encoding, err := json.Marshal(response)
 			if err != nil {
 				// call error func
@@ -80,7 +79,6 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	}
 	if utils.TokenCheck(userFromDb.ID, r, config.DB) {
 		response.Message = "user already logged in"
-		response.Id = userFromDb.ID
 		response_encoding, err := json.Marshal(response)
 		if err != nil {
 			// call error func
@@ -103,7 +101,6 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		Expires:  time.Now().Add(config.EXPIRING_SESSION_DATE * time.Hour),
 	}
 	response.Message = "user logged-in successfully"
-	response.Id = userFromDb.ID
 	response_encoding, err := json.Marshal(response)
 	if err != nil {
 		// call error func

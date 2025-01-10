@@ -7,23 +7,25 @@ const dislikeCounter = document.querySelector('.dislike-btn span')
 /// else hide like/dislike btns
 
 
-function interact(e, post_id, comment_id, reaction_type) {
-    console.log(e, post_id, comment_id, reaction_type);
+function interact(post_id, comment_id, reaction_type) {
+    ///post likecount also count comments
 
     ///    const postId = e.dataset.postId
     fetch(`/reaction`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            user_id: 2,
-            post_id,  comment_id,reaction_type
+            user_id, post_id, comment_id, reaction_type
         }),
     })
         .then(res => {
-            res.json()
             console.log(res)
-        }
-        )
+            if (!res.ok)
+                throw new Error('post interaction Error ' + res.status + " " + res.statusText)
+
+            res.json()
+
+        })
         .then(data => {
             fetchPosts()
             ///check if there is row in the like table with the userid and postid
@@ -38,7 +40,7 @@ function interact(e, post_id, comment_id, reaction_type) {
 
             // window.location.reload();
         })
-        .catch((error) => alert("post interaction Error : " + error.message))
+        .catch(error => alert(error))
 }
 
 function handleInteraction(action) {

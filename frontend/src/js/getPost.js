@@ -66,16 +66,16 @@ function postComment(e, Post_id) {
         return
     }
     console.log(Content, Post_id)
+    let Author_id = user_id
     ////get post comments
     fetch('/comment', {
         method: "post",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({Post_id,Content})
+        body: JSON.stringify({ Author_id, Post_id, Content })
     })
         .then(res => {
-            if (!res.ok) {
+            if (!res.ok)
                 throw new Error(`Response status: ${res.status}`)
-            }
 
             //fetch the response body content
             res.json()

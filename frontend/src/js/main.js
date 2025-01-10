@@ -1,10 +1,10 @@
-const logged = localStorage.getItem("logged");
+const user_id = parseInt(localStorage.getItem("logged"));
 const navLogoutBtn = document.querySelector('button.logout')
 const registerBtn = document.querySelector(".start-topic") || ''
 const loginBtn = document.querySelector("button.login")
 const createPostBtn = document.querySelector("button.createPostBtn")
 const likeBtn = document.querySelector('button.like-btn')
-
+const spinner = document.getElementById('spinner');
 // const profileName = document.querySelector('.profile')
 let categories = []
 let articles = []
@@ -17,7 +17,7 @@ function createElem(tag, className, content) {
 }
 
 
-if (logged === 'true') {
+if (user_id) {
     ///nav btns
     navLogoutBtn.style.display = "inline-block"
     createPostBtn.style.display = "inline-block"
@@ -70,7 +70,7 @@ const hideError = () => {
 }
 
 ///load comps  
-
+ 
 
 
 // document.querySelector("#signUpModal form").addEventListener("submit", handleRegister);)

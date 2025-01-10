@@ -54,4 +54,17 @@ func TokenCheck(user_id int, r *http.Request, db *sql.DB) bool {
 	return false
 }
 
-
+func UserIDFromToken(r *http.Request, db *sql.DB) (int, error) {
+	cookie, err := r.Cookie("session_token")
+	if err != nil {
+		return 0, err
+	}
+	var userID int
+	query := "SELECT user_id FROM sessions WHERE session_id = ?"
+	row := db.QueryRow(query, cookie.Value)
+	err = row.Scan(&userID)
+	if err != nil {
+		return 0, err
+	}
+	return userID, nil
+}

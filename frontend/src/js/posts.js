@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     })
 })
-if (logged) {
+if (user_id) {
 
 }
 ///TODO : still not working
@@ -141,7 +141,6 @@ const formatDate = (date) => {
     const hours = String(date.getHours()).padStart(2, '0')
     const minutes = String(date.getMinutes()).padStart(2, '0')
     const seconds = String(date.getSeconds()).padStart(2, '0')
-    console.log(year)
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 
@@ -150,17 +149,17 @@ let cursor = formatDate(new Date())
 const listPosts = (posts) => {
     postsContainer.innerHTML = ''
     articles = posts
+    console.log(articles)
 
     posts.forEach(async post => {
         const comments = await getComment(post.id)
-        console.log('comments : ', comments)
+        console.log(comments)
         postsContainer.innerHTML += Article(post, comments)
     })
 
     attachModalEventListeners()
     //after comp loaded
     registerModal = document.querySelector("#signUpModal")
-    console.log(articles)
 }
 
 loadMore.onclick = () => {
@@ -175,6 +174,9 @@ function fetchPosts() {
     // if (cursor) {
     url += `?cursor=${cursor}`
     // }
+    spinner.style.display = 'block';
+
+
 
     fetch(url, {
         // method: 'GET',
@@ -190,6 +192,8 @@ function fetchPosts() {
             } else {
                 alert("NO More POsts!!")
             }
+            spinner.style.display = 'none';
+
         }).catch(err => console.log("get posts : ", err));
 }
 
@@ -197,7 +201,6 @@ function fetchPosts() {
 fetch("/categories")
     .then(res => res.json())
     .then(categories => {
-        console.log(categories);
 
         document.querySelector('#createPostForm .categories-container').innerHTML = categories.map(cat => `<input type="checkbox" id="${cat.category_name}" name="categories" value="${cat.category_name}">
             <label for="${cat.category_name}">${cat.category_name}</label> `).join('')

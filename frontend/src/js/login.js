@@ -19,13 +19,14 @@ form.addEventListener('submit', (e) => {
         displayError("Invalid credentials")
         return
     }
+    spinner.style.display = 'block';
 
     fetch("/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
     })
-        .then((res) => {
+        .then(res => {
             if (!res.ok) {
                 return res.json().then(data => {
                     displayError(data.Message || "Something went wrong!");
@@ -37,13 +38,14 @@ form.addEventListener('submit', (e) => {
             return res.json();
         })
         .then(data => {
-            console.log("dddd : ", data);
-            ///save username to localstorage to display it in profile section
+
             ///testing TODO use cookie
-            localStorage.setItem("logged", "true");
-            
+            localStorage.setItem("logged", data.Id);
+
             // localStorage.setItem("username", data.user.username);
             window.location.href = "/";
+            spinner.style.display = 'none';
+
         })
         .catch(error => console.error("login errror  : ", error));
 })

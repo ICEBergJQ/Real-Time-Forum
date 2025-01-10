@@ -16,7 +16,6 @@
 <body>
   <span class="authError"></span>
 
-
   <!-- Navigation Bar -->
   <header class="navbar">
     <div class="container">
@@ -72,6 +71,7 @@
     <section class="feed">
       <h2>Posts</h2>
       <div class="post-list">
+        <div id="spinner"></div>
 
       </div>
     </section>
@@ -114,7 +114,7 @@
   <!-- scriptsss -->
   <script src="static/src/js/main.js"></script>
   <script type="module" src="static/src/js/posts.js"></script>
-  <script src="static/src/js/likeDislike.js"></script>
+  <script src="static/src/js/likeDislike.js" defer></script>
   <script src="static/src/js/register.js" defer></script>
   <script src="static/src/js/login.js" defer></script>
   <script src="static/src/js/createPost.js" defer></script>

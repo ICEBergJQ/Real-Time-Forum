@@ -28,6 +28,7 @@ func SeesionCreation(user_id int, db *sql.DB) (string, error) {
 func TokenCheck(user_id int, r *http.Request, db *sql.DB) bool {
 	cookie, err := r.Cookie("session_token")
 	if err != nil {
+		
 		return false
 	}
 	var dbToken string

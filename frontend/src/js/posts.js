@@ -16,6 +16,7 @@ logoutDynamic.innerHTML = Logout()
 dynaicPost.innerHTML = postForm()
 
 let registerModal = document.querySelector("#signUpModal")
+const loginModal = document.querySelector("#loginModal")
 const createPost = document.querySelector("#popupOverlay")
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -51,7 +52,6 @@ function Reply() {
 
 // /LOGIN AND SIGN UP/
 const showLoginModal = () => {
-    const loginModal = document.querySelector("#loginModal")
     if (loginModal) {
         loginModal.classList.remove("hidden")
     }
@@ -64,12 +64,11 @@ const showRegisterModal = () => {
 // Show create post modal when create post button is clicked
 
 const showCreatePostModal = () => {
-    dynaicPost.style.display = "block"
     popupOverlay.classList.remove("hidden")
 }
 
+///switch login / register
 const displayPopup = (target) => {
-    console.log(loginModal)
     if (target === "openLogin") {
         registerModal.classList.add("hidden") // Hide register modal
         showLoginModal()
@@ -94,11 +93,10 @@ window.addEventListener("click", (event) => {
     }
     if (event.target === createPost) {
         createPost.classList.add("hidden")
-        dynaicPost.style.display = "none"
     }
 })
 
-// Hide the modal when the close button is clicked 
+// X : Hide the modal when the close button is clicked 
 const closeModal = modal => {
     if (modal === 'login')
         loginModal.classList.add("hidden")
@@ -153,13 +151,13 @@ const listPosts = (posts) => {
 
     posts.forEach(async post => {
         const comments = await getComment(post.id)
-        console.log(comments)
+        // console.log(comments)
         postsContainer.innerHTML += Article(post, comments)
     })
 
     attachModalEventListeners()
     //after comp loaded
-    registerModal = document.querySelector("#signUpModal")
+    // registerModal = document.querySelector("#signUpModal")
 }
 
 loadMore.onclick = () => {
@@ -226,7 +224,7 @@ function displayComment(e) {
     e.target.parentElement.nextElementSibling.classList.toggle("hidden")
 }
 
-window.popPost = popPost
+// window.popPost = popPost
 window.closeModal = closeModal
 window.displayPopup = displayPopup
 window.listPosts = listPosts

@@ -7,18 +7,18 @@ createPostForm.onsubmit = (e) => {
 
     const title = postTitle.value.trim()
     const content = postContent.value.trim()
-    const Categories = Array.from(document.querySelectorAll('input[type=checkbox]:checked'), elem => elem.value)
+    const categories = Array.from(document.querySelectorAll('input[type=checkbox]:checked'), elem => elem.value)
 
-    console.log(title)
-    console.log(content)
-    console.log(Categories)
+    console.log(categories.length)
+    console.log(categories)
     const category_id = [1]
-    const Author_id = 1;
 
-    if (!title || !content) {
-        alert('all fields are required!')
+    if (!title || !content || !categories.length) {
+        displayError('all fields are required!')
+        // alert('')
         return
     }
+    let Author_id = user_id
 
     fetch('/post', {
         method: 'POST',
@@ -27,29 +27,33 @@ createPostForm.onsubmit = (e) => {
             Author_id,
             title,
             content,
-            Categories,
-            category_id
+            categories,
         })
     })
-        .then(res => res.json())
+        .then(res => {
+            console.log(res)
+            if (!res.ok)
+                throw error
+            res.json()
+        }
+        )
         .then(data => {
 
             /*
                // Placeholder for post creation
                 alert(`Post Created:\nTitle: ${title}\nCategory: ${category}`)
- 
+         
                 // Close the modal
                 popupOverlay.classList.add("hidden")
                 dynaicPost.style.display = "none"
- 
+         
                 // Reset form
                 createPostForm.reset()
             */
-            console.log(data)
-            alert(data.message)
-            // fetchPosts();
+            // alert("data.message)
+            fetchPosts();
 
-             location.href ='/'
+            // location.href = '/'
         })
-        .catch((error) => alert("creating post Error : " + error.message));
+        .catch(() => alert("creating post Error"));
 }

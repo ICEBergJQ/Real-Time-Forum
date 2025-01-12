@@ -14,17 +14,16 @@ createPostForm.onsubmit = (e) => {
     const category_id = [1]
 
     if (!title || !content || !categories.length) {
-        displayError('all fields are required!')
+        displayToast('var(--red)','all fields are required!')
         // alert('')
         return
     }
-    let Author_id = user_id
 
     fetch('/post', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            Author_id,
+            Author_id: 1,
             title,
             content,
             categories,
@@ -34,24 +33,19 @@ createPostForm.onsubmit = (e) => {
             console.log(res)
             if (!res.ok)
                 throw error
-            res.json()
+            return res.json()
         }
         )
         .then(data => {
-
+            console.log(data)
+            listSinglePost(data)
             /*
-               // Placeholder for post creation
                 alert(`Post Created:\nTitle: ${title}\nCategory: ${category}`)
-         
-                // Close the modal
-                popupOverlay.classList.add("hidden")
-                dynaicPost.style.display = "none"
-         
-                // Reset form
-                createPostForm.reset()
-            */
+                */
+            popupOverlay.classList.add("hidden")
+            createPostForm.reset()
             // alert("data.message)
-            fetchPosts();
+            // fetchPosts();
 
             // location.href = '/'
         })

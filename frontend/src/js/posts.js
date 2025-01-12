@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     })
 })
-    
+
 ///TODO : still not working
 function Reply() {
     const sendBtn = document.querySelector(".send-btn")
@@ -50,9 +50,8 @@ function Reply() {
 
 // /LOGIN AND SIGN UP/
 const showLoginModal = () => {
-    if (loginModal) {
+    if (loginModal)
         loginModal.classList.remove("hidden")
-    }
 }
 
 const showRegisterModal = () => {
@@ -147,15 +146,27 @@ const listPosts = (posts) => {
     articles = posts
     console.log(articles)
 
-    posts.forEach(async post => {
-        const comments = await getComment(post.id)
-        // console.log(comments)
-        postsContainer.innerHTML += Article(post, comments)
-    })
+    !articles ?
+        postsContainer.innerHTML += "<p>No Posts Found!!</p>"
+        : posts.forEach(async post => {
+            const comments = await getComment(post.id)
+            // console.log(comments)
+            postsContainer.innerHTML += Article(post, comments)
+        })
 
     attachModalEventListeners()
     //after comp loaded
     // registerModal = document.querySelector("#signUpModal")
+}
+
+
+const listSinglePost = (post) => {
+    console.log("hi : ", post)
+    postsContainer.insertAdjacentHTML("afterbegin", Article(post, []));
+
+    // postsContainer.prepend(Article(post, []))
+    // postsContainer.innerHTML += Article(post, [])
+ //   attachModalEventListeners()
 }
 
 loadMore.onclick = () => {
@@ -171,9 +182,6 @@ function fetchPosts() {
     url += `?cursor=${cursor}`
     // }
     spinner.style.display = 'block';
-
-
-
     fetch(url, {
         // method: 'GET',
         // headers: { "Content-Type": "application/json" },
@@ -222,8 +230,33 @@ function displayComment(e) {
     e.target.parentElement.nextElementSibling.classList.toggle("hidden")
 }
 
-function myposts(){
-    console.log(132131)
+function filterPosts(filtermethod) {
+    // document.querySelectorAll('nav checkbox')
+    let categories = []
+
+    let data = {
+        filtermethod,
+        categories,
+        cursor: formatDate(new Date()),
+        id: 1
+    }
+    console.log(filtermethod)
+    fetch('/filter', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+            data
+        ),
+    }).then(res => {
+        if (!res.ok) {
+            alert('something went wrong:::!!')
+            throw new Error('something went wrong:::!!')
+        }
+        return res.json()
+    }).then(data => {
+        listPosts(data)
+        console.log("get posts", data)
+    }).catch(err => console.log(err))
 }
 
 // window.popPost = popPost
@@ -232,7 +265,8 @@ window.displayPopup = displayPopup
 window.listPosts = listPosts
 window.fetchPosts = fetchPosts
 window.displayComment = displayComment
-window.myposts = myposts
+window.filterPosts = filterPosts
+window.listSinglePost = listSinglePost
 
 
 

@@ -224,12 +224,17 @@ function displayComment(e) {
     e.target.parentElement.nextElementSibling.classList.toggle("hidden")
 }
 
+function myposts(){
+    console.log(132131)
+}
+
 // window.popPost = popPost
 window.closeModal = closeModal
 window.displayPopup = displayPopup
 window.listPosts = listPosts
 window.fetchPosts = fetchPosts
 window.displayComment = displayComment
+window.myposts = myposts
 
 
 

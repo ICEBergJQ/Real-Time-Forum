@@ -24,14 +24,18 @@ confirmLogout.onclick = () => {
         })
         .then(data => {
             data?.Message ?
-                alert(data.Message)
+                displayToast('var(--green)', data.Message)
                 :
-                alert("You are logged out")
+                displayToast('var(--green)', "You are logged out")
             logoutModal.classList.add("hidden");
             localStorage.removeItem("logged")
 
             document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            window.location.href = "/"
+
+            setTimeout(() => {
+                window.location.href = "/";
+
+            }, 1500)
         }).catch(err => console.log("logout Error : ", err))
 }
 

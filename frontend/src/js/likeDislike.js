@@ -7,11 +7,11 @@ const dislikeCounter = document.querySelector('.dislike-btn span')
 /// else hide like/dislike btns
 
 
-function interact(post_id, comment_id, reaction_type) {
+function interact(e, post_id, comment_id, reaction_type) {
     ///post likecount also count comments
-    
-    if (!checkId()) {
-        console.log(checkId)
+    console.log(isLogged)
+    if (isLogged) {
+        // console.log(checkId)
         alert("you need to login!")
         return
     }

@@ -1,5 +1,8 @@
-.authError {
-    background-color: crimson;
+:root{
+    --red:#dc143c;
+    --green:#34a440;
+}.toast {
+    
     color: #fff;
     position: absolute;
     z-index: 10;

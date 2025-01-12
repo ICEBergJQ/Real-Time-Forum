@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"forum/config"
+	"forum/models"
 
 	"github.com/gofrs/uuid"
 )
@@ -25,34 +26,30 @@ func SeesionCreation(user_id int, db *sql.DB) (string, error) {
 	return token.String(), nil
 }
 
-func TokenCheck(user_id int, r *http.Request, db *sql.DB) bool {
-	cookie, err := r.Cookie("session_token")
-	if err != nil {
-		
-		return false
-	}
-	var dbToken string
-	query := "SELECT session_id FROM sessions WHERE user_id = ?"
+func TokenCheck(user_id int, r *http.Request, db *sql.DB) error{
+	var session models.Session
+	query := "SELECT session_id, user_id FROM sessions WHERE user_id = ?"
 	row := db.QueryRow(query, user_id)
-	err = row.Scan(&dbToken)
+	err := row.Scan(&session.SessionID, &session.UserID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return false
+			return nil
 		}
-		return true
+		return err
 	}
-	if cookie.Value == dbToken {
-		return true
-	} else if cookie.Value != dbToken {
-		query := "DELETE FROM sessions WHERE session_id = ?"
-		_, err = config.DB.Exec(query, dbToken)
+	cookie, err := r.Cookie("session_token")
+	if err != nil {
+		query := "DELETE FROM sessions WHERE user_id = ?"
+		_, err = config.DB.Exec(query, session.SessionID)
 		if err != nil {
-			// call error func
-			return true
+			return err
 		}
-		return false
+		return nil
 	}
-	return false
+	if cookie.Value == session.SessionID {
+		return fmt.Errorf("token already exists")
+	}
+	return nil
 }
 
 func UserIDFromToken(r *http.Request, db *sql.DB) (int, error) {

@@ -77,7 +77,8 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		}
 		// call error func
 	}
-	if utils.TokenCheck(userFromDb.ID, r, config.DB) {
+	
+	if err := utils.TokenCheck(userFromDb.ID, r, config.DB); (err != nil) {
 		response.Message = "user already logged in"
 		response_encoding, err := json.Marshal(response)
 		if err != nil {

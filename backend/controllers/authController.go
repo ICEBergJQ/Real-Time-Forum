@@ -77,8 +77,27 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		}
 		// call error func
 	}
-	
-	if err := utils.TokenCheck(userFromDb.ID, r, config.DB); (err != nil) {
+	err = utils.TokenCheck(userFromDb.ID, r, config.DB)
+	if err != nil {
+		if err.Error() == "token mismatch" {
+			cookie := &http.Cookie{
+				Name:     "session_token",
+				Value:    "",
+				Path:     "/",
+				HttpOnly: true,
+				Secure:   false,
+				Expires:  time.Now().Add(-time.Hour * 24 * 365),
+			}
+			http.SetCookie(w, cookie)
+			response.Message = "Token Expired. Please login again"
+			response_encoding, err := json.Marshal(response)
+			if err != nil {
+				// call error func
+			}
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(response_encoding)
+			return
+		}
 		response.Message = "user already logged in"
 		response_encoding, err := json.Marshal(response)
 		if err != nil {
@@ -99,7 +118,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   false,
-		Expires:  time.Now().Add(config.EXPIRING_SESSION_DATE * time.Hour),
+		Expires:  time.Now().Add(config.EXPIRING_SESSION_DATE),
 	}
 	response.Message = "user logged-in successfully"
 	response_encoding, err := json.Marshal(response)
@@ -128,6 +147,16 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// call error func
 	}
+	deleteCookie := &http.Cookie{
+		Name:     "session_token",
+		Value:    "",
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   false,
+		Expires:  time.Now().Add(-time.Hour * 24 * 365),
+	}
+	cookie.Expires = time.Now().Add(-time.Hour * 24 * 365)
+	http.SetCookie(w, deleteCookie)
 	response.Message = "user logged-out successfully"
 	response_encoding, err := json.Marshal(response)
 	if err != nil {

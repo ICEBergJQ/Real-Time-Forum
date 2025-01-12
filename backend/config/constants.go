@@ -1,8 +1,11 @@
 package config
 
-import "database/sql"
+import (
+	"database/sql"
+	"time"
+)
 
-const EXPIRING_SESSION_DATE = 120
+const EXPIRING_SESSION_DATE = 3 * time.Minute
 
 const STATIC_DIR = "../frontend/public"
 

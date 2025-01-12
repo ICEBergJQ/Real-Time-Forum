@@ -1,7 +1,3 @@
-const authError = document.querySelector('.authError')
-
-
-
 document.querySelector('#signUpModal .btn_s').addEventListener('click', function handleRegister(a) {
 
     a.preventDefault();
@@ -14,14 +10,14 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
     ///add confirm password input
 
     if (username == "" || email == "" || password == "" || confirmPassword == "") {
-        displayError("all fields are required!!")
+        displayToast('var(--red)', "all fields are required!!")
         return
     } else if (password.length < 6) {
-        displayError("Password must be at least 6 characters long !!")
+        displayToast('var(--red)', "Password must be at least 6 characters long !!")
         return
     }
     else if (password !== confirmPassword) {
-        displayError("Password mismatch")
+        displayToast('var(--red)', "Password mismatch")
         return
     }
 
@@ -33,14 +29,15 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
         .then(res => {
             console.log('Response status:', res.status);
             if (!res.ok) {
-                displayError(res.statusText)
+                displayToast('var(--red)', res.statusText)
                 throw new Error("something went wrong!")
             }
             res.json()
         })
         .then(() => {
             //display a popup
-            alert('registered, please login')
+            displayToast('var(--green)', 'registered, please login')
+            // alert('registered, please login')
             ///redirect to login page
             // window.location.href = "/"
             displayPopup("openLogin")

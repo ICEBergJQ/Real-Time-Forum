@@ -1,4 +1,3 @@
-const loginError = document.querySelector('.authError')
 
 const form = document.querySelector('#loginModal form')
 
@@ -12,11 +11,11 @@ form.addEventListener('submit', (e) => {
     ///    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;  // At least 8 chars, 1 letter, 1 number
 
     if (username == "" || password == "") {
-        displayError("all fields are required!!")
+        displayToast('var(--red)', "all fields are required!!")
         return
     } else if (password.length < 6) {
         //Password should be at least 6 characters long
-        displayError("Invalid credentials")
+        displayToast('var(--red)', "Invalid credentials")
         return
     }
     spinner.style.display = 'block';
@@ -28,10 +27,15 @@ form.addEventListener('submit', (e) => {
     })
         .then(res => {
             if (!res.ok) {
-                return res.json().then(data => {
-                    displayError(data.Message || "Something went wrong!");
-                    throw new Error(data.Message || "Invalid credentials");
-                });
+                //retturn msg from backend
+                //user 
+                displayToast('var(--red)', "Something went wrong!");
+                // return res.json().then(data => {
+                //     console.log(res)
+                //     displayToast('var(--green)', data?.Message || "Something went wrong!");
+                //     throw new Error(data?.Message || "Invalid credentials");
+                // });
+                throw new Error(data?.Message || "Invalid credentials");
                 // displayError(res.statusText)
                 // throw new Error("Invalid credentials");
             }
@@ -40,12 +44,19 @@ form.addEventListener('submit', (e) => {
         .then(data => {
 
             ///testing TODO use cookie
-            localStorage.setItem("logged", data.Id);
-
+            localStorage.setItem("logged", 1);
+            displayToast('var(--green)', "redirecting...!");
             // localStorage.setItem("username", data.user.username);
-            window.location.href = "/";
+            setTimeout(() => {
+                window.location.href = "/";
+
+            }, 1500)
             spinner.style.display = 'none';
 
         })
-        .catch(error => console.error("login errror  : ", error));
+        .catch(error => {
+            displayToast('var(--red)', "Something went wrong!");
+            console.error("login errror  : ", error)
+        }
+        );
 })

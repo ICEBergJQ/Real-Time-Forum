@@ -1,4 +1,4 @@
-const user_id = parseInt(localStorage.getItem("logged"));
+const logged = localStorage.getItem("logged")
 const navLogoutBtn = document.querySelector('button.logout')
 const registerBtn = document.querySelector(".start-topic") || ''
 const loginBtn = document.querySelector("button.login")
@@ -6,8 +6,10 @@ const createPostBtn = document.querySelector("button.createPostBtn")
 const likeBtn = document.querySelector('button.like-btn')
 const spinner = document.getElementById('spinner');
 // const profileName = document.querySelector('.profile')
+
 let categories = []
 let articles = []
+const toast = document.querySelector('.toast')
 
 function createElem(tag, className, content) {
     const element = document.createElement(tag)
@@ -16,8 +18,7 @@ function createElem(tag, className, content) {
     return element
 }
 
-
-if (user_id) {
+if (logged === '1') {
     ///nav btns
     navLogoutBtn.style.display = "inline-block"
     createPostBtn.style.display = "inline-block"
@@ -27,6 +28,8 @@ if (user_id) {
     //hide login / register
     loginBtn.style.display = "none"
     registerBtn.style.display = "none"
+
+    //display filter options
 
 } else {
     loginBtn.style.display = "inline-block"
@@ -45,40 +48,22 @@ const showPopup = (elem) => {
     }
 };
 
-const checkId = ()=>     user_id ? true : false
-
-// logoutBtn.onclick =  function () {
-//     // Clear user data from localStorage
-
-//     confirm("Logout Confirmation") ? (
-
-//         localStorage.clear(),
-//         // Redirect to the login page
-//         window.location.href = "/"
-//     ) : null
-// }
-
 
 //auth comps errors
-const displayError = (txt) => {
-    authError.textContent = txt
-    authError.style.top = "40px"
-    authError.style.animation = "bounce 0.5s ease-in-out"
-    hideError(authError)
+const displayToast = (color, txt) => {
+    toast.textContent = txt
+    toast.style.top = "40px"
+    toast.style.background = color;
+    toast.style.animation = "bounce 0.5s ease-in-out"
+    hideToast()
 }
 
 let timer
-const hideError = () => {
+const hideToast = () => {
     clearTimeout(timer)
     timer = setTimeout(() => {
-        authError.style.animation = "none"
-        authError.style.top = "-55px"
+        toast.style.animation = "none"
+        toast.style.top = "-55px"
     }, 3000);
 
 }
-
-///load comps  
- 
-
-
-// document.querySelector("#signUpModal form").addEventListener("submit", handleRegister);)

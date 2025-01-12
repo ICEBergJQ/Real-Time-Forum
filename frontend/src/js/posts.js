@@ -31,9 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     })
 })
-if (user_id) {
-
-}
+    
 ///TODO : still not working
 function Reply() {
     const sendBtn = document.querySelector(".send-btn")

@@ -124,8 +124,12 @@
   /* Buttons */
   .nav-actions .btn,
   .post-details .btn {
-      font-size: 13px;
+      font-size: 12px;
       padding: 0.3rem 0.5rem;
+  }
+
+  .reply-input {
+    width: 91%;
   }
 
   /* Footer adjustments */

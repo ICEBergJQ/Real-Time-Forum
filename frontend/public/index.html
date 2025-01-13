@@ -6,14 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Community Page</title>
   <link rel="stylesheet" href="static/src/css/main.css">
-  <link rel="stylesheet" href="static/src/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="static/src/css/login.css">
-  <link rel="stylesheet" href="static/src/css/logout.css">
   <link rel="stylesheet" href="static/src/css/post.css">
   <link rel="stylesheet" href="static/src/css/register.css">
   <link rel="stylesheet" href="static/src/css/signup.css">
+  <link rel="stylesheet" href="static/src/css/style.css">
   <link rel="stylesheet" href="static/src/css/responsive.css">
+  <link rel="stylesheet" href="static/src/css/logout.css">
 </head>
 
 <body>
@@ -31,11 +31,22 @@
           <li class="dropdown">
             <a href="/categories">Categories</a>
             <ul class="dropdown-menu">
-              <li><span class="cat">Technology</span></li>
+              <!-- <li><span class="cat">Technology</span></li>
               <li><span class="cat">Science</span></li>
               <li><span class="cat">Health</span></li>
               <li><span class="cat">Sports</span></li>
-              <li><span class="cat">Art</span></li>
+              <li><span class="cat">Art</span></li> -->
+              <li><input type="checkbox" id="tech" name="categories" value="Technology">
+                <label for="tech">Technology</label></li>
+              <li><input type="checkbox" id="science" name="categories" value="Science">
+                <label for="science">Lifestyle</label></li>
+              <li><input type="checkbox" id="health" name="categories" value="Health">
+                <label for="health">Health</label></li>
+              <li><input type="checkbox" id="sports" name="categories" value="Sports">
+                <label for="sports">Sports</label></li>
+              <li><input type="checkbox" id="art" name="categories" value="Art">
+                <label for="art">Education</label></li>
+                <button class="sbtf" type="submit">filter</button>
             </ul>
           </li>
           <li onclick="filterPosts('getcreatedposts')"> My Posts</li>

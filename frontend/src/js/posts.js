@@ -186,7 +186,15 @@ function fetchPosts() {
     // }
     spinner.style.display = 'block';
     fetch(url)
-        .then(res => res.json())
+        .then(res => {
+
+            if (!res.ok) {
+                displayToast('var(--red)', res.statusText)
+                throw new Error("something went wrong!")
+            }
+            res.json()
+        }
+        )
         .then(posts => {
             if (posts && posts.length > 0) {
                 loadMore.style.display = 'block'

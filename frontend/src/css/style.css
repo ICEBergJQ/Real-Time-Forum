@@ -7,7 +7,7 @@
   color: #fff;
   position: fixed;
   z-index: 10;
-  top: -55px;
+  top: -105px;
   padding: 15px 35px;
   border-radius: 5px;
   font-size: 1.2rem;
@@ -135,6 +135,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  display: none;
 }
 
 .dropdown-menu li {

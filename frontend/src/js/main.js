@@ -63,7 +63,7 @@ const hideToast = () => {
     clearTimeout(timer)
     timer = setTimeout(() => {
         toast.style.animation = "none"
-        toast.style.top = "-55px"
+        toast.style.top = "-105px"
     }, 3000);
 
 }

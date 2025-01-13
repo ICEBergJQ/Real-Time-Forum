@@ -27,12 +27,16 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
         body: JSON.stringify({ username, email, password }),
     })
         .then(res => {
-            console.log('Response status:', res.status);
+            console.log('Response status:', res);
             if (!res.ok) {
-                displayToast('var(--red)', res.statusText)
-                throw new Error("something went wrong!")
+                // displayToast('var(--red)', res.statusText)
+                // throw new Error("something went wrong!")
+
+                return res.json().then(errorData => {
+                    throw new Error(errorData.Message || 'Something went wrong');
+                });
             }
-            res.json()
+            return res.json()
         })
         .then(() => {
             //display a popup
@@ -42,6 +46,6 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
             // window.location.href = "/"
             displayPopup("openLogin")
         })
-        .catch((error) => console.error("- ", error))
+        .catch(err => displayToast('var(--red)', err))
 
 })

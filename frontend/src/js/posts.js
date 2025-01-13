@@ -214,6 +214,7 @@ async function getComment(postId) {
     try {
         const res = await fetch(url)
         const coms = await res.json()
+        console.log(coms)
         return coms || []
 
     } catch (err) {

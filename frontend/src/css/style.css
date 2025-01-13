@@ -1,10 +1,11 @@
 :root {
   --red: #dc143c;
   --green: #34a440;
+  --info: #1296b8;
 }
 .toast {
   color: #fff;
-  position: absolute;
+  position: fixed;
   z-index: 10;
   top: -55px;
   padding: 15px 35px;

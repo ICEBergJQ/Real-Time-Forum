@@ -37,9 +37,8 @@ createPostForm.onsubmit = (e) => {
         .then(data => {
             console.log(data)
             listSinglePost(data)
-            /*
-                alert(`Post Created:\nTitle: ${title}\nCategory: ${category}`)
-                */
+
+            displayToast('var(--info)', 'post created successfully!!!')
             popupOverlay.classList.add("hidden")
             createPostForm.reset()
             // alert("data.message)

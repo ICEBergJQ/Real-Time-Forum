@@ -8,7 +8,7 @@ const dynamicContent = document.querySelector("#dynamicContent")
 const anotherDynamic = document.querySelector("#anotherDynamic")
 const dynaicPost = document.querySelector("#dynaicPost")
 const logoutDynamic = document.querySelector("#logoutdynamic");
-const loadMore = document.querySelector('main>button')
+const loadMore = document.querySelector('main>button.load-more')
 
 anotherDynamic.innerHTML = registerForm()
 dynamicContent.innerHTML = teeeeeesloginForm()
@@ -182,11 +182,7 @@ function fetchPosts() {
     url += `?cursor=${cursor}`
     // }
     spinner.style.display = 'block';
-    fetch(url, {
-        // method: 'GET',
-        // headers: { "Content-Type": "application/json" },
-        // body: JSON.stringify({ cursor: "2025-01-06 01:27:33" }),
-    })
+    fetch(url)
         .then(res => res.json())
         .then(posts => {
             if (posts && posts.length > 0) {

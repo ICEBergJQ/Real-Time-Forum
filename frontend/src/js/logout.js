@@ -23,10 +23,8 @@ confirmLogout.onclick = () => {
             return res.json()
         })
         .then(data => {
-            data?.Message ?
-                displayToast('var(--green)', data.Message)
-                :
-                displayToast('var(--green)', "You are logged out")
+            displayToast('var(--green)', data.Message)
+
             logoutModal.classList.add("hidden");
             localStorage.removeItem("logged")
 

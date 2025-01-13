@@ -68,6 +68,14 @@ func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	newReaction := forum.Reactions{}
+	
+	var err error
+	newReaction.User_id, err = utils.UserIDFromToken(r, db)
+	if err != nil {
+		http.Error(w, "Failed to get user_id", http.StatusNotFound)
+		fmt.Println("Error user_id not found: ", err)
+		return
+	}
 	if err := json.NewDecoder(r.Body).Decode(&newReaction); err != nil {
 		http.Error(w, "Failed to decode newReaction", http.StatusBadRequest)
 		fmt.Println("Error decoding request: ", err)
@@ -79,6 +87,13 @@ func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if !PostExist {
 		fmt.Println("Error, Post does not exist!!")
 		http.Error(w, "Post Does not Exist", http.StatusBadRequest)
+		return 
+	}
+
+	CommentExist := utils.CommentExist(db, newReaction.Comment_id)
+	if !CommentExist {
+		fmt.Println("Error, Comment does not exist!!")
+		http.Error(w, "Comment Does not Exist", http.StatusBadRequest)
 		return 
 	}
 	Reacted, currentReaction := hasUserReacted(db, newReaction.User_id, newReaction.Post_id, &newReaction.Comment_id)

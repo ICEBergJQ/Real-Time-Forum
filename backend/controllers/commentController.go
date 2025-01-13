@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"html"
 	"net/http"
 
 	forum "forum/models"
@@ -20,7 +21,10 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-
+	if len(newComment.Content) == 0 || len(newComment.Content) > 300 {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
 	tx, err := db.Begin()
 	if err != nil {
 		http.Error(w, "Failed to start transaction", http.StatusInternalServerError)
@@ -53,7 +57,7 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	// Insert the post
 	query := "INSERT INTO comments (comment_id, user_id, post_id, content) VALUES (?, ?, ?, ?)"
-	_, err = tx.Exec(query, newComment.ID, newComment.Author_id, newComment.Post_id, newComment.Content)
+	_, err = tx.Exec(query, newComment.ID, newComment.Author_id, newComment.Post_id, html.EscapeString(newComment.Content))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error creating comment: %v", err), http.StatusInternalServerError)
 		return

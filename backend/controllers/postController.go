@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"html"
 	"net/http"
 	"strings"
 
@@ -37,7 +38,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 	newPost.ID = postID.String()
 
-	newPost.Author_id, err = utils.UserIDFromToken(r,db) 
+	newPost.Author_id, err = utils.UserIDFromToken(r, db)
 	if err != nil {
 		http.Error(w, "Unautherized access", http.StatusUnauthorized)
 		return
@@ -64,7 +65,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := "INSERT INTO posts (post_id, user_id, category_name, title, content) VALUES (?, ?, ?, ?, ?)"
-	_, err = tx.Exec(query, newPost.ID, newPost.Author_id, categories, newPost.Title, newPost.Content)
+	_, err = tx.Exec(query, newPost.ID, newPost.Author_id, categories, html.EscapeString(newPost.Title), html.EscapeString(newPost.Content))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error creating post: %v", err), http.StatusInternalServerError)
 		return
@@ -118,13 +119,13 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 		SELECT COUNT(*) AS count
 		FROM Reactions
 		WHERE reaction_type = 'like'
-		AND post_id = ?;`, post.ID, db)
+		AND post_id = ? AND comment_id = null;`, post.ID, db)
 
 		post.Dislikes_counter = RowCounter(`
 		SELECT COUNT(*) AS count
 		FROM Reactions
 		WHERE reaction_type = 'dislike'
-		AND post_id = ?;`, post.ID, db)
+		AND post_id = ? AND comment_id = null;`, post.ID, db)
 
 		post.Comments_Counter = RowCounter(`SELECT COUNT(*) AS count FROM comments WHERE post_id = ?;`, post.ID, db)
 		post.Categories = strings.Split(category, ",")

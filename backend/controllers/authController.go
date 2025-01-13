@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"html"
 	"net/http"
 	"time"
 
@@ -16,26 +17,33 @@ import (
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		err := errors.New("method not allowed")
-        utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Method not allowed")
+		utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Method not allowed")
+		return
 	}
 	var user models.User
 	w.Header().Set("Content-Type", "application/json")
 
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-        utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		return
 	}
+	user.Username = html.EscapeString(user.Username)
+
 	if err := utils.Validation(user); err != nil {
-        utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
+		return
 	}
 
 	if err := utils.Hash(&user.Password); err != nil {
-        utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		return
 	}
 
 	query := "INSERT INTO users (username, email, password) VALUES (?, ?, ?)"
 	_, err := config.DB.Exec(query, user.Username, user.Email, user.Password)
 	if err != nil {
-        utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		return
 	}
 	utils.CreateResponseAndLogger(w, http.StatusCreated, nil, "user created successfully")
 }
@@ -44,16 +52,19 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		err := errors.New("method not allowed")
-        utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Method not allowed")
+		utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Method not allowed")
+		return
 	}
 	var user models.User
 	var userFromDb models.User
 
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-        utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		return
 	}
 	if err := utils.Validation(user); err != nil {
-        utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
+		return
 	}
 
 	query := "SELECT user_id, username, email, password FROM users WHERE username = ?"
@@ -62,8 +73,10 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "no user found with this username")
-		}else{
+			return
+		} else {
 			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+			return
 		}
 	}
 	err = utils.TokenCheck(userFromDb.ID, r, config.DB)
@@ -79,13 +92,16 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 			}
 			http.SetCookie(w, deleteCookie)
 			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Token Expired. Please login again")
-		}else{
+			return
+		} else {
 			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "user already logged in")
+			return
 		}
 	}
 	token, err := utils.SeesionCreation(userFromDb.ID, config.DB)
 	if err != nil {
-        utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		return
 	}
 	cookie := &http.Cookie{
 		Name:     "session_token",
@@ -105,17 +121,19 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		err := errors.New("method not allowed")
 		utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Method not allowed")
-
+		return
 	}
-	
+
 	cookie, err := r.Cookie("session_token")
 	if err != nil {
-        utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "user not logged-in")
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "user not logged-in")
+		return
 	}
 	query := "DELETE FROM sessions WHERE session_id = ?"
 	_, err = config.DB.Exec(query, cookie.Value)
 	if err != nil {
-        utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		return
 	}
 	deleteCookie := &http.Cookie{
 		Name:     "session_token",

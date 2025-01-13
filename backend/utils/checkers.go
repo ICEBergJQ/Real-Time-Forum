@@ -12,15 +12,6 @@ func IsTimestamp(input string) bool {
 	return err == nil
 }
 
-func CommentExist(db *sql.DB, commentID string) bool {
-	var exist bool
-	query := `SELECT EXISTS(SELECT 1 FROM comments WHERE comment_id = ?)`
-	err := db.QueryRow(query, commentID).Scan(&exist)
-	if err != nil {
-		return false
-	}
-	return exist
-}
 
 func PostExists(db *sql.DB, postID string) bool {
 	var exists bool

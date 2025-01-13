@@ -10,46 +10,46 @@ import (
 	"forum/utils"
 )
 
-func hasUserReacted(db *sql.DB, userID int, postID string, commentID *string) (bool, string) {
+func hasUserReacted(db *sql.DB, userID int, postID string, commentID *string) (bool, *string) {
 	var hasReacted bool
-	var reactionType string
+	var reactionType *string
 
 	var query string
-	// case Reaction to a post
 	if commentID == nil {
+		// Case: Reaction to a post
 		query = `
 			SELECT EXISTS (
 				SELECT 1
 				FROM Reactions
 				WHERE user_id = ? AND post_id = ? AND comment_id IS NULL
-			), COALESCE(
-				(SELECT reaction_type
+			), (
+				SELECT reaction_type
 				FROM Reactions
-				WHERE user_id = ? AND post_id = ? AND comment_id IS NULL), ''
+				WHERE user_id = ? AND post_id = ? AND comment_id IS NULL
 			);
 		`
 		err := db.QueryRow(query, userID, postID, userID, postID).Scan(&hasReacted, &reactionType)
 		if err != nil {
 			fmt.Println("Error checking user reactions to post: ", err)
-			return false, ""
+			return false, nil
 		}
 	} else {
-		// case Reaction to a comment
+		// Case: Reaction to a comment
 		query = `
 			SELECT EXISTS (
 				SELECT 1
 				FROM Reactions
 				WHERE user_id = ? AND post_id = ? AND comment_id = ?
-			), COALESCE(
-				(SELECT reaction_type
+			), (
+				SELECT reaction_type
 				FROM Reactions
-				WHERE user_id = ? AND post_id = ? AND comment_id = ?), ''
+				WHERE user_id = ? AND post_id = ? AND comment_id = ?
 			);
 		`
 		err := db.QueryRow(query, userID, postID, *commentID, userID, postID, *commentID).Scan(&hasReacted, &reactionType)
 		if err != nil {
 			fmt.Println("Error checking user reactions to comment: ", err)
-			return false, ""
+			return false, nil
 		}
 	}
 
@@ -68,7 +68,6 @@ func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	newReaction := forum.Reactions{}
-	
 	var err error
 	newReaction.User_id, err = utils.UserIDFromToken(r, db)
 	if err != nil {
@@ -76,6 +75,7 @@ func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error user_id not found: ", err)
 		return
 	}
+
 	if err := json.NewDecoder(r.Body).Decode(&newReaction); err != nil {
 		http.Error(w, "Failed to decode newReaction", http.StatusBadRequest)
 		fmt.Println("Error decoding request: ", err)
@@ -83,26 +83,28 @@ func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	PostExist := utils.PostExists(db, newReaction.Post_id)
-	if !PostExist {
+	// Check if the post exists
+	if !utils.PostExists(db, newReaction.Post_id) {
 		fmt.Println("Error, Post does not exist!!")
 		http.Error(w, "Post Does not Exist", http.StatusBadRequest)
-		return 
+		return
 	}
 
-	CommentExist := utils.CommentExist(db, newReaction.Comment_id)
-	if !CommentExist {
-		fmt.Println("Error, Comment does not exist!!")
-		http.Error(w, "Comment Does not Exist", http.StatusBadRequest)
-		return 
-	}
+	// Check if the user has already reacted
 	Reacted, currentReaction := hasUserReacted(db, newReaction.User_id, newReaction.Post_id, &newReaction.Comment_id)
+
+	// Handle existing reaction
 	if Reacted {
-		if currentReaction == newReaction.Reaction_Type {
+		var currentReactionValue string
+		if currentReaction != nil {
+			currentReactionValue = *currentReaction
+		}
+
+		if currentReactionValue == newReaction.Reaction_Type {
 			// Remove the reaction
 			_, err := db.Exec(`
 				DELETE FROM Reactions
-				WHERE user_id = ? AND post_id = ? AND comment_id IS ?;`,
+				WHERE user_id = ? AND post_id = ? AND comment_id = ?;`,
 				newReaction.User_id, newReaction.Post_id, newReaction.Comment_id)
 			if err != nil {
 				http.Error(w, "Failed to delete reaction", http.StatusInternalServerError)
@@ -116,7 +118,7 @@ func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			_, err := db.Exec(`
 				UPDATE Reactions
 				SET reaction_type = ?
-				WHERE user_id = ? AND post_id = ? AND comment_id IS ?;`,
+				WHERE user_id = ? AND post_id = ? AND comment_id = ?;`,
 				newReaction.Reaction_Type, newReaction.User_id, newReaction.Post_id, newReaction.Comment_id)
 			if err != nil {
 				http.Error(w, "Failed to update reaction", http.StatusInternalServerError)

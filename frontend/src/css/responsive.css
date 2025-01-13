@@ -9,6 +9,7 @@
   .navbar .container {
       flex-direction: column;
       align-items: flex-start;
+      align-items: center;
   }
 
   .nav-links {
@@ -83,6 +84,11 @@
       text-align: center;
   }
 
+  .navbar .container .dropdown-menu{
+    left: -25px;
+    top: 36%;
+}
+
   .nav-links {
       flex-direction: column;
       gap: 0.5rem;
@@ -118,7 +124,7 @@
   /* Buttons */
   .nav-actions .btn,
   .post-details .btn {
-      font-size: 14px;
+      font-size: 13px;
       padding: 0.3rem 0.5rem;
   }
 
@@ -130,11 +136,12 @@
   .footer-sections {
       flex-direction: column;
       gap: 1rem;
+      align-items: center;
   }
 
   /* Modal adjustments */
   .modal-content {
-      width: 90%;
+      width: 69%;
       padding: 1rem;
   }
 
@@ -142,5 +149,37 @@
   .categories-container label {
       font-size: 12px;
       padding: 6px 10px;
+  }
+
+  /* log */
+  
+  h2.log{
+    font-size: 19px;
+  }
+  
+  .log{
+    font-size: 18px;
+  }
+
+  .for label{
+    font-size: 12px;
+  }
+
+  .for input{
+    font-size: 12px;
+  }
+
+  .btn_s{
+    font-size: 12px;
+    width: 99%;
+  }
+
+  .sign-up-text {
+    font-size: 13px;
+  }
+
+  .nav-links {
+    margin-left: 5%;
+    display: inline-block;
   }
 }

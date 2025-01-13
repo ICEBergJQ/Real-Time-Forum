@@ -1,0 +1,16 @@
+
+/* Sign-Up Text */
+.sign-up-text {
+    font-size: 14px;
+    color: #666;
+    margin-top: 1rem;
+}
+
+.sign-up-link {
+    color: #000;
+    font-weight: bold;
+}
+
+.sign-up-link:hover {
+    text-decoration: underline;
+}

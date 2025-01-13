@@ -36,6 +36,12 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	newPost.ID = postID.String()
+
+	newPost.Author_id, err = utils.UserIDFromToken(r,db) 
+	if err != nil {
+		http.Error(w, "Unautherized access", http.StatusUnauthorized)
+		return
+	}
 	newPost.Author_name, err = utils.GetUserName(newPost.Author_id, db)
 	if err != nil {
 		http.Error(w, "There was a problem getting username", http.StatusInternalServerError)

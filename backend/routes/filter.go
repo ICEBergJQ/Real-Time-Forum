@@ -22,10 +22,15 @@ func FilterRoute(db *sql.DB) {
 			query := ""
 			switch req.FilterMethod {
 			case "getlikedposts":
+				id, err := utils.UserIDFromToken(r, db)
+				if err != nil {
+					http.Error(w, "Unautherized access", http.StatusUnauthorized)
+					return
+				}
 				query = `SELECT p.post_id, p.user_id, p.category_name, p.title, p.content, p.created_at
 						FROM posts p
 						JOIN Reactions l ON p.post_id = l.post_id
-						WHERE l.reaction_type = 'like' AND l.user_id = ` + strconv.Itoa(req.Id) +
+						WHERE l.reaction_type = 'like' AND l.user_id = ` + strconv.Itoa(id) +
 					` AND p.created_at < ? ORDER BY p.created_at DESC limit ?`
 
 				controllers.FilterPosts(query, req.Cursor, db, w, r)
@@ -38,7 +43,12 @@ func FilterRoute(db *sql.DB) {
 				query = controllers.CreateQuery(req.Categories) + ` AND created_at < ? ORDER BY created_at DESC limit ?`
 				controllers.FilterPosts(query, req.Cursor, db, w, r)
 			case "getcreatedposts":
-				query = `SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE user_id = ` + strconv.Itoa(req.Id)
+				id, err := utils.UserIDFromToken(r, db)
+				if err != nil {
+					http.Error(w, "Unautherized access", http.StatusUnauthorized)
+					return
+				}
+				query = `SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE user_id = ` + strconv.Itoa(id)
 				controllers.FilterPosts(query, req.Cursor, db, w, r)
 			default:
 				http.Error(w, "Unsupported filter method", http.StatusBadRequest)

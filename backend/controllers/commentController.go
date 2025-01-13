@@ -35,15 +35,21 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 	newComment.ID = commentID.String()
 
+	newComment.Author_id, err = utils.UserIDFromToken(r, db)
+	if err != nil {
+		http.Error(w, "Unautherized access", http.StatusUnauthorized)
+		return
+	}
+
 	if !utils.PostExists(db, newComment.Post_id) {
 		http.Error(w, "Post does not exist Bad request", http.StatusBadRequest)
 		return
 	}
-	newComment.Author_name, err = utils.GetUserName(newComment.Author_id,db)
+	newComment.Author_name, err = utils.GetUserName(newComment.Author_id, db)
 	if err != nil {
 		http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
 		return
-	} 
+	}
 
 	// Insert the post
 	query := "INSERT INTO comments (comment_id, user_id, post_id, content) VALUES (?, ?, ?, ?)"
@@ -88,7 +94,7 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("internal server error x: %v", err), http.StatusInternalServerError)
 			return
 		}
-		comment.LikesCount =  RowCounter(`
+		comment.LikesCount = RowCounter(`
 		SELECT COUNT(*) AS count
 		FROM Reactions
 		WHERE reaction_type = 'like'

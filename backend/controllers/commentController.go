@@ -56,7 +56,7 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	newComment.Content = html.EscapeString(newComment.Content)
-	
+
 	query := "INSERT INTO comments (comment_id, user_id, post_id, content) VALUES (?, ?, ?, ?)"
 	_, err = tx.Exec(query, newComment.ID, newComment.Author_id, newComment.Post_id, newComment.Content)
 	if err != nil {
@@ -97,6 +97,11 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		err := rows.Scan(&comment.ID, &comment.Author_id, &comment.Post_id, &comment.Content, &comment.CreatedAt)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("internal server error x: %v", err), http.StatusInternalServerError)
+			return
+		}
+		comment.Author_name, err = utils.GetUserName(comment.Author_id, db)
+		if err != nil {
+			http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
 			return
 		}
 		comment.LikesCount = RowCounter(`

@@ -10,8 +10,7 @@ createPostForm.onsubmit = (e) => {
     const categories = Array.from(document.querySelectorAll('input[type=checkbox]:checked'), elem => elem.value)
 
     console.log(categories.length)
-    console.log(categories)
-    const category_id = [1]
+    console.log(categories) 
 
     if (!title || !content || !categories.length) {
         displayToast('var(--red)','all fields are required!')
@@ -22,8 +21,7 @@ createPostForm.onsubmit = (e) => {
     fetch('/post', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            Author_id: 1,
+        body: JSON.stringify({ 
             title,
             content,
             categories,

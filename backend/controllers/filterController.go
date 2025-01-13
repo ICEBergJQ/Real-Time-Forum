@@ -31,10 +31,10 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 	}
 	defer rows.Close()
 
-	var posts []forum.PaginationResponse
+	var posts []forum.Post
 	category := ""
 	for rows.Next() {
-		var post forum.PaginationResponse
+		var post forum.Post
 		err := rows.Scan(&post.ID, &post.Author_id, &category, &post.Title, &post.Content, &post.CreatedAt)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)

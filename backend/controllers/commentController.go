@@ -55,9 +55,10 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Insert the post
+	newComment.Content = html.EscapeString(newComment.Content)
+	
 	query := "INSERT INTO comments (comment_id, user_id, post_id, content) VALUES (?, ?, ?, ?)"
-	_, err = tx.Exec(query, newComment.ID, newComment.Author_id, newComment.Post_id, html.EscapeString(newComment.Content))
+	_, err = tx.Exec(query, newComment.ID, newComment.Author_id, newComment.Post_id, newComment.Content)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error creating comment: %v", err), http.StatusInternalServerError)
 		return

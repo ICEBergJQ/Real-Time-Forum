@@ -15,11 +15,10 @@ function postComment(e, Post_id) {
 
     const Content = e.target.previousElementSibling.querySelector('textarea').value.trim()
     if (!Content) {
-        alert("enter your comment!")
+        displayToast('var(--red)',"enter your comment!")
         return
     }
-    console.log(Content, Post_id)
-    let Author_id = user_id
+    let Author_id = 1
     ////get post comments
     fetch('/comment', {
         method: "post",
@@ -34,6 +33,7 @@ function postComment(e, Post_id) {
             res.json()
         })
         .then(data => {
+            console.log(data)
             alert("msg : ", data)
             //listPosts(articles);
             fetchPosts()

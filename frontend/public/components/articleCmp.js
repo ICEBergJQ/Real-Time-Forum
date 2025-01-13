@@ -1,6 +1,6 @@
 import Comment from './commentCmp.js'
 
-export function Article(post, comments) {
+export default function Article(post, comments) {
   return `
     <article class="post-preview">
       <div class="post-header">

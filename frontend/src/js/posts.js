@@ -1,6 +1,6 @@
-import { loginForm, teeeeeesloginForm } from '../../public/components/loginCmp.js'
-import registerForm from '../../public/components/registerCmp.js'
-import { Article } from '../../public/components/articleCmp.js'
+import loginForm from '../../public/components/loginCmp.js'
+import {registerForm, registerFormp} from '../../public/components/registerCmp.js'
+import  Article  from '../../public/components/articleCmp.js'
 import Logout from '../../public/components/logoutCmp.js'
 import postForm from '../../public/components/postFormCmp.js'
 const postsContainer = document.querySelector('main .post-list')
@@ -11,7 +11,7 @@ const logoutDynamic = document.querySelector("#logoutdynamic");
 const loadMore = document.querySelector('main>button.load-more')
 
 anotherDynamic.innerHTML = registerForm()
-dynamicContent.innerHTML = teeeeeesloginForm()
+dynamicContent.innerHTML = loginForm()
 logoutDynamic.innerHTML = Logout()
 dynaicPost.innerHTML = postForm()
 
@@ -263,6 +263,7 @@ window.fetchPosts = fetchPosts
 window.displayComment = displayComment
 window.filterPosts = filterPosts
 window.listSinglePost = listSinglePost
+window.popPost=popPost
 
 
 

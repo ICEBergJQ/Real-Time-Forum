@@ -14,14 +14,13 @@ import (
 func SeesionCreation(user_id int, db *sql.DB) (string, error) {
 	token, err := uuid.NewV4()
 	if err != nil {
-		return "error", err
+		return "empty", err
 	}
 	query := `INSERT INTO sessions (session_id, user_id, expired_at) 
           VALUES (?, ?, datetime('now', '+1 hour', '+5 days'))`
 	_, err = db.Exec(query, token.String(), user_id)
 	if err != nil {
-		fmt.Println(err)
-		return "error", err
+		return "empty", err
 	}
 	return token.String(), nil
 }

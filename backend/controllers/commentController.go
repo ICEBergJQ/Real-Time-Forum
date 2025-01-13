@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"html"
 	"net/http"
 
 	forum "forum/models"
@@ -20,7 +21,10 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-
+	if len(newComment.Content) == 0 || len(newComment.Content) > 300 {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
 	tx, err := db.Begin()
 	if err != nil {
 		http.Error(w, "Failed to start transaction", http.StatusInternalServerError)
@@ -35,17 +39,24 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 	newComment.ID = commentID.String()
 
+	newComment.Author_id, err = utils.UserIDFromToken(r, db)
+	if err != nil {
+		http.Error(w, "Unautherized access", http.StatusUnauthorized)
+		return
+	}
+
 	if !utils.PostExists(db, newComment.Post_id) {
 		http.Error(w, "Post does not exist Bad request", http.StatusBadRequest)
 		return
 	}
-	newComment.Author_name, err = utils.GetUserName(newComment.Author_id,db)
+	newComment.Author_name, err = utils.GetUserName(newComment.Author_id, db)
 	if err != nil {
 		http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
 		return
-	} 
+	}
 
-	// Insert the post
+	newComment.Content = html.EscapeString(newComment.Content)
+	
 	query := "INSERT INTO comments (comment_id, user_id, post_id, content) VALUES (?, ?, ?, ?)"
 	_, err = tx.Exec(query, newComment.ID, newComment.Author_id, newComment.Post_id, newComment.Content)
 	if err != nil {
@@ -88,7 +99,7 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("internal server error x: %v", err), http.StatusInternalServerError)
 			return
 		}
-		comment.LikesCount =  RowCounter(`
+		comment.LikesCount = RowCounter(`
 		SELECT COUNT(*) AS count
 		FROM Reactions
 		WHERE reaction_type = 'like'

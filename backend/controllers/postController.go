@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"html"
 	"net/http"
 	"strings"
 
@@ -36,6 +37,12 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	newPost.ID = postID.String()
+
+	newPost.Author_id, err = utils.UserIDFromToken(r, db)
+	if err != nil {
+		http.Error(w, "Unautherized access", http.StatusUnauthorized)
+		return
+	}
 	newPost.Author_name, err = utils.GetUserName(newPost.Author_id, db)
 	if err != nil {
 		http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
@@ -57,20 +64,14 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	newPost.Title = html.EscapeString(newPost.Title)
+	newPost.Content = html.EscapeString(newPost.Content)
+
 	query := "INSERT INTO posts (post_id, user_id, category_name, title, content) VALUES (?, ?, ?, ?, ?)"
 	_, err = tx.Exec(query, newPost.ID, newPost.Author_id, categories, newPost.Title, newPost.Content)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error creating post: %v", err), http.StatusInternalServerError)
 		return
-	}
-
-	// Link categories to the post
-	for _, categoryID := range newPost.Category_id {
-		_, err := tx.Exec("INSERT INTO postsCategories (post_id, category_id) VALUES (?, ?)", newPost.ID, categoryID)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Error linking post to category: %v", err), http.StatusInternalServerError)
-			return
-		}
 	}
 
 	if err := tx.Commit(); err != nil {
@@ -94,10 +95,10 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 	}
 	defer rows.Close()
 
-	var posts []forum.PaginationResponse
+	var posts []forum.Post
 	category := ""
 	for rows.Next() {
-		var post forum.PaginationResponse
+		var post forum.Post
 		err := rows.Scan(&post.ID, &post.Author_id, &category, &post.Title, &post.Content, &post.CreatedAt)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)
@@ -112,13 +113,13 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 		SELECT COUNT(*) AS count
 		FROM Reactions
 		WHERE reaction_type = 'like'
-		AND post_id = ?;`, post.ID, db)
+		AND post_id = ? AND comment_id = null;`, post.ID, db)
 
 		post.Dislikes_counter = RowCounter(`
 		SELECT COUNT(*) AS count
 		FROM Reactions
 		WHERE reaction_type = 'dislike'
-		AND post_id = ?;`, post.ID, db)
+		AND post_id = ? AND comment_id = null;`, post.ID, db)
 
 		post.Comments_Counter = RowCounter(`SELECT COUNT(*) AS count FROM comments WHERE post_id = ?;`, post.ID, db)
 		post.Categories = strings.Split(category, ",")

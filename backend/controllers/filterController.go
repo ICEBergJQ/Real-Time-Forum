@@ -31,10 +31,10 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 	}
 	defer rows.Close()
 
-	var posts []forum.PaginationResponse
+	var posts []forum.Post
 	category := ""
 	for rows.Next() {
-		var post forum.PaginationResponse
+		var post forum.Post
 		err := rows.Scan(&post.ID, &post.Author_id, &category, &post.Title, &post.Content, &post.CreatedAt)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("internal server error: %v", err), http.StatusInternalServerError)
@@ -49,13 +49,13 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 		SELECT COUNT(*) AS count
 		FROM Reactions
 		WHERE reaction_type = 'like'
-		AND post_id = ?;`, post.ID, db)
+		AND post_id = ? AND comment_id = null;`, post.ID, db)
 
 		post.Dislikes_counter = RowCounter(`
 		SELECT COUNT(*) AS count
 		FROM Reactions
 		WHERE reaction_type = 'dislike'
-		AND post_id = ?;`, post.ID, db)
+		AND post_id = ? AND comment_id = null;`, post.ID, db)
 
 		post.Comments_Counter = RowCounter(`SELECT COUNT(*) AS count FROM comments WHERE post_id = ?;`, post.ID, db)
 		post.Categories = strings.Split(category, ",")

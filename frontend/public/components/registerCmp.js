@@ -41,10 +41,10 @@ export default function registerForm() {
                    <input type="text" value="" id="email" name="email" placeholder="Enter your email" >
        
                    <label for="password">Password</label>
-                   <input type="password" value="111111" id="password" name="password" placeholder="Enter your password" >
+                   <input type="password"  id="password" name="password" placeholder="Enter your password" >
        
                    <label for="confirm-password">Confirm Password</label>
-                   <input type="password" value="111111" id="confirm-password" name="confirm-password" placeholder="Confirm your password" >
+                   <input type="password"  id="confirm-password" name="confirm-password" placeholder="Confirm your password" >
                    <button class="btn_s">Sign Up</button>
                </form>
                <p class="sign-up-text">

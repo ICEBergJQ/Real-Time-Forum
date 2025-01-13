@@ -26,6 +26,7 @@ form.addEventListener('submit', (e) => {
         body: JSON.stringify({ username, password }),
     })
         .then(res => {
+            console.log(res)
             if (!res.ok) {
                 //retturn msg from backend
                 //user 

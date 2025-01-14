@@ -17,7 +17,7 @@ func main() {
 	// home routes
 	routes.HomeRoute()
 	// authentication routes
-	routes.AuthRoutes(config.DB)
+	routes.AuthRoutes()
 	// post routes
 	routes.PostRoute(config.DB)
 	// like routes

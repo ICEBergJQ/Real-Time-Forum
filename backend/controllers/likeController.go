@@ -6,16 +6,43 @@ import (
 	"fmt"
 	"net/http"
 
-	forum "forum/models"
+	"forum/models"
 	"forum/utils"
 )
 
-func hasUserReacted(db *sql.DB, userID int, postID string, commentID *string) (bool, *string) {
+func HasUserReacted(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		err := fmt.Errorf("Methode Not Allowed")
+		utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Methode Not Allowed")
+		return
+	}
+
+	if r.URL.Path != "/reaction" {
+		err := fmt.Errorf("unauthorized")
+		utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "unauthorized path")
+		return
+	}
+	var reaction models.Reactions
+	var err error
+	
+	reaction.User_id, err = utils.UserIDFromToken(r, db)
+	if err != nil {
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "user_id not found")
+		return
+	}
+	if err := json.NewDecoder(r.Body).Decode(&reaction); err != nil {
+		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		return
+	}
+	defer r.Body.Close()
+
+
 	var hasReacted bool
 	var reactionType *string
+	
 
 	var query string
-	if commentID == nil {
+	if reaction.Comment_id == "" {
 		// Case: Reaction to a post
 		query = `
 			SELECT EXISTS (
@@ -28,11 +55,12 @@ func hasUserReacted(db *sql.DB, userID int, postID string, commentID *string) (b
 				WHERE user_id = ? AND post_id = ? AND comment_id IS NULL
 			);
 		`
-		err := db.QueryRow(query, userID, postID, userID, postID).Scan(&hasReacted, &reactionType)
+		err := db.QueryRow(query, reaction.User_id, reaction.Post_id, reaction.User_id, reaction.Post_id).Scan(&hasReacted, &reactionType)
 		if err != nil {
-			fmt.Println("Error checking user reactions to post: ", err)
-			return false, nil
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+			return
 		}
+		PostReaction(db, reaction,hasReacted, reactionType, w)
 	} else {
 		// Case: Reaction to a comment
 		query = `
@@ -46,100 +74,108 @@ func hasUserReacted(db *sql.DB, userID int, postID string, commentID *string) (b
 				WHERE user_id = ? AND post_id = ? AND comment_id = ?
 			);
 		`
-		err := db.QueryRow(query, userID, postID, *commentID, userID, postID, *commentID).Scan(&hasReacted, &reactionType)
+		err := db.QueryRow(query, reaction.User_id, reaction.Post_id, reaction.Comment_id, reaction.User_id, reaction.Post_id, reaction.Comment_id).Scan(&hasReacted, &reactionType)
 		if err != nil {
-			fmt.Println("Error checking user reactions to comment: ", err)
-			return false, nil
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+			return
 		}
+		CommentReaction(db, reaction,hasReacted, reactionType, w)
 	}
-
-	return hasReacted, reactionType
 }
 
-func InsertOrUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-		return
-	}
+func PostReaction(db *sql.DB, newReaction models.Reactions ,hasReacted bool, reactionType *string, w http.ResponseWriter) {
 
-	if r.URL.Path != "/reaction" {
-		http.Error(w, "Not found", http.StatusNotFound)
-		return
-	}
-
-	newReaction := forum.Reactions{}
-	var err error
-	newReaction.User_id, err = utils.UserIDFromToken(r, db)
-	if err != nil {
-		http.Error(w, "Failed to get user_id", http.StatusNotFound)
-		fmt.Println("Error user_id not found: ", err)
-		return
-	}
-
-	if err := json.NewDecoder(r.Body).Decode(&newReaction); err != nil {
-		http.Error(w, "Failed to decode newReaction", http.StatusBadRequest)
-		fmt.Println("Error decoding request: ", err)
-		return
-	}
-	defer r.Body.Close()
-
-	// Check if the post exists
 	if !utils.PostExists(db, newReaction.Post_id) {
-		fmt.Println("Error, Post does not exist!!")
-		http.Error(w, "Post Does not Exist", http.StatusBadRequest)
+		err := fmt.Errorf("Post Does not Exist")
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Post Does not Exist")
 		return
 	}
 
-	// Check if the user has already reacted
-	Reacted, currentReaction := hasUserReacted(db, newReaction.User_id, newReaction.Post_id, &newReaction.Comment_id)
-
-	// Handle existing reaction
-	if Reacted {
-		var currentReactionValue string
-		if currentReaction != nil {
-			currentReactionValue = *currentReaction
-		}
-
-		if currentReactionValue == newReaction.Reaction_Type {
-			// Remove the reaction
+	var ReactionStatus string
+	if hasReacted {
+		if reactionType == &newReaction.Reaction_Type {
 			_, err := db.Exec(`
 				DELETE FROM Reactions
 				WHERE user_id = ? AND post_id = ? AND comment_id = ?;`,
 				newReaction.User_id, newReaction.Post_id, newReaction.Comment_id)
 			if err != nil {
-				http.Error(w, "Failed to delete reaction", http.StatusInternalServerError)
-				fmt.Println("Error deleting reaction: ", err)
+				utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Failed to delete reaction")
 				return
 			}
-			w.WriteHeader(http.StatusOK)
-			fmt.Fprint(w, "Reaction removed successfully")
+			ReactionStatus = "Removed"
+			utils.CreateResponseAndLogger(w, http.StatusOK, nil, ReactionStatus)
+			return 
 		} else {
-			// Update the reaction type
 			_, err := db.Exec(`
 				UPDATE Reactions
 				SET reaction_type = ?
 				WHERE user_id = ? AND post_id = ? AND comment_id = ?;`,
 				newReaction.Reaction_Type, newReaction.User_id, newReaction.Post_id, newReaction.Comment_id)
 			if err != nil {
-				http.Error(w, "Failed to update reaction", http.StatusInternalServerError)
-				fmt.Println("Error updating reaction: ", err)
+				utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Failed to update reaction")
 				return
 			}
-			w.WriteHeader(http.StatusOK)
-			fmt.Fprint(w, "Reaction updated successfully")
+			ReactionStatus = "Updated"
+			utils.CreateResponseAndLogger(w, http.StatusOK, nil, ReactionStatus)
+			return 
 		}
 	} else {
-		// Add a new reaction
 		_, err := db.Exec(`
 			INSERT INTO Reactions (user_id, post_id, comment_id, reaction_type)
 			VALUES (?, ?, ?, ?);`,
 			newReaction.User_id, newReaction.Post_id, newReaction.Comment_id, newReaction.Reaction_Type)
 		if err != nil {
-			http.Error(w, "Failed to insert reaction", http.StatusInternalServerError)
-			fmt.Println("Error inserting reaction: ", err)
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Failed to insert reaction")
 			return
 		}
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprint(w, "Reaction added successfully")
+		ReactionStatus = "Added"
+		utils.CreateResponseAndLogger(w, http.StatusOK, nil, ReactionStatus)
+		return 
+	}
+}
+
+func CommentReaction(db *sql.DB, newReaction models.Reactions,hasReacted bool, reactionType *string, w http.ResponseWriter) {
+	
+	var ReactionStatus string
+
+	if hasReacted {
+		if *reactionType == newReaction.Reaction_Type {
+			_, err := db.Exec(`
+				DELETE FROM Reactions
+				WHERE user_id = ? AND post_id = ? AND comment_id IS NULL;`,
+				newReaction.User_id, newReaction.Post_id, newReaction.Comment_id)
+			if err != nil {
+				utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Failed to delete reaction")
+				return
+			}
+			ReactionStatus = "Removed"
+			utils.CreateResponseAndLogger(w, http.StatusOK, nil, ReactionStatus)
+			return 
+		} else {
+			_, err := db.Exec(`
+				UPDATE Reactions
+				SET reaction_type = ?
+				WHERE user_id = ? AND post_id = ? AND comment_id IS NULL;`,
+				newReaction.Reaction_Type, newReaction.User_id, newReaction.Post_id, newReaction.Comment_id)
+			if err != nil {
+				utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Failed to update reaction")
+				return
+			}
+			ReactionStatus = "Updated"
+			utils.CreateResponseAndLogger(w, http.StatusOK, nil, ReactionStatus)
+			return 
+		}
+	} else {
+		_, err := db.Exec(`
+			INSERT INTO Reactions (user_id, post_id, comment_id, reaction_type)
+			VALUES (?, ?, NULL, ?);`,
+			newReaction.User_id, newReaction.Post_id, newReaction.Comment_id, newReaction.Reaction_Type)
+		if err != nil {
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Failed to insert reaction")
+			return
+		}
+		ReactionStatus = "Added"
+		utils.CreateResponseAndLogger(w, http.StatusOK, nil, ReactionStatus)
+		return
 	}
 }

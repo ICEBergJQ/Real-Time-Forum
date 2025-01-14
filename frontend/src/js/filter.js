@@ -1,63 +1,33 @@
 
-///filter drop down
-const category = document.querySelector('.category')
-///filter btn
-const filter = document.querySelector('.filter')
-const main = document.querySelector('.main')
-const radiobtns = document.querySelectorAll('[type=radio]')
+// radiobtns.forEach(elem => elem.checked ? checked = elem.id : null)
 
-const posts = []
-let checked = ''
 
-radiobtns.forEach(elem => elem.checked ? checked = elem.id : null)
+function filterPosts(filtermethod) {
+    // document.querySelectorAll('nav checkbox')
+    let categories = []
 
-filter.onclick = () => {
-    let filteredPosts = []
-
-    if (checked === "likes") {
-
-        filteredPosts = posts.sort(function (a, b) { return a.likes - b.likes });
-        listFilteredPosts(filteredPosts)
-    } else if (checked === 'date') {
-        filteredPosts = posts.sort((a, b) => {
-            return new Date(a) - new Date(b)
-        })
-    } else if (checked === "category") {
-
-        posts.filter((elem) => {
-            elem.category === category.value ? filteredPosts.push(elem) : null
-        })
+    let data = {
+        filtermethod,
+        categories,
+        cursor: formatDate(new Date()),
+        id: 1
     }
-
-
-    //remove prev content
-    main.innerHTML = ''
-    listFilteredPosts(filteredPosts)
-
-
+    console.log(filtermethod)
+    fetch('/filter', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+            data
+        ),
+    }).then(res => {
+        if (!res.ok) {
+            alert('something went wrong:::!!')
+            throw new Error('something went wrong:::!!')
+        }
+        return res.json()
+    }).then(data => {
+        listPosts(data)
+        console.log("get posts", data)
+    }).catch(err => console.log(err))
 }
 
-
-function listFilteredPosts(posts) {
-
-    posts.forEach(elem => {
-
-        const post = createElem("div", "post")
-
-        const title = createElem("h2", "title", elem.title)
-        const content = createElem("p", "content", elem.content)
-        const details = createElem("p")
-
-        ///datails
-        const cat = createElem("span", "category", elem.category)
-        const craetedAt = createElem("span", "date", elem.craetedAt)
-        details.appendChild(cat)
-        details.appendChild(craetedAt)
-
-        post.appendChild(title)
-        post.appendChild(content)
-        post.appendChild(details)
-
-        main.appendChild(post)
-    })
-}

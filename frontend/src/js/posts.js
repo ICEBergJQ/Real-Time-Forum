@@ -192,10 +192,13 @@ function fetchPosts() {
                 displayToast('var(--red)', res.statusText)
                 throw new Error("something went wrong!")
             }
-            res.json()
+          return  res.json()
         }
         )
         .then(posts => {
+            console.log(url)
+            console.log(cursor)
+            console.log(posts)
             if (posts && posts.length > 0) {
                 loadMore.style.display = 'block'
                 listPosts(posts);
@@ -238,34 +241,34 @@ function displayComment(e) {
     e.target.parentElement.nextElementSibling.classList.toggle("hidden")
 }
 
-function filterPosts(filtermethod) {
-    // document.querySelectorAll('nav checkbox')
-    let categories = []
+// function filterPosts(filtermethod) {
+//     // document.querySelectorAll('nav checkbox')
+//     let categories = []
 
-    let data = {
-        filtermethod,
-        categories,
-        cursor: formatDate(new Date()),
-        id: 1
-    }
-    console.log(filtermethod)
-    fetch('/filter', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-            data
-        ),
-    }).then(res => {
-        if (!res.ok) {
-            alert('something went wrong:::!!')
-            throw new Error('something went wrong:::!!')
-        }
-        return res.json()
-    }).then(data => {
-        listPosts(data)
-        console.log("get posts", data)
-    }).catch(err => console.log(err))
-}
+//     let data = {
+//         filtermethod,
+//         categories,
+//         cursor: formatDate(new Date()),
+//         id: 1
+//     }
+//     console.log(filtermethod)
+//     fetch('/filter', {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify(
+//             data
+//         ),
+//     }).then(res => {
+//         if (!res.ok) {
+//             alert('something went wrong:::!!')
+//             throw new Error('something went wrong:::!!')
+//         }
+//         return res.json()
+//     }).then(data => {
+//         listPosts(data)
+//         console.log("get posts", data)
+//     }).catch(err => console.log(err))
+// }
 
 // window.popPost = popPost
 window.closeModal = closeModal
@@ -273,6 +276,5 @@ window.displayPopup = displayPopup
 window.listPosts = listPosts
 window.fetchPosts = fetchPosts
 window.displayComment = displayComment
-window.filterPosts = filterPosts
 window.listSinglePost = listSinglePost
 window.listSingleComment = listSingleComment

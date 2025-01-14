@@ -80,7 +80,7 @@
                   />
                   <label for="art">Education</label>
                 </li>
-                <button class="sbtf" type="submit">filter</button>
+                <button onclick="filterPosts('getpostsbycategory')" class="sbtf" type="submit">filter</button>
               </ul>
             </li>
             <li onclick="filterPosts('getcreatedposts')">created posts</li>
@@ -166,6 +166,7 @@
     <script src="static/src/js/createPost.js" defer></script>
     <script src="static/src/js/logout.js" defer></script>
     <script src="static/src/js/comment.js"></script>
+    <script src="static/src/js/filter.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const commentBtns = document.querySelectorAll(".comment-btn");

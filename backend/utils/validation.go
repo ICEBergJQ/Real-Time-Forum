@@ -29,10 +29,12 @@ func containsAll(s string) bool {
     return hasUpper && hasLower && hasNumber && hasSpecial
 }
 
-func Validation(user models.User) error {
-    if _, err := mail.ParseAddress(user.Email); err != nil {
-        return errors.New("invalid email address")
-    }
+func Validation(user models.User, flag bool) error {
+	if flag {
+		if _, err := mail.ParseAddress(user.Email); err != nil {
+			return errors.New("invalid email address")
+		}
+	}
     if len(user.Password) < 6 {
         return errors.New("password must be at least 6 characters long")
     }

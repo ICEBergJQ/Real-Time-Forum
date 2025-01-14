@@ -11,6 +11,8 @@ import (
 	"forum/config"
 	"forum/models"
 	"forum/utils"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // RegisterUser handles user registration
@@ -28,8 +30,10 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user.Username = html.EscapeString(user.Username)
+	user.Email = html.EscapeString(user.Email)
+	user.Password = html.EscapeString(user.Password)
 
-	if err := utils.Validation(user); err != nil {
+	if err := utils.Validation(user, true); err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
 		return
 	}
@@ -42,6 +46,13 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	query := "INSERT INTO users (username, email, password) VALUES (?, ?, ?)"
 	_, err := config.DB.Exec(query, user.Username, user.Email, user.Password)
 	if err != nil {
+		if err.Error() == "UNIQUE constraint failed: users.username" {
+			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Username already exists")
+			return
+		} else if err.Error() == "UNIQUE constraint failed: users.email" {
+			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Email already exists")
+			return
+		}
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
 		return
 	}
@@ -62,7 +73,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
 		return
 	}
-	if err := utils.Validation(user); err != nil {
+	if err := utils.Validation(user, false); err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
 		return
 	}
@@ -73,6 +84,15 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "no user found with this username")
+			return
+		} else {
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+			return
+		}
+	}
+	if err := utils.CheckPassword(user.Password, userFromDb.Password); err != nil {
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "invalid password")
 			return
 		} else {
 			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")

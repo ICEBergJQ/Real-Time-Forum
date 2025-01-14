@@ -63,6 +63,17 @@
 }
 
 /* Navbar */
+
+.logo{
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.logo:hover{
+  color: #00aaff;
+  transition: color 0.3s;
+}
+
 .navbar {
   background: #222;
   color: #fff;
@@ -88,12 +99,23 @@
 /* Ensures the dropdown menu is positioned relative to its parent */
 /* } */
 
-.nav-links li a {
+.nav-links li a{
   color: #fff;
   transition: color 0.3s;
+  cursor: pointer;
 }
 
 .nav-links li a:hover {
+  color: #00aaff;
+}
+
+.nav-links li {
+  color: #fff;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.nav-links li:hover {
   color: #00aaff;
 }
 

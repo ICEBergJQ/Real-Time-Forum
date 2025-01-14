@@ -1,171 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Community Page</title>
+    <link rel="stylesheet" href="static/src/css/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="static/src/css/login.css" />
+    <link rel="stylesheet" href="static/src/css/post.css" />
+    <link rel="stylesheet" href="static/src/css/register.css" />
+    <link rel="stylesheet" href="static/src/css/signup.css" />
+    <link rel="stylesheet" href="static/src/css/style.css" />
+    <link rel="stylesheet" href="static/src/css/responsive.css" />
+    <link rel="stylesheet" href="static/src/css/logout.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Community Page</title>
-  <link rel="stylesheet" href="static/src/css/main.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="static/src/css/login.css">
-  <link rel="stylesheet" href="static/src/css/post.css">
-  <link rel="stylesheet" href="static/src/css/register.css">
-  <link rel="stylesheet" href="static/src/css/signup.css">
-  <link rel="stylesheet" href="static/src/css/style.css">
-  <link rel="stylesheet" href="static/src/css/responsive.css">
-  <link rel="stylesheet" href="static/src/css/logout.css">
-</head>
+  <body>
+    <span class="toast"></span>
 
-<body>
-  <span class="toast"></span>
-
-  <!-- Navigation Bar -->
-  <header class="navbar">
-    <div class="container">
-      <div class="logo">
-        <h1>My Forum</h1>
-      </div>
-      <nav class="navbar">
-        <ul class="nav-links">
-          <li><a href="/home"><i class="fa fa-home" style="font-size:18px"></i> Home</a></li>
-          <li class="dropdown">
-            <a href="/categories">Categories</a>
-            <ul class="dropdown-menu">
-              <!-- <li><span class="cat">Technology</span></li>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+      <div class="container">
+        <div class="logo">
+          <h1>My Forum</h1>
+        </div>
+        <nav class="navbar">
+          <ul class="nav-links">
+            <li>
+              <a href="/home"
+                ><i class="fa fa-home" style="font-size: 18px"></i> Home</a
+              >
+            </li>
+            <li class="dropdown">
+              <a href="/categories">Categories</a>
+              <ul class="dropdown-menu">
+                <!-- <li><span class="cat">Technology</span></li>
               <li><span class="cat">Science</span></li>
               <li><span class="cat">Health</span></li>
               <li><span class="cat">Sports</span></li>
               <li><span class="cat">Art</span></li> -->
-              <li><input type="checkbox" id="tech" name="categories" value="Technology">
-                <label for="tech">Technology</label></li>
-              <li><input type="checkbox" id="science" name="categories" value="Science">
-                <label for="science">Lifestyle</label></li>
-              <li><input type="checkbox" id="health" name="categories" value="Health">
-                <label for="health">Health</label></li>
-              <li><input type="checkbox" id="sports" name="categories" value="Sports">
-                <label for="sports">Sports</label></li>
-              <li><input type="checkbox" id="art" name="categories" value="Art">
-                <label for="art">Education</label></li>
+                <li>
+                  <input
+                    type="checkbox"
+                    id="tech"
+                    name="categories"
+                    value="Technology"
+                  />
+                  <label for="tech">Technology</label>
+                </li>
+                <li>
+                  <input
+                    type="checkbox"
+                    id="science"
+                    name="categories"
+                    value="Science"
+                  />
+                  <label for="science">Lifestyle</label>
+                </li>
+                <li>
+                  <input
+                    type="checkbox"
+                    id="health"
+                    name="categories"
+                    value="Health"
+                  />
+                  <label for="health">Health</label>
+                </li>
+                <li>
+                  <input
+                    type="checkbox"
+                    id="sports"
+                    name="categories"
+                    value="Sports"
+                  />
+                  <label for="sports">Sports</label>
+                </li>
+                <li>
+                  <input
+                    type="checkbox"
+                    id="art"
+                    name="categories"
+                    value="Art"
+                  />
+                  <label for="art">Education</label>
+                </li>
                 <button class="sbtf" type="submit">filter</button>
+              </ul>
+            </li>
+            <li onclick="filterPosts('getcreatedposts')">My Posts</li>
+            <li onclick="filterPosts('getlikedposts')">Popular Posts</li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <button class="btn login">Login</button>
+          <button class="btn start-topic">Sign Up</button>
+          <!-- <button class="btn logout hidden">Logout</button> -->
+          <button class="btn logout">Logout</button>
+          <button class="btn createPostBtn">Create Post</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- for login -->
+    <div id="dynamicContent"></div>
+
+    <!-- for register -->
+    <div id="anotherDynamic"></div>
+
+    <!-- for creating post -->
+    <div id="dynaicPost"></div>
+
+    <!-- for logout -->
+    <div id="logoutdynamic"></div>
+
+    <!-- Main Content -->
+    <!-- <main id="main-content" class="main-content"></main> -->
+    <main class="main-content">
+      <section class="feed">
+        <h2>Posts</h2>
+        <div class="post-list">
+          <div id="spinner"></div>
+        </div>
+      </section>
+      <button class="load-more">Load More</button>
+    </main>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-sections">
+          <div>
+            <h4>Forum</h4>
+            <ul>
+              <li><a class="foo">Categories</a></li>
+              <li><a class="foo">Popular Posts</a></li>
+              <li><a class="foo">Help</a></li>
             </ul>
-          </li>
-          <li onclick="filterPosts('getcreatedposts')"> My Posts</li>
-          <li onclick="filterPosts('getlikedposts')">Popular Posts</li>
-          <li><a href="/help"><i class="fa fa-question-circle" style="font-size:18px"></i> Help</a></li>
-        </ul>
-      </nav>
-
-      <div class="nav-actions">
-        <button class="btn login">Login</button>
-        <button class="btn start-topic">Sign Up</button>
-        <!-- <button class="btn logout hidden">Logout</button> -->
-        <button class="btn logout">Logout</button>
-        <button class="btn createPostBtn">Create Post</button>
-      </div>
-    </div>
-  </header>
-
-
-  <!-- for login -->
-  <div id="dynamicContent"></div>
-
-  <!-- for register -->
-  <div id="anotherDynamic"></div>
-
-  <!-- for creating post -->
-  <div id="dynaicPost"></div>
-
-  <!-- for logout -->
-  <div id="logoutdynamic"></div>
-
-
-  <!-- Main Content -->
-  <!-- <main id="main-content" class="main-content"></main> -->
-  <main class="main-content">
-    <section class="feed">
-      <h2>Posts</h2>
-      <div class="post-list">
-        <div id="spinner"></div>
-
-      </div>
-    </section>
-    <button class="load-more">Load More</button>
-  </main>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-sections">
-        <div>
-          <h4>Forum</h4>
-          <ul>
-            <li><a class="foo">Categories</a></li>
-            <li><a class="foo">Popular Posts</a></li>
-            <li><a class="foo">Help</a></li>
-          </ul>
+          </div>abc2ce
+          <div>
+            <h4>Legal</h4>
+            <ul>
+              <li><a class="foo">Terms of Service</a></li>
+              <li><a class="foo">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Support</h4>
+            <ul>
+              <li><a class="foo">Contact Us</a></li>
+              <li><a class="foo">Report Issue</a></li>
+            </ul>
+          </div>
         </div>
-        <div>
-          <h4>Legal</h4>
-          <ul>
-            <li><a class="foo">Terms of Service</a></li>
-            <li><a class="foo">Privacy Policy</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Support</h4>
-          <ul>
-            <li><a class="foo">Contact Us</a></li>
-            <li><a class="foo">Report Issue</a></li>
-          </ul>
-        </div>
+        <p>&copy; 2024 My Forum. All rights reserved.</p>
       </div>
-      <p>&copy; 2024 My Forum. All rights reserved.</p>
-    </div>
-  </footer>
+    </footer>
 
+    <!-- scriptsss -->
+    <script src="static/src/js/main.js"></script>
+    <script type="module" src="static/src/js/posts.js"></script>
+    <script src="static/src/js/likeDislike.js" defer></script>
+    <script src="static/src/js/register.js" defer></script>
+    <script src="static/src/js/login.js" defer></script>
+    <script src="static/src/js/createPost.js" defer></script>
+    <script src="static/src/js/logout.js" defer></script>
+    <script src="static/src/js/comment.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const commentBtns = document.querySelectorAll(".comment-btn");
 
-  <!-- scriptsss -->
-  <script src="static/src/js/main.js"></script>
-  <script type="module" src="static/src/js/posts.js"></script>
-  <script src="static/src/js/likeDislike.js" defer></script>
-  <script src="static/src/js/register.js" defer></script>
-  <script src="static/src/js/login.js" defer></script>
-  <script src="static/src/js/createPost.js" defer></script>
-  <script src="static/src/js/logout.js" defer></script>
-  <script src="static/src/js/comment.js" ></script>
-  <script>
+        commentBtns.forEach((btn, index) => {
+          btn.addEventListener("click", () => {
+            // Use index to find the correct comment section
+            const commentContainer =
+              document.querySelectorAll(".container-comment")[index];
 
-    document.addEventListener("DOMContentLoaded", () => {
-
-      const commentBtns = document.querySelectorAll(".comment-btn");
-
-      commentBtns.forEach((btn, index) => {
-        btn.addEventListener("click", () => {
-          // Use index to find the correct comment section
-          const commentContainer = document.querySelectorAll(".container-comment")[index];
-
-          // Toggle visibility of the comment container
-          if (commentContainer) {
-            commentContainer.classList.toggle("hidden");
-          }
+            // Toggle visibility of the comment container
+            if (commentContainer) {
+              commentContainer.classList.toggle("hidden");
+            }
+          });
         });
       });
-    }); 
-  </script>
-  <script>
-    document.querySelectorAll('.dropdown > a').forEach(item => {
-      item.addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default link behavior
-        console.log(e)
+    </script>
+    <script>
+      // document.querySelectorAll('.dropdown > a').forEach(item => {
+      //   item.addEventListener('click', function (e) {
+      //     e.preventDefault(); // Prevent default link behavior
+      //     console.log(e)
 
-        const dropdownMenu = this.nextElementSibling; // Get the sibling <ul>
-        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+      //     const dropdownMenu = this.nextElementSibling; // Get the sibling <ul>
+      //     dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+      //   });
+      // });
+      document.querySelectorAll(".dropdown > ul").forEach((menu) => {
+        menu.style.display = "none";
       });
-    });
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-</body>
+      // Add click event listeners to toggle dropdown menus
+      document.querySelectorAll(".dropdown > a").forEach((item) => {
+        item.addEventListener("click", function (e) {
+          e.preventDefault(); // Prevent default link behavior
 
+          const dropdownMenu = this.nextElementSibling; // Get the sibling <ul>
+          const isVisible = dropdownMenu.style.display === "block";
+
+          // Hide all dropdown menus
+          document.querySelectorAll(".dropdown > ul").forEach((menu) => {
+            menu.style.display = "none";
+          });
+
+          // Toggle the clicked dropdown menu
+          dropdownMenu.style.display = isVisible ? "none" : "block";
+        });
+      });
+
+      // Add click event listener to the window to hide dropdowns
+      window.addEventListener("click", function (e) {
+        // Check if the clicked element is not inside a dropdown
+        if (!e.target.closest(".dropdown")) {
+          document.querySelectorAll(".dropdown > ul").forEach((menu) => {
+            menu.style.display = "none";
+          });
+        }
+      });
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </body>
 </html>

@@ -312,9 +312,21 @@
 }
 
 .post-actions .post-details .like-btn,
-.post-details .dislike-btn,
+.post-actions .post-details .dislike-btn,
+.post-details .comment-btn,
 .comment button:hover {
   background: #ddd;
+}
+
+.post-details .comment-btn {
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background: gray;
+  color: #0a0202;
+  transition: background 0.3s;
 }
 
 .hidden {

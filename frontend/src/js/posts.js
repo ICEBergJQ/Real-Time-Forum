@@ -20,22 +20,6 @@ let registerModal = document.querySelector("#signUpModal")
 const loginModal = document.querySelector("#loginModal")
 const createPost = document.querySelector("#popupOverlay")
 
-document.addEventListener("DOMContentLoaded", () => {
-    const likeButtons = document.querySelectorAll(".btn")
-
-    likeButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            if (button.textContent.includes("👍")) {
-                const likes = parseInt(button.textContent.match(/\d+/)) || 0
-                button.textContent = `👍 Like (${likes + 1})`
-            }
-        })
-    })
-})
-
-
-
-
 // X : Hide the modal when the close button is clicked 
 const closeModal = modal => {
     if (modal === 'login')
@@ -44,23 +28,6 @@ const closeModal = modal => {
         registerModal.classList.add("hidden")
     else if (modal === 'post')
         createPost.classList.add("hidden")
-
-}
-
-///TODO : still not working
-function Reply() {
-    const sendBtn = document.querySelector(".send-btn")
-    const replyInput = document.querySelector(".reply-input")
-
-    sendBtn.addEventListener("click", () => {
-        const replyText = replyInput.value
-        if (replyText.trim() !== "") {
-            alert("Reply submitted: " + replyText)
-            replyInput.value = "" // Clear the input after submission
-        } else {
-            alert("Reply cannot be empty!")
-        }
-    })
 }
 
 // /LOGIN AND SIGN UP/
@@ -104,8 +71,6 @@ window.addEventListener("click", (event) => {
     }
 })
 
-
-
 // Show the login modal when the login button is clicked
 
 loginBtn.addEventListener("click", showLoginModal)
@@ -123,10 +88,9 @@ const listPosts = (posts) => {
     console.log(articles)
 
     !articles ?
-        postsContainer.innerHTML += "<p>No Posts Found!!</p>"
+        postsContainer.innerHTML += "<p>No Post Found!!</p>"
         : posts.forEach(async post => {
             const comments = await getComment(post.id)
-            // console.log(comments)
             postsContainer.innerHTML += Article(post, comments)
         })
 }
@@ -145,16 +109,14 @@ loadMore.onclick = () => {
 function fetchPosts() {
     let url = '/post';
 
-    // if (cursor) {
     url += `?cursor=${cursor}`
-    // }
     spinner.style.display = 'block';
     fetch(url)
         .then(res => {
-
+            console.log(res.statusText)
             if (!res.ok) {
                 displayToast('var(--red)', res.statusText)
-                throw new Error("something went wrong!")
+                throw new Error("something went wrong with Saaaaalah aka lmodira!!:!")
             }
             return res.json()
         })
@@ -168,7 +130,7 @@ function fetchPosts() {
                 spinner.style.display = 'none';
             }
 
-        }).catch(err => console.log("get posts : ", err))
+        }).catch(err => displayToast('var(--red)', `get posts : ${err}`))
 }
 
 
@@ -179,31 +141,31 @@ fetch("/categories")
         document.querySelector('#createPostForm .categories-container').innerHTML = categories.map(cat => `<input type="checkbox" id="${cat.category_name}" name="categories" value="${cat.category_name}">
             <label for="${cat.category_name}">${cat.category_name}</label> `).join('')
     })
-    .catch(err => console.log("can't get categories", err))
+    .catch(err => displayToast('var(--red)', `can't get categories${err}`))
 
 fetchPosts();
 
+////.
 async function getComment(postId) {
     let url = `/comment?id=${postId}`
     try {
         const res = await fetch(url)
+        if (!res.ok) throw new Error('something wrong with salah')
+            
         const coms = await res.json()
         return coms || []
 
     } catch (err) {
-        console.log("can't get comment", err)
+        displayToast('var(--red)', `can't get comment ${err}`)
     }
-
 }
 
-function displayComment(e) {
-    e.target.parentElement.nextElementSibling.classList.toggle("hidden")
-}
+const displayComments = (e) => e.target.parentElement.nextElementSibling.classList.toggle("hidden")
 
 window.displayPopup = displayPopup
 window.listPosts = listPosts
 window.fetchPosts = fetchPosts
-window.displayComment = displayComment
+window.displayComments = displayComments
 window.listSinglePost = listSinglePost
 window.listSingleComment = listSingleComment
 window.closeModal = closeModal

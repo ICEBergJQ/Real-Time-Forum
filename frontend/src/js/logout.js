@@ -3,14 +3,6 @@ const logoutModal = document.querySelector("#logoutModal");
 const closeLogoutModal = logoutModal.querySelector(".close");
 const confirmLogout = logoutModal.querySelector("#confirmLogout");
 
-// const showLogoutModal = () => {
-//     // const logoutModal = document.querySelector("#logoutModal");
-//     if (logoutModal) {
-//         logoutModal.classList.remove("hidden");
-//     }
-// };
-
-
 //check if it's logged in alreadty bedore access logout
 // Handle logout confirmation
 confirmLogout.onclick = () => {
@@ -27,19 +19,18 @@ confirmLogout.onclick = () => {
 
             logoutModal.classList.add("hidden");
             localStorage.removeItem("logged")
-
+///remove
             document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
             setTimeout(() => {
                 window.location.href = "/";
 
             }, 1500)
-        }).catch(err => console.log("logout Error : ", err))
+        }).catch(err => displayToast('var(--red)', "logout Error : " + err))
 }
 
 // Show the logout modal when the logout button is clicked
 logoutBtn.addEventListener("click", () => showPopup(logoutModal));
-// logoutBtn.addEventListener("click", showLogoutModal);
 
 // Hide the modal when clicking outside the modal content
 window.addEventListener("click", (e) => {

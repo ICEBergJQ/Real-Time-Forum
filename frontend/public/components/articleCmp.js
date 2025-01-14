@@ -24,7 +24,7 @@ export default function Article(post, comments) {
           (<span>${post.likes_count}</span>)</button>
         <button class="btn dislike-btn" onclick="interact('${post.id}', null, 'dislike')"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
           ${(post.dislikes_count)}</button>
-        <button class="btn comment-btn" onclick="displayComment(event)">💬 Comment</button>
+        <button class="btn comment-btn" onclick="displayComments(event)">💬 Comment</button>
       </div>
       <!-- Comments Section (Initially Hidden) -->
       <div class="container-comment hidden">
@@ -42,7 +42,3 @@ export default function Article(post, comments) {
 }
 
 const loadComments = (postID, comments) => comments.map(com => Comment(postID, com))
-// function loadComments(comments) {
-//   console.log(comments)
-//   return comments.map(com => Comment(com))
-// } 

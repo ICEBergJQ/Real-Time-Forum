@@ -5,14 +5,16 @@ const loginBtn = document.querySelector("button.login")
 const createPostBtn = document.querySelector("button.createPostBtn")
 const likeBtn = document.querySelector('button.like-btn')
 const spinner = document.getElementById('spinner');
+const toast = document.querySelector('.toast')
 
 // const profileName = document.querySelector('.profile')
 ///TODO
 //return created date with the created comment also in post
+//merge likedislike with postcomment in interact file.js
+//hide filter that needs logged user
 
 let categories = []
 let articles = []
-const toast = document.querySelector('.toast')
 
 function createElem(tag, className, content) {
     const element = document.createElement(tag)
@@ -25,8 +27,6 @@ if (logged === '1') {
     ///nav btns
     navLogoutBtn.style.display = "inline-block"
     createPostBtn.style.display = "inline-block"
-    // profileName.textContent = localStorage.getItem("username")
-    // profileName.style.display = 'inline-block'
 
     //hide login / register
     loginBtn.style.display = "none"
@@ -39,17 +39,13 @@ if (logged === '1') {
     registerBtn.style.display = "inline-block"
     navLogoutBtn.style.display = "none"
     createPostBtn.style.display = "none"
-
-    //hide profile
-    // profileName.style.display = 'none':
-
 }
 
 const showPopup = (elem) => {
     if (elem) {
-        elem.classList.remove("hidden");
+        elem.classList.remove("hidden")
     }
-};
+}
 
 // errors  
 const displayToast = (color, txt) => {
@@ -86,7 +82,7 @@ const formatDate = (date) => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 
-//load more
+//load more content...
 function popPost(e, id) {
     const post = articles.find(p => p.id == id)
     e.target.parentElement.textContent = post.content

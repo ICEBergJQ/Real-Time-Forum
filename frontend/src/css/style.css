@@ -279,6 +279,7 @@
 /* Post Previews */
 .post-preview {
   padding: 1rem;
+  border-radius:10px;
   border: 1px solid #ccc;
   background: #f9f9f9;
   margin-bottom: 1rem;
@@ -293,12 +294,21 @@
   color: #0056b3;
 }
 
-.post-preview p {
+.post-preview .time {
   margin: 0.5rem 0;
   color: #555;
+  font-size: 15px;
+}
+
+.post-snippet{
+  background-color: rgb(194, 185, 185);
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .post-preview a {
+  font-size: 23px;
+  text-shadow: 1px -4px 5px;
   display: inline-block;
   margin-top: 0.5rem;
   color: #00aaff;

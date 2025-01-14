@@ -5,11 +5,11 @@ export default function Article(post, comments) {
     <article class="post-preview">
       <div class="post-header">
         <h3><a href="#">${post.title}</a></h3>
-        <p>By <strong>${post.author}</strong> | Category: <em>${post.categories.map(cat =>
+        <p class="time">By <strong>${post.author}</strong> | Category: <em>${post.categories.map(cat =>
     ` <span> ${cat}</span>`
   )}
-        </em> 
-        | Posted on: ${post.createdat}</p>
+        </em> <br>
+         Posted on: ${post.createdat}</p>
       </div>
       
       <p class="post-snippet">${post.content.length > 100 ? `

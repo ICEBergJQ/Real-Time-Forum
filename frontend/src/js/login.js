@@ -28,21 +28,15 @@ form.addEventListener('submit', (e) => {
         .then(res => {
             console.log(res)
             if (!res.ok) {
-                //retturn msg from backend
-                //user 
-                displayToast('var(--red)', "Something went wrong!");
-                // return res.json().then(data => {
-                //     console.log(res)
-                //     displayToast('var(--green)', data?.Message || "Something went wrong!");
-                //     throw new Error(data?.Message || "Invalid credentials");
-                // });
-                throw new Error(data?.Message || "Invalid credentials");
-                // displayError(res.statusText)
-                // throw new Error("Invalid credentials");
+
+                return res.json().then(data => {
+                    //displayToast('var(--green)', data?.Message || "Something went wrong!");
+                    throw new Error(data.Message || "Invalid credentials");
+                });
             }
             return res.json();
         })
-        .then(data => {
+        .then(() => {
 
             ///testing TODO use cookie
             localStorage.setItem("logged", 1);
@@ -56,8 +50,7 @@ form.addEventListener('submit', (e) => {
 
         })
         .catch(error => {
-            displayToast('var(--red)', "Something went wrong!");
-            console.error("login errror  : ", error)
-        }
-        );
+            displayToast('var(--red)', error);
+            // console.error("login errror  : ", error)
+        });
 })

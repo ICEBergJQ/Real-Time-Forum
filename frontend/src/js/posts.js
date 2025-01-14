@@ -1,6 +1,7 @@
 import loginForm from '../../public/components/loginCmp.js'
-import {registerForm, registerFormp} from '../../public/components/registerCmp.js'
-import  Article  from '../../public/components/articleCmp.js'
+import registerForm from '../../public/components/registerCmp.js'
+import Article from '../../public/components/articleCmp.js'
+import Comment from '../../public/components/commentCmp.js'
 import Logout from '../../public/components/logoutCmp.js'
 import postForm from '../../public/components/postFormCmp.js'
 const postsContainer = document.querySelector('main .post-list')
@@ -161,12 +162,14 @@ const listPosts = (posts) => {
 
 
 const listSinglePost = (post) => {
-    console.log("hi : ", post)
     postsContainer.insertAdjacentHTML("afterbegin", Article(post, []));
 
-    // postsContainer.prepend(Article(post, []))
-    // postsContainer.innerHTML += Article(post, [])
- //   attachModalEventListeners()
+    attachModalEventListeners()
+}
+
+const listSingleComment = (container, com) => {
+    container.insertAdjacentHTML("afterbegin", Comment("1", com));
+
 }
 
 loadMore.onclick = () => {
@@ -183,18 +186,27 @@ function fetchPosts() {
     // }
     spinner.style.display = 'block';
     fetch(url)
-        .then(res => res.json())
+        .then(res => {
+
+            if (!res.ok) {
+                displayToast('var(--red)', res.statusText)
+                throw new Error("something went wrong!")
+            }
+            res.json()
+        }
+        )
         .then(posts => {
             if (posts && posts.length > 0) {
                 loadMore.style.display = 'block'
                 listPosts(posts);
 
             } else {
-                alert("NO More POsts!!")
+                displayToast('var(--info)', "NO POsts!!")
+                // alert("NO POsts!!")
+                spinner.style.display = 'none';
             }
-            spinner.style.display = 'none';
 
-        }).catch(err => console.log("get posts : ", err));
+        }).catch(err => console.log("get posts : ", err))
 }
 
 
@@ -214,7 +226,6 @@ async function getComment(postId) {
     try {
         const res = await fetch(url)
         const coms = await res.json()
-        console.log(coms)
         return coms || []
 
     } catch (err) {
@@ -264,7 +275,4 @@ window.fetchPosts = fetchPosts
 window.displayComment = displayComment
 window.filterPosts = filterPosts
 window.listSinglePost = listSinglePost
-window.popPost=popPost
-
-
-
+window.listSingleComment = listSingleComment

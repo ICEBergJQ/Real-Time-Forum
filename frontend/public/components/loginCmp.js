@@ -8,7 +8,7 @@ export default function loginForm() {
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="off"  required>
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password"  required>
+                <input type="password" id="password" value="1@dF.s" name="password" placeholder="Enter your password"  required>
                 <button type="submit" class="btn_s">Login</button>
             </form>
             <p class="sign-up-text">

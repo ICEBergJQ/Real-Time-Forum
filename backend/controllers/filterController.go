@@ -24,12 +24,18 @@ func CreateQuery(categories []string) string {
 }
 
 func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	var logged bool
 	rows, err := db.Query(query, cursor, 20)
 	if err != nil {
 		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
+
+	userid, err := utils.UserIDFromToken(r, db)
+	if err != nil {
+		logged = false
+	}
 
 	var posts []forum.Post
 	category := ""
@@ -45,6 +51,12 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 			http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
 			return
 		}
+
+		if logged {
+			post.Liked = utils.IfPostReacted(post.ID, userid, "like", db)
+			post.Disliked = utils.IfPostReacted(post.ID, userid, "dislike", db)
+		}
+
 		post.Likes_Counter = RowCounter(`
 		SELECT COUNT(*) AS count
 		FROM Reactions

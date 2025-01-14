@@ -78,6 +78,7 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	var logged bool
 	var comments []forum.Comment
 	postID := r.URL.Query().Get("id")
 	if postID == "" {
@@ -91,6 +92,10 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer rows.Close()
+	userid, err := utils.UserIDFromToken(r, db)
+	if err != nil {
+		logged = false
+	}
 
 	for rows.Next() {
 		var comment forum.Comment
@@ -103,6 +108,10 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
 			return
+		}
+		if logged {
+			comment.Liked = utils.IfCommentReacted(comment.ID, userid, "like", db)
+			comment.Disliked = utils.IfCommentReacted(comment.ID, userid, "dislike", db)
 		}
 		comment.LikesCount = RowCounter(`
 		SELECT COUNT(*) AS count

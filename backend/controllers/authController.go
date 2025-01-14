@@ -33,10 +33,10 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	user.Email = html.EscapeString(user.Email)
 	user.Password = html.EscapeString(user.Password)
 
-	if err := utils.Validation(user, true); err != nil {
-		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
-		return
-	}
+	// if err := utils.Validation(user, true); err != nil {
+	// 	utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
+	// 	return
+	// }
 
 	if err := utils.Hash(&user.Password); err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
@@ -73,10 +73,10 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
 		return
 	}
-	if err := utils.Validation(user, false); err != nil {
-		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
-		return
-	}
+	// if err := utils.Validation(user, false); err != nil {
+	// 	utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
+	// 	return
+	// }
 
 	query := "SELECT user_id, username, email, password FROM users WHERE email = ? OR username = ?"
 	row := config.DB.QueryRow(query, user.Email, user.Username)

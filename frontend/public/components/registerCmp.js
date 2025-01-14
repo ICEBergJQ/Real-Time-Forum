@@ -12,10 +12,10 @@ export default function registerForm() {
                 <input type="email" id="email" name="email" placeholder="Enter your email" required>
     
                 <label for="password">Password</label>
-                <input type="password" value="1@dF.s" id="password" name="password" placeholder="Enter your password" required>
+                <input type="password"   id="password" name="password" placeholder="Enter your password" required>
     
                 <label for="confirm-password">Confirm Password</label>
-                <input type="password" value="1@dF.s" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+                <input type="password"   id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
     
                 <button class="btn_s">Sign Up</button>
             </form>

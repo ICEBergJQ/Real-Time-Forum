@@ -29,7 +29,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 	user.Username = html.EscapeString(user.Username)
 
-	if err := utils.Validation(user); err != nil {
+	if err := utils.Validation(user, true); err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
 		return
 	}
@@ -62,7 +62,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
 		return
 	}
-	if err := utils.Validation(user); err != nil {
+	if err := utils.Validation(user, false); err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
 		return
 	}

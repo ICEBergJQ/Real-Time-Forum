@@ -88,7 +88,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 				Path:     "/",
 				HttpOnly: true,
 				Secure:   false,
-				Expires:  time.Now().Add(-time.Hour * 24 * 365),
+				Expires:  time.Now().Add(config.DELETE_COOKIE_DATE),
 			}
 			http.SetCookie(w, deleteCookie)
 			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Token Expired. Please login again")
@@ -109,7 +109,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   false,
-		Expires:  time.Now().Add(config.EXPIRING_SESSION_DATE),
+		Expires:  time.Now().Add(config.EXPIRIATION_SESSION_DATE),
 	}
 	http.SetCookie(w, cookie)
 	utils.CreateResponseAndLogger(w, http.StatusOK, nil, "user logged-in successfully")
@@ -141,7 +141,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   false,
-		Expires:  time.Now().Add(-time.Hour * 24 * 365),
+		Expires:  time.Now().Add(config.DELETE_COOKIE_DATE),
 	}
 	http.SetCookie(w, deleteCookie)
 	utils.CreateResponseAndLogger(w, http.StatusOK, nil, "user logged-out successfully")

@@ -17,7 +17,7 @@ func SeesionCreation(user_id int, db *sql.DB) (string, error) {
 		return "empty", err
 	}
 	query := `INSERT INTO sessions (session_id, user_id, expired_at) 
-          VALUES (?, ?, datetime('now', '+1 hour', '+5 days'))`
+          VALUES (?, ?, datetime('now', '+1 hour', '+1 day'))`
 	_, err = db.Exec(query, token.String(), user_id)
 	if err != nil {
 		return "empty", err

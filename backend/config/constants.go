@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-const EXPIRING_SESSION_DATE = 3 * time.Minute
+const EXPIRIATION_SESSION_DATE = 25 * time.Hour
+const DELETE_COOKIE_DATE = -time.Hour * 24 * 365
 
 const STATIC_DIR = "../frontend/public"
 

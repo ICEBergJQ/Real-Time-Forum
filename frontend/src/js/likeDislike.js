@@ -15,10 +15,14 @@ function interact(post_id, comment_id, reaction_type) {
         .then(res => {
             if (!res.ok)
                 throw new Error('post interaction Error ' + res.status)
+
+            return res.json()
         })
-        .then(() => {
+        .then((data) => {
+            console.log(data)
             fetchPosts()
 
         })
-        .catch(error => alert(error))
+        .catch(error => displayToast('var(--red)', error)
+        )
 }

@@ -33,6 +33,20 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 })
 
+
+
+
+// X : Hide the modal when the close button is clicked 
+const closeModal = modal => {
+    if (modal === 'login')
+        loginModal.classList.add("hidden")
+    else if (modal === 'register')
+        registerModal.classList.add("hidden")
+    else if (modal === 'post')
+        createPost.classList.add("hidden")
+
+}
+
 ///TODO : still not working
 function Reply() {
     const sendBtn = document.querySelector(".send-btn")
@@ -76,10 +90,6 @@ const displayPopup = (target) => {
     }
 }
 
-function popPost(e, id) {
-    const post = articles.find(p => p.id == id)
-    e.target.parentElement.textContent = post.content
-}
 // Hide the modal when clicit pull origin developking outside the modal content
 window.addEventListener("click", (event) => {
 
@@ -94,33 +104,7 @@ window.addEventListener("click", (event) => {
     }
 })
 
-// X : Hide the modal when the close button is clicked 
-const closeModal = modal => {
-    if (modal === 'login')
-        loginModal.classList.add("hidden")
-    else if (modal === 'register')
-        registerModal.classList.add("hidden")
-    else if (modal === 'post')
-        createPost.classList.add("hidden")
 
-}
-// registerBtn.click() 
-
-const attachModalEventListeners = () => {
-    //trigger login popup
-    const buttons = document.querySelectorAll(".like-btn, .dislike-btn, #Like, #DisLike, .send-btn")
-
-    buttons.forEach((button) => {
-        button.addEventListener("click", (e) => {
-            e.preventDefault()
-            if (!localStorage.getItem("logged")) {
-                showLoginModal()
-            } else {
-                alert("Action successful! You are logged in.")
-            }
-        })
-    })
-}
 
 // Show the login modal when the login button is clicked
 
@@ -130,15 +114,6 @@ createPostBtn.onclick = () => showCreatePostModal()
 ///get data
 
 //get poosts
-const formatDate = (date) => {
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    const hours = String(date.getHours()).padStart(2, '0')
-    const minutes = String(date.getMinutes()).padStart(2, '0')
-    const seconds = String(date.getSeconds()).padStart(2, '0')
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-}
 
 let cursor = formatDate(new Date())
 
@@ -154,23 +129,12 @@ const listPosts = (posts) => {
             // console.log(comments)
             postsContainer.innerHTML += Article(post, comments)
         })
-
-    attachModalEventListeners()
-    //after comp loaded
-    // registerModal = document.querySelector("#signUpModal")
 }
 
-
-const listSinglePost = (post) => {
-    postsContainer.insertAdjacentHTML("afterbegin", Article(post, []));
-
-    attachModalEventListeners()
-}
-
-const listSingleComment = (container, com) => {
-    container.insertAdjacentHTML("afterbegin", Comment("1", com));
-
-}
+const listSinglePost = (post) => postsContainer.insertAdjacentHTML("afterbegin", Article(post, []));
+//////return the post id to replace the "1"
+///the comùent belongs to
+const listSingleComment = (container, com) => container.insertAdjacentHTML("afterbegin", Comment("1", com));
 
 loadMore.onclick = () => {
     cursor = formatDate(new Date(articles[articles.length - 1].createdat))
@@ -192,20 +156,15 @@ function fetchPosts() {
                 displayToast('var(--red)', res.statusText)
                 throw new Error("something went wrong!")
             }
-          return  res.json()
-        }
-        )
+            return res.json()
+        })
         .then(posts => {
-            console.log(url)
-            console.log(cursor)
-            console.log(posts)
             if (posts && posts.length > 0) {
                 loadMore.style.display = 'block'
                 listPosts(posts);
 
             } else {
                 displayToast('var(--info)', "NO POsts!!")
-                // alert("NO POsts!!")
                 spinner.style.display = 'none';
             }
 
@@ -241,40 +200,10 @@ function displayComment(e) {
     e.target.parentElement.nextElementSibling.classList.toggle("hidden")
 }
 
-// function filterPosts(filtermethod) {
-//     // document.querySelectorAll('nav checkbox')
-//     let categories = []
-
-//     let data = {
-//         filtermethod,
-//         categories,
-//         cursor: formatDate(new Date()),
-//         id: 1
-//     }
-//     console.log(filtermethod)
-//     fetch('/filter', {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(
-//             data
-//         ),
-//     }).then(res => {
-//         if (!res.ok) {
-//             alert('something went wrong:::!!')
-//             throw new Error('something went wrong:::!!')
-//         }
-//         return res.json()
-//     }).then(data => {
-//         listPosts(data)
-//         console.log("get posts", data)
-//     }).catch(err => console.log(err))
-// }
-
-// window.popPost = popPost
-window.closeModal = closeModal
 window.displayPopup = displayPopup
 window.listPosts = listPosts
 window.fetchPosts = fetchPosts
 window.displayComment = displayComment
 window.listSinglePost = listSinglePost
 window.listSingleComment = listSingleComment
+window.closeModal = closeModal

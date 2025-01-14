@@ -1,17 +1,17 @@
 
-// radiobtns.forEach(elem => elem.checked ? checked = elem.id : null)
 
 
 function filterPosts(filtermethod) {
-    // document.querySelectorAll('nav checkbox')
-    let categories = []
+    let categories = Array.from(document.querySelectorAll('nav input[type=checkbox]:checked'), elem => elem.value)
 
+    console.log(categories)
     let data = {
         filtermethod,
         categories,
         cursor: formatDate(new Date()),
         id: 1
     }
+    ///getpostsbycategory
     console.log(filtermethod)
     fetch('/filter', {
         method: "POST",

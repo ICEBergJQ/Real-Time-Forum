@@ -87,6 +87,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	logged := true
 	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE created_at < ? ORDER BY created_at DESC limit ?;"
 	rows, err := db.Query(query, cursor, 20)
 	if err != nil {
@@ -94,7 +95,10 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 		return
 	}
 	defer rows.Close()
-
+	userid, err := utils.UserIDFromToken(r, db)
+	if err != nil {
+		logged = false
+	}
 	var posts []forum.Post
 	category := ""
 	for rows.Next() {
@@ -108,6 +112,10 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 		if err != nil {
 			http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
 			return
+		}
+		if logged {
+			post.Liked = utils.IfPostReacted(post.ID, userid, "like", db)
+			post.Disliked = utils.IfPostReacted(post.ID, userid, "dislike", db)
 		}
 		post.Likes_Counter = RowCounter(`
 		SELECT COUNT(*) AS count

@@ -34,8 +34,7 @@ createPostForm.onsubmit = (e) => {
             return res.json()
         }
         )
-        .then(data => {
-            console.log(data)
+        .then(data => { 
             listSinglePost(data)
 
             displayToast('var(--info)', 'post created successfully!!!')

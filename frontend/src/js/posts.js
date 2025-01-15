@@ -91,6 +91,7 @@ const listPosts = (posts) => {
         postsContainer.innerHTML += "<p>No Post Found!!</p>"
         : posts.forEach(async post => {
             const comments = await getComment(post.id)
+            console.log(comments)
             postsContainer.innerHTML += Article(post, comments)
         })
 }

@@ -24,11 +24,11 @@
 }
 
 .liked {
-  background-color: blue !important;
+  background-color: #6060ff !important;
 }
 
 .disliked {
-  background-color: red !important;
+  background-color: #f84343 !important;
 }
 
 @keyframes bounce {
@@ -220,7 +220,7 @@
 }
 
 /* Checked state */
-.dropdown-menu input[type="checkbox"]:checked+label {
+.dropdown-menu input[type="checkbox"]:checked + label {
   background-color: #6799b3;
   color: white;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
@@ -319,10 +319,10 @@
 
 .post-preview a {
   font-size: 23px;
-  text-shadow: 1px -4px 5px;
+  text-shadow: 6px 7px 4px;
   display: inline-block;
   margin-top: 0.5rem;
-  color: #00aaff;
+  color: #474343;
   font-weight: bold;
 }
 
@@ -354,8 +354,8 @@
   transition: background 0.3s;
 }
 
-article span ,
-article i{
+article span,
+article i {
   pointer-events: none;
 }
 

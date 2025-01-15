@@ -112,8 +112,7 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if logged {
-			comment.Liked = utils.IfCommentReacted(comment.ID, userid, "like", db)
-			comment.Disliked = utils.IfCommentReacted(comment.ID, userid, "dislike", db)
+			comment.Reaction = utils.IfCommentReacted(comment.ID, userid, db)
 		}
 		comment.LikesCount = RowCounter(`
 		SELECT COUNT(*) AS count

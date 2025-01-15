@@ -117,8 +117,7 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 			return
 		}
 		if logged {
-			post.Liked = utils.IfPostReacted(post.ID, userid, "like", db)
-			post.Disliked = utils.IfPostReacted(post.ID, userid, "dislike", db)
+			post.Reaction = utils.IfPostReacted(post.ID, userid, db)
 		}
 		post.Likes_Counter = RowCounter(`
 		SELECT COUNT(*) AS count
@@ -140,7 +139,7 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 		cursor = response.Posts[len(response.Posts)-1].CreatedAt
 		response.Postsremaining = RowCounter(`SELECT COUNT(*) AS count
 		FROM Posts
-		WHERE created_at < ? ORDER BY created_at;`,cursor ,db)
+		WHERE created_at < ? ORDER BY created_at;`, cursor, db)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

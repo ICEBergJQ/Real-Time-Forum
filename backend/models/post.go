@@ -12,6 +12,5 @@ type Post struct {
 	Dislikes_counter int      `json:"dislikes_count"`
 	Comments_Counter int      `json:"comments_count"`
 	CreatedAt        string   `json:"createdat"`
-	Liked            bool     `json:"liked"`
-	Disliked         bool     `json:"disliked"`
+	Reaction         string   `json:"reaction"`
 }

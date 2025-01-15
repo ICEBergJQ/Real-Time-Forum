@@ -9,6 +9,5 @@ type Comment struct {
 	CreatedAt     string `json:"createdat"`
 	LikesCount    int    `json:"likescount"`
 	DislikesCount int    `json:"dislikescount"`
-	Liked         bool   `json:"liked"`
-	Disliked      bool   `json:"disliked"`
+	Reaction      string `json:"reaction"`
 }

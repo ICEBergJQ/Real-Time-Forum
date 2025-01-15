@@ -12,7 +12,6 @@ func IsTimestamp(input string) bool {
 	return err == nil
 }
 
-
 func PostExists(db *sql.DB, postID string) bool {
 	var exists bool
 	query := `SELECT EXISTS(SELECT 1 FROM posts WHERE post_id = ?)`
@@ -69,20 +68,20 @@ func GetUserName(userid int, db *sql.DB) (string, error) {
 	return username, nil
 }
 
-func IfPostReacted(postid string, userid int, reaction string, db *sql.DB) bool {
-	var exists bool
-	err := db.QueryRow(`SELECT EXISTS(SELECT 1 FROM Reactions WHERE post_id = ? AND user_id = ? AND reaction_type = ? AND comment_id = 'none')`, postid, userid, reaction).Scan(&exists)
+func IfPostReacted(postid string, userid int, db *sql.DB) string {
+	var reaction string
+	err := db.QueryRow(`SELECT reaction_type FROM Reactions WHERE post_id = ? AND user_id = ? AND comment_id = 'none')`, postid, userid).Scan(&reaction)
 	if err != nil {
-		return false
+		return ""
 	}
-	return exists
+	return reaction
 }
 
-func IfCommentReacted(commentid string, userid int, reaction string, db *sql.DB) bool {
-	var exists bool
-	err := db.QueryRow(`SELECT EXISTS(SELECT 1 FROM Reactions WHERE comment_id = ? AND user_id = ? AND reaction_type = ?)`, commentid, userid, reaction).Scan(&exists)
+func IfCommentReacted(id string, userid int, db *sql.DB) string {
+	var reaction string
+	err := db.QueryRow(`SELECT reaction_type FROM Reactions WHERE user_id = ? AND comment_id = ?)`, userid, id).Scan(&reaction)
 	if err != nil {
-		return false
+		return ""
 	}
-	return exists
+	return reaction
 }

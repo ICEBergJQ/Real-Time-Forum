@@ -20,11 +20,11 @@ export default function Article(post, comments) {
       : post.content}
       </p>
       <div class="post-details">
-        <button class="btn like-btn ${post.liked ? 'liked' : ''}"  onclick="interact(event, '${post.id}', null, 'like')">
+        <button class="btn like-btn ${post.reaction == "like" ? 'liked' : ''}"  onclick="interact(event, '${post.id}', null, 'like')">
         <i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
           (<span>${post.likes_count}</span>)
           </button>
-        <button class="btn dislike-btn  ${post.disliked ? 'disliked' : ''}" onclick="interact(event, '${post.id}', null, 'dislike')">
+        <button class="btn dislike-btn  ${post.reaction == "dislike" ? 'disliked' : ''}" onclick="interact(event, '${post.id}', null, 'dislike')">
         <i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
           (<span>${post.dislikes_count}</span>)
           </button>
@@ -33,7 +33,7 @@ export default function Article(post, comments) {
       <!-- Comments Section (Initially Hidden) -->
       <div class="container-comment hidden">
         <h2><span>${post.comments_count}</span> Comments</h2>
-         ${loadComments(post.id, comments)}
+         ${loadComments(post.id,  comments)}
          <div id="Reply-section" class="reply-section">
               <h3>Reply</h3>
               <div class="editor">
@@ -45,4 +45,4 @@ export default function Article(post, comments) {
     </article>`
 }
 
-const loadComments = (postID, comments) => comments.map(com => Comment(postID, com))
+const loadComments = (postID,  comments) => comments.map(com => Comment(postID, com))

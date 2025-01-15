@@ -24,11 +24,11 @@
 }
 
 .liked {
-  background-color: blue !important;
+  background-color: #6060ff !important;
 }
 
 .disliked {
-  background-color: red !important;
+  background-color: #f84343 !important;
 }
 
 @keyframes bounce {

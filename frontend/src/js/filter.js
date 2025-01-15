@@ -21,7 +21,7 @@ function filterPosts(filtermethod) {
         return res.json()
     }).then(data => {
         //list filtered posts
-        listPosts(data)
+        listPosts(data.posts)
     }).catch(err => displayToast('var(--red)', err))
 }
 

@@ -37,7 +37,7 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 		logged = false
 	}
 
-	var posts []forum.Post
+	var response forum.PostResponse
 	category := ""
 	for rows.Next() {
 		var post forum.Post
@@ -71,11 +71,18 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 
 		post.Comments_Counter = RowCounter(`SELECT COUNT(*) AS count FROM comments WHERE post_id = ?;`, post.ID, db)
 		post.Categories = strings.Split(category, ",")
-		posts = append(posts, post)
+		response.Posts = append(response.Posts, post)
+	}
+
+	if len(response.Posts) == 20 {
+		cursor = response.Posts[len(response.Posts)-1].CreatedAt
+		response.Postsremaining = RowCounter(`SELECT COUNT(*) AS count
+		FROM Posts
+		WHERE created_at < ? ORDER BY created_at;`,cursor ,db)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(posts); err != nil {
+	if err := json.NewEncoder(w).Encode(response); err != nil {
 		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
 	}

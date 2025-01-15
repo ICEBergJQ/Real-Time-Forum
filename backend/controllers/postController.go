@@ -99,7 +99,8 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		logged = false
 	}
-	var posts []forum.Post
+	var response forum.PostResponse
+
 	category := ""
 	for rows.Next() {
 		var post forum.Post
@@ -131,17 +132,23 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 
 		post.Comments_Counter = RowCounter(`SELECT COUNT(*) AS count FROM comments WHERE post_id = ?;`, post.ID, db)
 		post.Categories = strings.Split(category, ",")
-		posts = append(posts, post)
+		response.Posts = append(response.Posts, post)
+	}
+	if len(response.Posts) == 20 {
+		cursor = response.Posts[len(response.Posts)-1].CreatedAt
+		response.Postsremaining = RowCounter(`SELECT COUNT(*) AS count
+		FROM Posts
+		WHERE created_at < ? ORDER BY created_at;`,cursor ,db)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(posts); err != nil {
+	if err := json.NewEncoder(w).Encode(response); err != nil {
 		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 	}
 }
 
-func RowCounter(query string, ID string, db *sql.DB) int {
+func RowCounter(query string, arg string, db *sql.DB) int {
 	count := 0
-	db.QueryRow(query, ID).Scan(&count)
+	db.QueryRow(query, arg).Scan(&count)
 	return count
 }

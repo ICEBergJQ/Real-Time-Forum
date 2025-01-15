@@ -24,7 +24,7 @@ func CreateQuery(categories []string) string {
 }
 
 func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	var logged bool
+	logged := true 
 	rows, err := db.Query(query, cursor, 20)
 	if err != nil {
 		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)

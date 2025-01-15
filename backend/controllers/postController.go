@@ -7,6 +7,7 @@ import (
 	"html"
 	"net/http"
 	"strings"
+	"time"
 
 	"forum/utils"
 
@@ -78,6 +79,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to commit transaction", http.StatusInternalServerError)
 		return
 	}
+	newPost.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

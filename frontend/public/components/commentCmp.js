@@ -14,10 +14,14 @@ export default function Comment(postID, { id, author, createdat, content, replyc
               </div>
               <div id="Comment-footer" class="comment-footer">
                 <p>${likescount} person likes this</p>
-                <button id="Like"  onclick="interact('${postID}', '${id}', 'like')" class="btn"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
-                (${likescount})</button>
-                <button id="DisLike" onclick="interact('${postID}','${id}', 'dislike')" class="btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
-                  (${dislikescount})</button>
+                <button id="Like"  onclick="interact(event,'${postID}', '${id}', 'like')" class="btn">
+                <i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
+          (<span>${likescount}</span>)
+                </button>
+                <button id="DisLike " onclick="interact(event,'${postID}','${id}', 'dislike')" class="btn dislike-btn">
+                <i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
+                  (<span>${dislikescount}</span>)
+                  </button>
               </div>
             </div>
             <!-- Reply Section -->

@@ -121,13 +121,13 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 		SELECT COUNT(*) AS count
 		FROM Reactions
 		WHERE reaction_type = 'like'
-		AND post_id = ? AND comment_id = '';`, post.ID, db)
+		AND post_id = ? AND comment_id = 'none';`, post.ID, db)
 
 		post.Dislikes_counter = RowCounter(`
 		SELECT COUNT(*) AS count
 		FROM Reactions
 		WHERE reaction_type = 'dislike'
-		AND post_id = ? AND comment_id = '';`, post.ID, db)
+		AND post_id = ? AND comment_id = 'none';`, post.ID, db)
 
 		post.Comments_Counter = RowCounter(`SELECT COUNT(*) AS count FROM comments WHERE post_id = ?;`, post.ID, db)
 		post.Categories = strings.Split(category, ",")

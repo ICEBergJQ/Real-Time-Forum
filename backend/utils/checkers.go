@@ -71,7 +71,7 @@ func GetUserName(userid int, db *sql.DB) (string, error) {
 
 func IfPostReacted(postid string, userid int, reaction string, db *sql.DB) bool {
 	var exists bool
-	err := db.QueryRow(`SELECT EXISTS(SELECT 1 FROM Reactions WHERE post_id = ? AND user_id = ? AND reaction_type = ? AND comment_id = '')`, postid, userid, reaction).Scan(&exists)
+	err := db.QueryRow(`SELECT EXISTS(SELECT 1 FROM Reactions WHERE post_id = ? AND user_id = ? AND reaction_type = ? AND comment_id = 'none')`, postid, userid, reaction).Scan(&exists)
 	if err != nil {
 		return false
 	}

@@ -35,15 +35,15 @@ func HasUserReacted(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-
+	fmt.Println("reaction : ", reaction.Comment_id)
 	var hasReacted string
 	var query string
 	var reactionFromDB models.Reactions
 
 	if reaction.Comment_id == "" {
-		reaction.Comment_id = "0"
+		reaction.Comment_id = "none"
 	}
-
+	// r1 := strings.TrimSpace(reaction.Comment_id)
 	query = "SELECT user_id, post_id, comment_id, reaction_type FROM Reactions WHERE user_id = ? AND post_id = ? AND comment_id = ?"
 
 	err = db.QueryRow(query, reaction.User_id, reaction.Post_id, reaction.Comment_id).Scan(&reactionFromDB.User_id, &reactionFromDB.Post_id, &reactionFromDB.Comment_id, &reactionFromDB.Reaction_Type)
@@ -60,17 +60,15 @@ func HasUserReacted(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	} else if reactionFromDB.Reaction_Type != reaction.Reaction_Type {
 		hasReacted = "update"
 	}
-	Reaction(db, reactionFromDB, hasReacted, w)
+	Reaction(db, reaction, hasReacted, w)
 }
 
 func Reaction(db *sql.DB, newReaction models.Reactions, hasReacted string, w http.ResponseWriter) {
-
 	if !utils.PostExists(db, newReaction.Post_id) {
 		err := fmt.Errorf("post does not exist")
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Post Does not Exist")
 		return
 	}
-
 	var ReactionStatus string
 	if hasReacted == "remove" {
 		_, err := db.Exec(`

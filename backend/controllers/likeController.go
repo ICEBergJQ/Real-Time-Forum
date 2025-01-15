@@ -35,7 +35,6 @@ func HasUserReacted(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	fmt.Println("reaction : ", reaction.Comment_id)
 	var hasReacted string
 	var query string
 	var reactionFromDB models.Reactions
@@ -101,7 +100,6 @@ func Reaction(db *sql.DB, newReaction models.Reactions, hasReacted string, w htt
 			VALUES (?, ?, ?, ?);`,
 			newReaction.User_id, newReaction.Post_id, newReaction.Comment_id, newReaction.Reaction_Type)
 		if err != nil {
-			fmt.Println(newReaction)
 			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Failed to insert reaction")
 			return
 		}

@@ -16,7 +16,7 @@ export default function Comment(postID, { id, author, createdat, content, replyc
                 <p>${likescount} person likes this</p>
                 <button id="Like"  onclick="interact('${postID}', '${id}', 'like')" class="btn"><i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
                 (${likescount})</button>
-                <button id="DisLike" onclick="interact('${postID}',' ${id}', 'dislike')" class="btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
+                <button id="DisLike" onclick="interact('${postID}','${id}', 'dislike')" class="btn"><i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
                   (${dislikescount})</button>
               </div>
             </div>

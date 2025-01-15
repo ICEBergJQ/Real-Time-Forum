@@ -21,13 +21,15 @@ function interact(e, post_id, comment_id, reaction_type) {
         })
         .then(data => {
             let currentElem = e.target
+            console.log(e.target)
             console.log(data)
             let count = currentElem.children[1].textContent
             let otherElem = null
             let otherCount = null
-
+            let dislikeClicked = false
             if (currentElem.classList.contains('dislike-btn')) {
-                console.log(2133)
+                dislikeClicked = true
+
                 otherElem = currentElem.previousElementSibling
                 otherCount = currentElem.previousElementSibling.children[1].textContent
             } else {
@@ -36,13 +38,24 @@ function interact(e, post_id, comment_id, reaction_type) {
             }
             if (data.Message === 'Removed') {
                 currentElem.children[1].textContent = parseInt(count) - 1
+                dislikeClicked ? currentElem.classList.remove('disliked') : currentElem.classList.remove('liked')
             }
             if (data.Message === 'Added') {
                 currentElem.children[1].textContent = parseInt(count) + 1
+                dislikeClicked ? currentElem.classList.add('disliked') : currentElem.classList.add('liked')
             }
             if (data.Message === 'Updated') {
                 currentElem.children[1].textContent = parseInt(count) + 1
                 otherElem.children[1].textContent = parseInt(otherCount) - 1
+
+                dislikeClicked ? (
+                    currentElem.classList.add('disliked'),
+                    otherElem.classList.remove('liked')
+                )
+                    : (
+                        currentElem.classList.add('liked'),
+                        otherElem.classList.remove('disliked')
+                    )
 
             }
 

@@ -35,7 +35,7 @@ createPostForm.onsubmit = (e) => {
         }
         )
         .then(data => {
-            console.log(data)
+            console.log('5555 : ', data)
             listSinglePost(data)
 
             displayToast('var(--info)', 'post created successfully!!!')

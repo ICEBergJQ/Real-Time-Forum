@@ -70,7 +70,7 @@ func GetUserName(userid int, db *sql.DB) (string, error) {
 
 func IfPostReacted(postid string, userid int, db *sql.DB) string {
 	var reaction string
-	err := db.QueryRow(`SELECT reaction_type FROM Reactions WHERE post_id = ? AND user_id = ? AND comment_id = 'none')`, postid, userid).Scan(&reaction)
+	err := db.QueryRow(`SELECT reaction_type FROM Reactions WHERE post_id = ? AND user_id = ? AND comment_id = 'none'`, postid, userid).Scan(&reaction)
 	if err != nil {
 		return ""
 	}

@@ -3,6 +3,7 @@
   --green: #34a440;
   --info: #1296b8;
 }
+
 .toast {
   color: #fff;
   position: fixed;
@@ -20,6 +21,14 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
+}
+
+.liked {
+  background-color: blue !important;
+}
+
+.disliked {
+  background-color: red !important;
 }
 
 @keyframes bounce {
@@ -47,6 +56,7 @@
     top: 40px;
   }
 }
+
 .load-more {
   display: none;
   background-color: #00aaff;
@@ -64,12 +74,12 @@
 
 /* Navbar */
 
-.logo{
+.logo {
   cursor: pointer;
   transition: color 0.3s;
 }
 
-.logo:hover{
+.logo:hover {
   color: #00aaff;
   transition: color 0.3s;
 }
@@ -99,7 +109,7 @@
 /* Ensures the dropdown menu is positioned relative to its parent */
 /* } */
 
-.nav-links li a{
+.nav-links li a {
   color: #fff;
   transition: color 0.3s;
   cursor: pointer;
@@ -135,6 +145,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -209,7 +220,7 @@
 }
 
 /* Checked state */
-.dropdown-menu input[type="checkbox"]:checked + label {
+.dropdown-menu input[type="checkbox"]:checked+label {
   background-color: #6799b3;
   color: white;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
@@ -279,7 +290,7 @@
 /* Post Previews */
 .post-preview {
   padding: 1rem;
-  border-radius:10px;
+  border-radius: 10px;
   border: 1px solid #ccc;
   background: #f9f9f9;
   margin-bottom: 1rem;
@@ -300,7 +311,7 @@
   font-size: 15px;
 }
 
-.post-snippet{
+.post-snippet {
   background-color: rgb(194, 185, 185);
   padding: 10px;
   border-radius: 10px;
@@ -341,6 +352,11 @@
   background: #00aaff;
   color: #0a0202;
   transition: background 0.3s;
+}
+
+article span ,
+article i{
+  pointer-events: none;
 }
 
 .post-actions .post-details .like-btn,

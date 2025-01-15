@@ -120,10 +120,12 @@ function fetchPosts() {
             }
             return res.json()
         })
-        .then(posts => {
-            if (posts && posts.length > 0) {
-                loadMore.style.display = 'block'
-                listPosts(posts);
+        .then(data => {
+            console.log(data)
+            if (data.posts && data.posts.length > 0) {
+                if (data.postsremaing)
+                    loadMore.style.display = 'block'
+                listPosts(data.posts);
 
             } else {
                 displayToast('var(--info)', "NO POsts!!")
@@ -151,7 +153,7 @@ async function getComment(postId) {
     try {
         const res = await fetch(url)
         if (!res.ok) throw new Error('something wrong with salah')
-            
+
         const coms = await res.json()
         return coms || []
 

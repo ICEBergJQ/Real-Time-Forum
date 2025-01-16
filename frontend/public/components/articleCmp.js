@@ -1,6 +1,6 @@
 import Comment from './commentCmp.js'
 
-export default function Article(post, comments) {
+export default function Article(post) {
   return `
     <article class="post-preview">
       <div class="post-header">
@@ -36,12 +36,13 @@ export default function Article(post, comments) {
         <i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
           (<span>${post.dislikes_count}</span>)
           </button>
-        <button class="btn comment-btn" onclick="displayComments(event)">💬 Comment</button>
+        <button class="btn comment-btn" onclick="displayComments(event,'${post.id}' )">💬 Comment</button>
       </div>
       <!-- Comments Section (Initially Hidden) -->
       <div class="container-comment hidden">
         <h2><span>${post.comments_count}</span> Comments</h2>
-         ${loadComments(post.id,  comments)}
+        <div class="replyContainer">
+        </div>
          <div id="Reply-section" class="reply-section">
               <h3>Reply</h3>
               <div class="editor">
@@ -53,4 +54,4 @@ export default function Article(post, comments) {
     </article>`
 }
 
-const loadComments = (postID,  comments) => comments.map(com => Comment(postID, com)).join('')
+// const loadComments = (postID,  comments) => comments.map(com => Comment(postID, com)).join('')

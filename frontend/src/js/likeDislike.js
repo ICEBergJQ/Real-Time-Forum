@@ -15,7 +15,7 @@ function interact(e, post_id, comment_id, reaction_type) {
         }),
     })
         .then(res => {
-console.log(res)
+            console.log(res)
 
             if (!res.ok)
                 throw new Error('post interaction Error ' + res.status)

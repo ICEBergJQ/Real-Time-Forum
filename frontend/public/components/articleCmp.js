@@ -4,7 +4,7 @@ export default function Article(post) {
   return `
     <article class="post-preview">
       <div class="post-header">
-        <h3><a href="#">${post.title}</a></h3>
+        <h4 class="post-title">${post.title}</h4>
         <div class="comment-header comment-details">
 
         <img src="./static/src/Unknown_person.jpg" alt="User Avatar" class="user-avatar">

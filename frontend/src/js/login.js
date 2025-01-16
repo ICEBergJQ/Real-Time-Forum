@@ -1,4 +1,3 @@
-
 const form = document.querySelector('#loginModal form')
 
 form.addEventListener('submit', (e) => {
@@ -45,6 +44,7 @@ form.addEventListener('submit', (e) => {
 
             }, 700)
             spinner.style.display = 'none'
+            form.reset()
 
         })
         .catch(error => { displayToast('var(--red)', error)})

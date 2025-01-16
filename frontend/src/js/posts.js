@@ -84,7 +84,10 @@ const listPosts = (posts, fromWhere) => {
     postsContainer.innerHTML = ''
     // articles = posts
     fromWhere === 'fromFilter' ? articles = [] : null
-    articles.push(...posts)
+    if (posts) {
+
+        articles.push(...posts)
+    }
 
     !articles ?
         postsContainer.innerHTML += "<p>No Post Found!!</p>"

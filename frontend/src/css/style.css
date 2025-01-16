@@ -314,7 +314,11 @@ h2{
   color: #797878;
   font-size: 15px;
 }
+.comment-details p{
+margin: 5px;
+}
 .comment-time{
+  margin-top: 0;
   color: #797878;
 }
 .post-snippet {
@@ -329,6 +333,12 @@ h2{
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #fefefe;
+  margin: 10px 0;
+  transition:box-shadow 0.3s;
+
+}
+.comment:hover{
+  box-shadow: 0 0px 4px #ddd;
 
 }
 .comment-body p{

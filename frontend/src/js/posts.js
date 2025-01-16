@@ -81,15 +81,17 @@ createPostBtn.onclick = () => showCreatePostModal()
 let cursor = formatDate(new Date())
 
 const listPosts = (posts, fromWhere) => {
-    postsContainer.innerHTML = ''
+    spinner.style.display = 'none !important';
     // articles = posts
-    if (fromWhere === 'fromFilter'){
-console.log('hi')
+    if (fromWhere === 'fromFilter') {
+        postsContainer.innerHTML = ''
+        console.log('hi')
         articles = []
     }
-    
+
     if (posts) {
         if (fromWhere === "fromloadmore") {
+            console.log("fromloadmore")
             articles = posts
         } else {
 
@@ -102,8 +104,8 @@ console.log('hi')
         : articles.forEach(async post => {
             // const comments = await getComment(post.id)
             // console.log(comments)
-           postsContainer.innerHTML += Article(post)
-             // postsContainer.insertAdjacentHTML("beforeend", Article(post));
+            postsContainer.innerHTML += Article(post)
+            // postsContainer.insertAdjacentHTML("beforeend", Article(post));
         })
 }
 
@@ -132,6 +134,7 @@ function fetchPosts(from) {
         })
         .then(data => {
             console.log(data)
+            spinner.style.display = 'none';
             if (data.posts && data.posts.length > 0) {
 
                 data.postsremaing ? loadMore.style.display = 'block' : loadMore.style.display = 'none'
@@ -145,8 +148,9 @@ function fetchPosts(from) {
 
             } else {
                 displayToast('var(--info)', "NO POsts!!")
-                spinner.style.display = 'none';
             }
+            console.log('sdqsd')
+            spinner.style.display = 'none !important';
 
         }).catch(err => displayToast('var(--red)', `get posts : ${err}`))
 }

@@ -98,7 +98,7 @@ const listPosts = (posts, fromWhere) => {
 const listSinglePost = (post) => postsContainer.insertAdjacentHTML("afterbegin", Article(post, []));
 //////return the post id to replace the "1"
 ///the comùent belongs to
-const listSingleComment = (Post_id, container, com) => container.insertAdjacentHTML("afterbegin", Comment(Post_id, com));
+const listSingleComment = (Post_id, container, com) => container.querySelector('h2').insertAdjacentHTML("afterend", Comment(Post_id, com));
 
 loadMore.onclick = () => {
     cursor = formatDate(new Date(articles[articles.length - 1].createdat))

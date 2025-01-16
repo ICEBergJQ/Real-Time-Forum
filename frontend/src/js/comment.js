@@ -39,7 +39,10 @@ function postComment(e, Post_id) {
         displayToast('var(--green)', 'comment added succesfully!!')
         // alert("msg : ", data)
         // fetchPosts()
+        console.log(e.target.parentElement.parentElement)
         listSingleComment(Post_id, e.target.parentElement.parentElement, data)
+        let commentsCount = e.target.parentElement.parentElement.querySelector('h2 span')
+        commentsCount.textContent = parseInt(commentsCount.textContent) + 1
         textarea.value = ''
     })
         .catch(error => {

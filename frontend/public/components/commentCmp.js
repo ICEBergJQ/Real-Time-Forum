@@ -1,11 +1,11 @@
-export default function Comment(postID, { id, author,reaction, createdat, content, replycount, likescount, dislikescount }) {
+export default function Comment(postID, { id, author,reaction, createdat, content, likescount, dislikescount }) {
   return `
     <section class="comments">
             <div class="comment">
               <div class="comment-header">
-                <img src="./Unknown_person.jpg" alt="User Avatar" class="user-avatar">
+                <img src="./static/src/Unknown_person.jpg" alt="User Avatar" class="user-avatar">
                 <div class="comment-details">
-                  <p><strong>${author}</strong> <span class="user-role">New Member</span> • ${replycount} replies</p>
+                  <p><strong>${author}</strong> <span class="user-role"></span></p>
                   <p class="comment-time">${createdat}</p>
                 </div>
               </div>
@@ -13,7 +13,6 @@ export default function Comment(postID, { id, author,reaction, createdat, conten
                 <p>${content}</p>
               </div>
               <div id="Comment-footer" class="comment-footer">
-                <p>${likescount} person likes this</p>
                 <button id="Like"  onclick="interact(event,'${postID}', '${id}', 'like')" class="btn ${reaction == "like"? 'liked' : ''}">
                 <i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like
           (<span>${likescount}</span>)

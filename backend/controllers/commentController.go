@@ -80,7 +80,7 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	var logged bool
+	logged := true
 	var comments []forum.Comment
 	postID := r.URL.Query().Get("id")
 	if postID == "" {

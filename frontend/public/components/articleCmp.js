@@ -5,8 +5,11 @@ export default function Article(post, comments) {
     <article class="post-preview">
       <div class="post-header">
         <h3><a href="#">${post.title}</a></h3>
+                <img src="./static/src/Unknown_person.jpg" alt="User Avatar" class="user-avatar">
+        
         <p class="time">By <strong>${post.author}</strong> | Category: <em>${post.categories.map(cat =>
-    ` <span> ${cat}</span>`
+    ` 
+    <span> ${cat}</span>`
   )}
         </em> <br>
          Posted on: ${post.createdat}</p>
@@ -45,4 +48,4 @@ export default function Article(post, comments) {
     </article>`
 }
 
-const loadComments = (postID,  comments) => comments.map(com => Comment(postID, com))
+const loadComments = (postID,  comments) => comments.map(com => Comment(postID, com)).join('')

@@ -5,8 +5,8 @@ export default function registerForm() {
             <span class="close" onclick="closeModal('register')">&times;</span>
             <h2 class="log">Sign Up</h2>
             <form class="for">
-                   <label for="username">Full Name</label>
-                <input type="text" id="username" name="username" placeholder="Enter your full name" required>
+                   <label for="username">username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
     
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" required>

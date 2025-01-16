@@ -76,7 +76,6 @@ window.addEventListener("click", (event) => {
 loginBtn.addEventListener("click", showLoginModal)
 registerBtn.onclick = () => showRegisterModal()
 createPostBtn.onclick = () => showCreatePostModal()
-///get data
 
 //get poosts
 
@@ -85,13 +84,12 @@ let cursor = formatDate(new Date())
 const listPosts = (posts) => {
     postsContainer.innerHTML = ''
     articles = posts
-    console.log(articles)
 
     !articles ?
         postsContainer.innerHTML += "<p>No Post Found!!</p>"
         : posts.forEach(async post => {
             const comments = await getComment(post.id)
-            console.log(comments)
+            console.log("comments : ", comments)
             postsContainer.innerHTML += Article(post, comments)
         })
 }
@@ -99,7 +97,7 @@ const listPosts = (posts) => {
 const listSinglePost = (post) => postsContainer.insertAdjacentHTML("afterbegin", Article(post, []));
 //////return the post id to replace the "1"
 ///the comùent belongs to
-const listSingleComment = (container, com) => container.insertAdjacentHTML("afterbegin", Comment("1", com));
+const listSingleComment = (Post_id, container, com) => container.insertAdjacentHTML("afterbegin", Comment(Post_id, com));
 
 loadMore.onclick = () => {
     cursor = formatDate(new Date(articles[articles.length - 1].createdat))
@@ -117,7 +115,7 @@ function fetchPosts() {
             console.log(res.statusText)
             if (!res.ok) {
                 displayToast('var(--red)', res.statusText)
-                throw new Error("something went wrong with Saaaaalah aka lmodira!!:!")
+                throw new Error("something went wrong with !!:!")
             }
             return res.json()
         })

@@ -10,6 +10,7 @@ function postComment(e, Post_id) {
     console.log(e)
     if (logged !== '1') {
         displayToast('var(--red)', 'you need to login!')
+        displayPopup("openLogin")
         return
     }
 
@@ -38,7 +39,7 @@ function postComment(e, Post_id) {
         displayToast('var(--green)', 'comment added succesfully!!')
         // alert("msg : ", data)
         // fetchPosts()
-        listSingleComment(e.target.parentElement.parentElement, data)
+        listSingleComment(Post_id, e.target.parentElement.parentElement, data)
         textarea.value = ''
     })
         .catch(error => {

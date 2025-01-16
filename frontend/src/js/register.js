@@ -7,7 +7,7 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
     const email = document.querySelector("#email").value.trim()
     const password = document.querySelector("#signUpModal #password").value.trim()
     const confirmPassword = document.querySelector("#confirm-password").value.trim()
-    ///add confirm password input
+    
 
     if (username == "" || email == "" || password == "" || confirmPassword == "") {
         displayToast('var(--red)', "all fields are required!!")

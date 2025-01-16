@@ -19,7 +19,6 @@
 
 .post-snippet button {
   background-color: transparent;
-  border: none;
   cursor: pointer;
 }
 
@@ -61,14 +60,13 @@
   display: none;
   background-color: #00aaff;
   border-radius: 10px;
-  border: none;
   outline: none;
   margin: 3rem auto;
   font-size: 1rem;
   padding: 10px 2rem;
-    cursor: pointer;
-    color: #fff;
-    font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
 }
 
 .container {
@@ -101,7 +99,7 @@
   align-items: center;
 }
 
-.nav-links { 
+.nav-links {
   display: flex;
   gap: 1rem;
   margin: 0;
@@ -155,18 +153,13 @@
   }
 }
 
-.dropdown-menu { 
-  padding: 0;
+.dropdown-menu {
   margin: 0;
   position: absolute;
   top: 100%;
-  /* Position below the parent item */
   left: 43px;
   background-color: #222;
-  display: none;
-  /* Hidden by default */
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -220,13 +213,12 @@
 /* Default state */
 .dropdown-menu label {
   background-color: rgb(190, 190, 190);
-  border: none;
   color: black;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Checked state */
-.dropdown-menu input[type="checkbox"]:checked + label {
+.dropdown-menu input[type="checkbox"]:checked+label {
   background-color: #6799b3;
   color: white;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
@@ -235,16 +227,17 @@
 .dropdown-menu b {
   background-color: #00aaff;
   color: white;
-} 
-.post-avatar{
-  display: flex;
-    align-items: center;
 }
+
+.post-avatar {
+  display: flex;
+  align-items: center;
+}
+
 .dropdown-menu .sbtf {
   margin-top: 20px;
   width: 100%;
   padding: 0.75rem;
-  border: none;
   border-radius: 25px;
   background-color: #434444;
   color: #fff;
@@ -269,7 +262,6 @@
   padding: 0.5rem 1rem;
   background: #00aaff;
   color: #fff;
-  border: none;
   cursor: pointer;
   border-radius: 5px;
 }
@@ -285,33 +277,33 @@
 /* main */
 
 .main-content {
-  padding: 2rem 0;
+  padding: 2rem;
   flex-grow: 1;
 }
 
 /* Feed and Filters */
 .feed {
-  margin-bottom: 0.5rem;
-  margin-left: 21rem;
-  margin-right: 21rem;
+  max-width: 800px;
+  margin: auto;
 }
 
-h2{
+h2 {
   color: #00aaff;
 }
 
 /* Post Previews */
-.post-title{
+.post-title {
   font-size: 20px;
   margin: 0 0 10px;
 }
+
 .post-preview {
   padding: 1rem;
   border-radius: 10px;
   border: 1px solid #ccc;
   background: #f9f9f9;
   margin-bottom: 1rem;
-  transition:box-shadow 0.3s ;
+  transition: box-shadow 0.3s;
   box-shadow: 0 2px 4px #aaa;
 }
 
@@ -329,31 +321,37 @@ h2{
   color: #797878;
   font-size: 13px;
 }
-.comment-details p{
-margin: 5px;
+
+.comment-details p {
+  margin: 5px;
 }
-.comment-time{
+
+.comment-time {
   margin-top: 0;
   color: #797878;
 }
-.card-content{
+
+.card-content {
   box-shadow: 0 4px 4px #ddd;
   padding: 7px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #fefefe;
   margin: 10px 0;
-  transition:box-shadow 0.3s;
-} 
-.card-content:hover{
+  transition: box-shadow 0.3s;
+}
+
+.card-content:hover {
   box-shadow: 0 0px 4px #ddd;
 }
-.comment-body p{
+
+.comment-body p {
   background-color: rgb(241 241 241);
   padding: 10px;
   box-shadow: 0 4px 4px #ddd;
   border-radius: 10px;
 }
+
 .post-preview a {
   font-size: 23px;
   display: inline-block;
@@ -380,11 +378,9 @@ margin: 5px;
 .post-details .like-btn,
 .post-details .dislike-btn,
 .comment button,
-.post-details .comment-btn
- {
+.post-details .comment-btn {
   padding: 0.5rem 1rem;
   margin-right: 1rem;
-  border: none;
   border-radius: 5px;
   cursor: pointer;
   background: #dff4ff;
@@ -398,17 +394,8 @@ article i {
   pointer-events: none;
 }
 
-.post-actions .post-details .like-btn,
-.post-actions .post-details .dislike-btn,
-.post-details .comment-btn,
-.comment button:hover {
-  background: #ddd;
-}
- 
 
-.hidden {
-  display: none;
-}
+
 
 .container-comment {
   margin-top: 15px;
@@ -447,7 +434,6 @@ article i {
   padding: 0.5rem 1rem;
   background-color: #00aaff;
   border-radius: 5px;
-  border: none;
   font-size: 15px;
   cursor: pointer;
   transition: all 0.5s;
@@ -464,6 +450,11 @@ article i {
   color: #fff;
   padding: 2rem 0;
   margin-top: auto;
+}
+
+footer .container>p {
+  text-align: center;
+
 }
 
 .footer-sections {

@@ -25,3 +25,11 @@ ul{
 
     list-style: none;
 }
+
+button{
+    border: none;
+}
+
+.hidden {
+    display: none;
+  }

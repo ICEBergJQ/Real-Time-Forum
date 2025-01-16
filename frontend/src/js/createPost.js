@@ -44,7 +44,7 @@ createPostForm.onsubmit = (e) => {
             // alert("data.message)
             // fetchPosts();
 
-            // location.href = '/'
+                window.location.href = "/"
         })
         .catch(() => displayToast('var(--red)', "creating post Error"));
 }

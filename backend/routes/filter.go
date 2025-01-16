@@ -25,7 +25,6 @@ func FilterRoute(db *sql.DB) {
 				id, err := utils.UserIDFromToken(r, db)
 				if err != nil {
 					controllers.Logout(w,r)
-					//http.Error(w, "Unautherized access", http.StatusUnauthorized)
 					return
 				}
 				query = `SELECT p.post_id, p.user_id, p.category_name, p.title, p.content, p.created_at
@@ -47,7 +46,6 @@ func FilterRoute(db *sql.DB) {
 				id, err := utils.UserIDFromToken(r, db)
 				if err != nil {
 					controllers.Logout(w,r)
-					//http.Error(w, "Unautherized access", http.StatusUnauthorized)
 					return
 				}
 				query = `SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE user_id = ` + strconv.Itoa(id)

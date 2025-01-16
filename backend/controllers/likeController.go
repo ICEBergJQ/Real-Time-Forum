@@ -27,7 +27,7 @@ func HasUserReacted(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	reaction.User_id, err = utils.UserIDFromToken(r, db)
 	if err != nil {
-		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "user_id not found")
+		Logout(w,r)
 		return
 	}
 	if err := json.NewDecoder(r.Body).Decode(&reaction); err != nil {

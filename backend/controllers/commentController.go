@@ -42,7 +42,7 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	newComment.Author_id, err = utils.UserIDFromToken(r, db)
 	if err != nil {
-		http.Error(w, "Unautherized access", http.StatusUnauthorized)
+		Logout(w,r)
 		return
 	}
 

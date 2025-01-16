@@ -34,26 +34,27 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	postID, err := uuid.NewV4()
 	if err != nil {
-		http.Error(w, "Internal server error generating post ID", http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	newPost.ID = postID.String()
 
 	newPost.Author_id, err = utils.UserIDFromToken(r, db)
 	if err != nil {
+		Logout(w,r)
 		http.Error(w, "Unautherized access", http.StatusUnauthorized)
 		return
 	}
 	newPost.Author_name, err = utils.GetUserName(newPost.Author_id, db)
 	if err != nil {
-		http.Error(w, "There was a problem getting username", http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
 	// Begin transaction
 	tx, err := db.Begin()
 	if err != nil {
-		http.Error(w, "Failed to start transaction", http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer tx.Rollback()
@@ -71,12 +72,12 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	query := "INSERT INTO posts (post_id, user_id, category_name, title, content) VALUES (?, ?, ?, ?, ?)"
 	_, err = tx.Exec(query, newPost.ID, newPost.Author_id, categories, newPost.Title, newPost.Content)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error creating post: %v", err), http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
 	if err := tx.Commit(); err != nil {
-		http.Error(w, "Failed to commit transaction", http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	newPost.CreatedAt = time.Now().Format("2006-01-02 15:04:05")

@@ -7,13 +7,17 @@ function filterPosts(filtermethod) {
 
         return
     }
-
+    if (filtermethod === 'filterbycategories' && !categories.length) {
+        console.log(121)
+        displayToast('var(--info)', 'please select a category to filter by')
+        return
+    }
     let data = {
         filtermethod,
         categories,
         cursor: formatDate(new Date())
     }
-    
+
     fetch('/filter', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -28,7 +32,8 @@ function filterPosts(filtermethod) {
     }).then(data => {
         console.log(data)
         //list filtered posts
-        listPosts(data.posts)
+        data.postsremaing ? loadMore.style.display = 'block' : loadMore.style.display = 'none'
+        listPosts(data.posts, 'fromFilter')
     }).catch(err => displayToast('var(--red)', err))
 }
 

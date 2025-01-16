@@ -43,7 +43,7 @@ form.addEventListener('submit', (e) => {
             setTimeout(() => {
                 window.location.href = "/"
 
-            }, 1000)
+            }, 700)
             spinner.style.display = 'none'
 
         })

@@ -4,6 +4,7 @@ function interact(e, post_id, comment_id, reaction_type) {
     //check if logged
     if (logged !== '1') {
         displayToast('var(--red)', 'you need to login!')
+        displayPopup("openLogin")
         return
     }
     fetch(`/reaction`, {

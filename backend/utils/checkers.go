@@ -79,7 +79,7 @@ func IfPostReacted(postid string, userid int, db *sql.DB) string {
 
 func IfCommentReacted(id string, userid int, db *sql.DB) string {
 	var reaction string
-	err := db.QueryRow(`SELECT reaction_type FROM Reactions WHERE user_id = ? AND comment_id = ?)`, userid, id).Scan(&reaction)
+	err := db.QueryRow(`SELECT reaction_type FROM Reactions WHERE user_id = ? AND comment_id = ?`, userid, id).Scan(&reaction)
 	if err != nil {
 		return ""
 	}

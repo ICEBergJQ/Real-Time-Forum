@@ -5,23 +5,28 @@ export default function Article(post, comments) {
     <article class="post-preview">
       <div class="post-header">
         <h3><a href="#">${post.title}</a></h3>
-                <img src="./static/src/Unknown_person.jpg" alt="User Avatar" class="user-avatar">
+        <div class="comment-header comment-details">
+
+        <img src="./static/src/Unknown_person.jpg" alt="User Avatar" class="user-avatar">
         
         <p class="time">By <strong>${post.author}</strong> | Category: <em>${post.categories.map(cat =>
     ` 
     <span> ${cat}</span>`
   )}
         </em> <br>
-         Posted on: ${post.createdat}</p>
+         ${post.createdat}</p>
+
+
       </div>
-      
-      <p class="post-snippet">${post.content.length > 100 ? `
+      </div>
+      <div>
+      <pre class="post-snippet card-content">${post.content.length > 100 ? `
         ${post.content.slice(0, 76)}
         <button onclick="popPost(event, '${post.id}')">Read More...
-        </button>
-        `
-      : post.content}
-      </p>
+        </button>`:post.content}
+      </pre>
+      </div>
+
       <div class="post-details">
         <button class="btn like-btn ${post.reaction == "like" ? 'liked' : ''}"  onclick="interact(event, '${post.id}', null, 'like')">
         <i class="fa fa-thumbs-o-up" style="font-size:18px"></i> Like

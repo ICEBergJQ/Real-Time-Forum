@@ -1,16 +1,16 @@
 export default function Comment(postID, { id, author,reaction, createdat, content, likescount, dislikescount }) {
   return `
     <section class="comments">
-            <div class="comment">
+            <div class="comment card-content">
               <div class="comment-header">
                 <img src="./static/src/Unknown_person.jpg" alt="User Avatar" class="user-avatar">
                 <div class="comment-details">
                   <p><strong>${author}</strong> <span class="user-role"></span></p>
-                  <p class="comment-time">${createdat}</p>
+                  <p class="comment-time time">${createdat}</p>
                 </div>
               </div>
               <div class="comment-body">
-                <p>${content}</p>
+                <pre>${content}</pre>
               </div>
               <div id="Comment-footer" class="comment-footer">
                 <button id="Like"  onclick="interact(event,'${postID}', '${id}', 'like')" class="btn ${reaction == "like"? 'liked' : ''}">

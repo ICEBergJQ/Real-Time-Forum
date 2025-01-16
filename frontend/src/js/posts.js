@@ -85,12 +85,11 @@ const listPosts = (posts, fromWhere) => {
     // articles = posts
     fromWhere === 'fromFilter' ? articles = [] : null
     if (posts) {
-
         articles.push(...posts)
     }
+    !articles.length ?
+        displayToast('var(--info', 'No Post Found!!')
 
-    !articles ?
-        postsContainer.innerHTML += "<p>No Post Found!!</p>"
         : articles.forEach(async post => {
             const comments = await getComment(post.id)
             console.log(comments)

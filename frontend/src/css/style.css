@@ -61,9 +61,14 @@
   display: none;
   background-color: #00aaff;
   border-radius: 10px;
-  padding: 6px;
   border: none;
   outline: none;
+  margin: 3rem auto;
+  font-size: 1rem;
+  padding: 10px 2rem;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 600;
 }
 
 .container {
@@ -96,8 +101,7 @@
   align-items: center;
 }
 
-.nav-links {
-  list-style: none;
+.nav-links { 
   display: flex;
   gap: 1rem;
   margin: 0;
@@ -151,8 +155,7 @@
   }
 }
 
-.dropdown-menu {
-  list-style: none;
+.dropdown-menu { 
   padding: 0;
   margin: 0;
   position: absolute;
@@ -162,13 +165,15 @@
   background-color: #222;
   display: none;
   /* Hidden by default */
-  border-radius: 5px;
+  border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 5px;
   display: none;
+  box-shadow: 0 0 5px #ddd;
 }
 
 .dropdown-menu li {
@@ -209,6 +214,7 @@
   /* Prevent text selection */
   text-align: center;
   outline: none;
+  width: 70%;
 }
 
 /* Default state */
@@ -229,8 +235,11 @@
 .dropdown-menu b {
   background-color: #00aaff;
   color: white;
+} 
+.post-avatar{
+  display: flex;
+    align-items: center;
 }
-
 .dropdown-menu .sbtf {
   margin-top: 20px;
   width: 100%;
@@ -312,7 +321,7 @@ h2{
 .post-preview .time {
   margin: 0.5rem 0;
   color: #797878;
-  font-size: 15px;
+  font-size: 13px;
 }
 .comment-details p{
 margin: 5px;
@@ -321,13 +330,7 @@ margin: 5px;
   margin-top: 0;
   color: #797878;
 }
-.post-snippet {
-  background-color:rgb(241 241 241);
-  padding: 10px;
-  box-shadow: 0 4px 4px #ddd;
-  border-radius: 10px;
-}
-.comment{
+.card-content{
   box-shadow: 0 4px 4px #ddd;
   padding: 7px;
   border: 1px solid #ddd;
@@ -335,11 +338,9 @@ margin: 5px;
   background: #fefefe;
   margin: 10px 0;
   transition:box-shadow 0.3s;
-
-}
-.comment:hover{
+} 
+.card-content:hover{
   box-shadow: 0 0px 4px #ddd;
-
 }
 .comment-body p{
   background-color: rgb(241 241 241);
@@ -465,7 +466,6 @@ article i {
 }
 
 .footer-sections ul {
-  list-style: none;
   margin: 0;
   padding: 0;
 }

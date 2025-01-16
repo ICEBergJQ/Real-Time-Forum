@@ -21,3 +21,7 @@ a{
 h1 a{
     color: #fff;
 }
+ul{
+
+    list-style: none;
+}

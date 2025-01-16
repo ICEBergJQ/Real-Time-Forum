@@ -10,10 +10,10 @@ createPostForm.onsubmit = (e) => {
     const categories = Array.from(document.querySelectorAll('input[type=checkbox]:checked'), elem => elem.value)
 
     console.log(categories.length)
-    console.log(categories) 
+    console.log(categories)
 
     if (!title || !content || !categories.length) {
-        displayToast('var(--red)','all fields are required!')
+        displayToast('var(--red)', 'all fields are required!')
         // alert('')
         return
     }
@@ -21,7 +21,7 @@ createPostForm.onsubmit = (e) => {
     fetch('/post', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
             title,
             content,
             categories,
@@ -35,7 +35,7 @@ createPostForm.onsubmit = (e) => {
         }
         )
         .then(data => {
-            console.log('5555 : ', data)
+            checkIfLoggedout(data)
             listSinglePost(data)
 
             displayToast('var(--info)', 'post created successfully!!!')
@@ -46,5 +46,5 @@ createPostForm.onsubmit = (e) => {
 
             // location.href = '/'
         })
-        .catch(() => alert("creating post Error"));
+        .catch(() => displayToast('var(--red)', "creating post Error"));
 }

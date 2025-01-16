@@ -53,7 +53,7 @@ const displayToast = (color, txt) => {
     toast.style.top = "40px"
     toast.style.background = color;
     toast.style.animation = "bounce 0.5s ease-in-out"
-    hideToast(3000)
+    hideToast(1500)
 }
 ///reset the delay
 toast.addEventListener('mouseenter', () => hideToast(10000))

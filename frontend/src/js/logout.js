@@ -19,13 +19,12 @@ confirmLogout.onclick = () => {
 
             logoutModal.classList.add("hidden");
             localStorage.removeItem("logged")
-///remove
-            document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+         //   document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
             setTimeout(() => {
                 window.location.href = "/";
 
-            }, 1500)
+            }, 700)
         }).catch(err => displayToast('var(--red)', "logout Error : " + err))
 }
 

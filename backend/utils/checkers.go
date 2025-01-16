@@ -21,6 +21,15 @@ func PostExists(db *sql.DB, postID string) bool {
 	}
 	return exists
 }
+func CommentExists(db *sql.DB, commentID string) bool {
+	var exists bool
+	query := `SELECT EXISTS(SELECT 1 FROM comments WHERE comment_id = ?)`
+	err := db.QueryRow(query, commentID).Scan(&exists)
+	if err != nil {
+		return false
+	}
+	return exists
+}
 
 func CategoriesChecker(db *sql.DB, categoryNames []string) ([]int, string, error) {
 	if len(categoryNames) < 1 {

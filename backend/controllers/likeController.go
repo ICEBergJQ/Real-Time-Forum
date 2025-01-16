@@ -27,7 +27,7 @@ func HasUserReacted(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	reaction.User_id, err = utils.UserIDFromToken(r, db)
 	if err != nil {
-		Logout(w,r)
+		Logout(w, r)
 		return
 	}
 	if err := json.NewDecoder(r.Body).Decode(&reaction); err != nil {
@@ -54,6 +54,7 @@ func HasUserReacted(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
 		return
 	}
+	fmt.Println(reaction.Comment_id)
 	if reactionFromDB.Reaction_Type == reaction.Reaction_Type {
 		hasReacted = "remove"
 	} else if reactionFromDB.Reaction_Type != reaction.Reaction_Type {
@@ -67,6 +68,13 @@ func Reaction(db *sql.DB, newReaction models.Reactions, hasReacted string, w htt
 		err := fmt.Errorf("post does not exist")
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Post Does not Exist")
 		return
+	}
+	if newReaction.Comment_id != "none"{
+		if !utils.CommentExists(db, newReaction.Comment_id) {
+			err := fmt.Errorf("comment does not exist")
+			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Comment Does not Exist")
+			return
+		}	
 	}
 	var ReactionStatus string
 	if hasReacted == "remove" {

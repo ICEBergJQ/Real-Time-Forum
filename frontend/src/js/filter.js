@@ -30,14 +30,15 @@ function filterPosts(filtermethod) {
         }
         return res.json()
     }).then(data => {
-        checkIfLoggedout(data)
+        console.log(data)
         
         document.querySelector('.dropdown-menu').style.display = "none";
         //list filtered posts
         Array.from(document.querySelectorAll('nav input[type=checkbox]:checked'), elem =>elem.checked = false)
-        // if (!data.posts) {
-        //     throw new Error('no posts:::!!')  
-        // }
+        if (!data.posts) {
+            throw new Error('no posts:::!!')
+            
+        }
         data.postsremaing ? loadMore.style.display = 'block' : loadMore.style.display = 'none'
         listPosts(data.posts, 'fromFilter')
     }).catch(err => displayToast('var(--red)', err))

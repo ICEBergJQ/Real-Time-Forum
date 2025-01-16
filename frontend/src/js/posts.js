@@ -9,7 +9,6 @@ const dynamicContent = document.querySelector("#dynamicContent")
 const anotherDynamic = document.querySelector("#anotherDynamic")
 const dynaicPost = document.querySelector("#dynaicPost")
 const logoutDynamic = document.querySelector("#logoutdynamic");
-const loadMore = document.querySelector('main>button.load-more')
 
 anotherDynamic.innerHTML = registerForm()
 dynamicContent.innerHTML = loginForm()
@@ -81,15 +80,17 @@ createPostBtn.onclick = () => showCreatePostModal()
 
 let cursor = formatDate(new Date())
 
-const listPosts = (posts) => {
+const listPosts = (posts, fromWhere) => {
     postsContainer.innerHTML = ''
-    articles = posts
+    // articles = posts
+    fromWhere === 'fromFilter' ? articles = [] : null
+    articles.push(...posts)
 
     !articles ?
         postsContainer.innerHTML += "<p>No Post Found!!</p>"
-        : posts.forEach(async post => {
+        : articles.forEach(async post => {
             const comments = await getComment(post.id)
-            console.log("comments : ", comments)
+            console.log(comments)
             postsContainer.innerHTML += Article(post, comments)
         })
 }
@@ -112,9 +113,8 @@ function fetchPosts() {
     spinner.style.display = 'block';
     fetch(url)
         .then(res => {
-            console.log(res.statusText)
+            // console.log(res)
             if (!res.ok) {
-                displayToast('var(--red)', res.statusText)
                 throw new Error("something went wrong with !!:!")
             }
             return res.json()
@@ -122,8 +122,9 @@ function fetchPosts() {
         .then(data => {
             console.log(data)
             if (data.posts && data.posts.length > 0) {
-                if (data.postsremaing)
-                    loadMore.style.display = 'block'
+
+                data.postsremaing ? loadMore.style.display = 'block' : loadMore.style.display = 'none'
+
                 listPosts(data.posts);
 
             } else {

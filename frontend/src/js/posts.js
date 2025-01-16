@@ -83,32 +83,42 @@ let cursor = formatDate(new Date())
 const listPosts = (posts, fromWhere) => {
     postsContainer.innerHTML = ''
     // articles = posts
-    fromWhere === 'fromFilter' ? articles = [] : null
+    if (fromWhere === 'fromFilter'){
+console.log('hi')
+        articles = []
+    }
+    
     if (posts) {
-        articles.push(...posts)
+        if (fromWhere === "fromloadmore") {
+            articles = posts
+        } else {
+
+            articles.push(...posts)
+        }
     }
     !articles.length ?
         displayToast('var(--info', 'No Post Found!!')
 
         : articles.forEach(async post => {
-            const comments = await getComment(post.id)
-            console.log(comments)
-            postsContainer.innerHTML += Article(post, comments)
+            // const comments = await getComment(post.id)
+            // console.log(comments)
+           postsContainer.innerHTML += Article(post)
+             // postsContainer.insertAdjacentHTML("beforeend", Article(post));
         })
 }
 
-const listSinglePost = (post) => postsContainer.insertAdjacentHTML("afterbegin", Article(post, []));
+const listSinglePost = (post) => postsContainer.insertAdjacentHTML("afterbegin", Article(post));
 //////return the post id to replace the "1"
 ///the comùent belongs to
 const listSingleComment = (Post_id, container, com) => container.querySelector('h2').insertAdjacentHTML("afterend", Comment(Post_id, com));
 
 loadMore.onclick = () => {
     cursor = formatDate(new Date(articles[articles.length - 1].createdat))
-    fetchPosts();
+    fetchPosts("fromloadmore");
 }
 
 // Function to fetch posts
-function fetchPosts() {
+function fetchPosts(from) {
     let url = '/post';
     url += `?cursor=${cursor}`
     spinner.style.display = 'block';
@@ -125,8 +135,13 @@ function fetchPosts() {
             if (data.posts && data.posts.length > 0) {
 
                 data.postsremaing ? loadMore.style.display = 'block' : loadMore.style.display = 'none'
+                if (from === 'fromloadmore') {
+                    listPosts(data.posts, 'fromloadmore');
 
-                listPosts(data.posts);
+                } else {
+
+                    listPosts(data.posts, '');
+                }
 
             } else {
                 displayToast('var(--info)', "NO POsts!!")
@@ -163,7 +178,15 @@ async function getComment(postId) {
     }
 }
 
-const displayComments = (e) => e.target.parentElement.nextElementSibling.classList.toggle("hidden")
+const displayComments = async (e, postid) => {
+    e.target.parentElement.nextElementSibling.querySelector('.replyContainer').innerHTML = ''
+    let comms = await getComment(postid)
+    e.target.parentElement.nextElementSibling.classList.toggle("hidden")
+
+    e.target.parentElement.nextElementSibling.querySelector('.replyContainer').insertAdjacentHTML("afterbegin", comms.map(com => Comment(postid, com)).join(''));
+    // const loadComments = (postID,  comments) => comments.map(com => Comment(postID, com)).join('')
+
+}
 
 window.displayPopup = displayPopup
 window.listPosts = listPosts

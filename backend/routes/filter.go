@@ -24,7 +24,7 @@ func FilterRoute(db *sql.DB) {
 			case "getlikedposts":
 				id, err := utils.UserIDFromToken(r, db)
 				if err != nil {
-					http.Error(w, "Unautherized access", http.StatusUnauthorized)
+					controllers.Logout(w,r)
 					return
 				}
 				query = `SELECT p.post_id, p.user_id, p.category_name, p.title, p.content, p.created_at
@@ -45,7 +45,7 @@ func FilterRoute(db *sql.DB) {
 			case "getcreatedposts":
 				id, err := utils.UserIDFromToken(r, db)
 				if err != nil {
-					http.Error(w, "Unautherized access", http.StatusUnauthorized)
+					controllers.Logout(w,r)
 					return
 				}
 				query = `SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE user_id = ` + strconv.Itoa(id)

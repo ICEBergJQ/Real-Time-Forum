@@ -84,10 +84,12 @@ const listPosts = (posts, fromWhere) => {
     postsContainer.innerHTML = ''
     // articles = posts
     fromWhere === 'fromFilter' ? articles = [] : null
-    articles.push(...posts)
+    if (posts) {
+        articles.push(...posts)
+    }
+    !articles.length ?
+        displayToast('var(--info', 'No Post Found!!')
 
-    !articles ?
-        postsContainer.innerHTML += "<p>No Post Found!!</p>"
         : articles.forEach(async post => {
             const comments = await getComment(post.id)
             console.log(comments)
@@ -108,7 +110,6 @@ loadMore.onclick = () => {
 // Function to fetch posts
 function fetchPosts() {
     let url = '/post';
-
     url += `?cursor=${cursor}`
     spinner.style.display = 'block';
     fetch(url)

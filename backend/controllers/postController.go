@@ -91,7 +91,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	logged := true
 	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE created_at < ? ORDER BY created_at DESC limit ?;"
-	rows, err := db.Query(query, cursor, 2)
+	rows, err := db.Query(query, cursor, 20)
 	if err != nil {
 		http.Error(w, "internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
@@ -135,7 +135,7 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 		post.Categories = strings.Split(category, ",")
 		response.Posts = append(response.Posts, post)
 	}
-	if len(response.Posts) == 2 {
+	if len(response.Posts) == 20 {
 		cursor = response.Posts[len(response.Posts)-1].CreatedAt
 		response.Postsremaining = RowCounter(`SELECT COUNT(*) AS count
 		FROM Posts

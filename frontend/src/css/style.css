@@ -92,7 +92,7 @@
 }
 
 .navbar {
-  background: #222;
+  background: #20202e;
   color: #fff;
   padding: 1rem 0;
 }
@@ -451,10 +451,10 @@ article i {
 
 /* Footer */
 .footer {
-  background: #222;
+  background: #20202e;
   color: #fff;
-  padding: 2rem 0;
-  margin-top: auto;
+  padding: 2rem 0rem 2rem 0;
+  margin-top: 8rem;
 }
 
 footer .container>p {

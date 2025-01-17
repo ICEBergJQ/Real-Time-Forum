@@ -1,10 +1,12 @@
 package routes
 
 import (
-	"forum/controllers"
 	"net/http"
+
+	"forum/controllers"
 )
 
-func HomeRoute(){
+func HomeRoute() {
+	http.HandleFunc("/static/", controllers.ServeFile)
 	http.HandleFunc("/", controllers.Index)
 }

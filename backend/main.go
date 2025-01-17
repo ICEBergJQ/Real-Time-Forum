@@ -13,7 +13,6 @@ func main() {
 	config.CreateDatabaseTables(config.DB, "../database/schema.sql")
 	defer config.DB.Close()
 	address := "localhost:8080"
-	config.ServeFiles()
 	// home routes
 	routes.HomeRoute()
 	// authentication routes

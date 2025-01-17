@@ -12,7 +12,6 @@ createPostForm.onsubmit = (e) => {
 
     if (!title || !content || !categories.length) {
         displayToast('var(--red)', 'all fields are required!')
-        // alert('')
         return
     }
     if (title.length > 300 || content.length > 4000) {
@@ -37,15 +36,12 @@ createPostForm.onsubmit = (e) => {
         )
         .then(data => {
             checkIfLoggedout(data)
-            //listSinglePost(data)
 
             displayToast('var(--info)', 'post created successfully!!!')
             popupOverlay.classList.add("hidden")
             mainContent.innerHTML = ''
 
             createPostForm.reset()
-            // alert("data.message)
-            // fetchPosts();
             setTimeout(() => {
                 form.reset()
                 window.location.href = "/"

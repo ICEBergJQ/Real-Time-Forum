@@ -90,7 +90,6 @@ const removeDuplicates = (arr) => {
 };
 const listPosts = (posts, fromWhere) => {
     spinner.style.display = 'none !important';
-    // articles = posts
     if (fromWhere === 'fromFilter') {
         postsContainer.innerHTML = ''
         articles = []
@@ -104,22 +103,15 @@ const listPosts = (posts, fromWhere) => {
             articles.push(...posts)
         }
     }
-   // articles = removeDuplicates(articles);
 
     !articles.length ?
         displayToast('var(--info', 'No Post Found!!')
 
         : articles.forEach(async post => {
-            // const comments = await getComment(post.id)
-            // console.log(comments)
             postsContainer.innerHTML += Article(post)
-            // postsContainer.insertAdjacentHTML("beforeend", Article(post));
         })
 }
 
-//const listSinglePost = (post) => postsContainer.insertAdjacentHTML("afterbegin", Article(post));
-//////return the post id to replace the "1"
-///the comùent belongs to
 const listSingleComment = (Post_id, container, com) => container.querySelector('h2').insertAdjacentHTML("afterend", Comment(Post_id, com));
 
 loadMore.onclick = () => {
@@ -134,7 +126,6 @@ function fetchPosts(from) {
     spinner.style.display = 'block';
     fetch(url)
         .then(res => {
-            // console.log(res)
             if (!res.ok) {
                 throw new Error("something went wrong with !!:!")
             }
@@ -174,7 +165,6 @@ fetch("/categories")
 
 fetchPosts();
 
-////.
 async function getComment(postId) {
     let url = `/comment?id=${postId}`
     try {
@@ -195,8 +185,6 @@ const displayComments = async (e, postid) => {
     e.target.parentElement.nextElementSibling.classList.toggle("hidden")
 
     e.target.parentElement.nextElementSibling.querySelector('.replyContainer').insertAdjacentHTML("afterbegin", comms.map(com => Comment(postid, com)).join(''));
-    // const loadComments = (postID,  comments) => comments.map(com => Comment(postID, com)).join('')
-
 }
 
 window.displayPopup = displayPopup

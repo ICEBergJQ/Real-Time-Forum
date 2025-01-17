@@ -19,7 +19,6 @@ confirmLogout.onclick = () => {
 
             logoutModal.classList.add("hidden");
             localStorage.removeItem("logged")
-         //   document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
             setTimeout(() => {
                 window.location.href = "/";

@@ -53,5 +53,3 @@ export default function Article(post) {
       </div>
     </article>`
 }
-
-// const loadComments = (postID,  comments) => comments.map(com => Comment(postID, com)).join('')

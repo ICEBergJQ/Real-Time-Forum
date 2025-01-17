@@ -60,5 +60,8 @@ func Validation(user models.User, flag bool) error {
     if !printable(user.Username) {
         return errors.New("username must be printable")
     }
+    if len(user.Username) > 20 {
+        return errors.New("username must be at most 20 characters long")
+    }
     return nil
 }

@@ -61,9 +61,6 @@ function interact(e, post_id, comment_id, reaction_type) {
                     )
 
             }
-
-            // fetchPosts()
-
         })
         .catch(error => displayToast('var(--red)', error)
         )

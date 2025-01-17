@@ -16,7 +16,11 @@
   transform: translateX(-50%);
   transition: top 0.3s ease-in-out;
 }
-
+.post-header p span{
+  background-color: #eceafa;
+  padding: 0px 9px;
+  box-shadow: 0 0 2px #ddd;
+}
 .post-snippet button {
   background-color: transparent;
   cursor: pointer;
@@ -333,12 +337,13 @@ h2 {
 
 .card-content {
   box-shadow: 0 4px 4px #ddd;
-  padding: 7px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #fefefe;
   margin: 10px 0;
   transition: box-shadow 0.3s;
+  overflow: scroll;
 }
 
 .card-content:hover {

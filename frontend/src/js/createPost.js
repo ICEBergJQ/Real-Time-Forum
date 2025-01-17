@@ -17,6 +17,10 @@ createPostForm.onsubmit = (e) => {
         // alert('')
         return
     }
+    if(title.length>300 || content.length>4000){
+        displayToast('var(--red)', 'You have exceeded the maximum character limit!!')
+        return
+    }
 
     fetch('/post', {
         method: 'POST',

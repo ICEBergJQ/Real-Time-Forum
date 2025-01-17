@@ -42,9 +42,9 @@ form.addEventListener('submit', (e) => {
             setTimeout(() => {
                 window.location.href = "/"
 
+                form.reset()
             }, 700)
             spinner.style.display = 'none'
-            form.reset()
 
         })
         .catch(error => { displayToast('var(--red)', error)})

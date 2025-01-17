@@ -19,6 +19,10 @@ function postComment(e, Post_id) {
         displayToast('var(--red)', "enter your comment!")
         return
     }
+    if(content.length>300){
+        displayToast('var(--red)', 'You have exceeded the maximum character limit!!')
+        return
+    }
     ////get post comments
     fetch('/comment', {
         method: "POST",

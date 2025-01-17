@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"html"
 	"net/http"
 	"time"
@@ -34,10 +33,10 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	user.Email = html.EscapeString(user.Email)
 	user.Password = html.EscapeString(user.Password)
 
-	// if err := utils.Validation(user, true); err != nil {
-	// 	utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
-	// 	return
-	// }
+	if err := utils.Validation(user, true); err != nil {
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
+		return
+	}
 
 	if err := utils.Hash(&user.Password); err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
@@ -74,10 +73,10 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
 		return
 	}
-	// if err := utils.Validation(user, false); err != nil {
-	// 	utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
-	// 	return
-	// }
+	if err := utils.Validation(user, false); err != nil {
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
+		return
+	}
 
 	query := "SELECT user_id, username, email, password FROM users WHERE email = ? OR username = ?"
 	row := config.DB.QueryRow(query, user.Email, user.Username)
@@ -146,11 +145,10 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookie, err := r.Cookie("session_token")
-	fmt.Println(cookie.Name)
-	// if err != nil {
-	// 	utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "user not logged-in")
-	// 	return
-	// }
+	if err != nil {
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "user not logged-in")
+		return
+	}
 	query := "DELETE FROM sessions WHERE session_id = ?"
 	_, err = config.DB.Exec(query, cookie.Value)
 	if err != nil {

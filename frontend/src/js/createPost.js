@@ -15,7 +15,7 @@ createPostForm.onsubmit = (e) => {
         // alert('')
         return
     }
-    if(title.length>300 || content.length>4000){
+    if (title.length > 300 || content.length > 4000) {
         displayToast('var(--red)', 'You have exceeded the maximum character limit!!')
         return
     }
@@ -41,6 +41,8 @@ createPostForm.onsubmit = (e) => {
 
             displayToast('var(--info)', 'post created successfully!!!')
             popupOverlay.classList.add("hidden")
+            mainContent.innerHTML = ''
+
             createPostForm.reset()
             // alert("data.message)
             // fetchPosts();

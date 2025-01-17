@@ -4,7 +4,6 @@ import Article from '../../public/components/articleCmp.js'
 import Comment from '../../public/components/commentCmp.js'
 import Logout from '../../public/components/logoutCmp.js'
 import postForm from '../../public/components/postFormCmp.js'
-const postsContainer = document.querySelector('main .post-list')
 const dynamicContent = document.querySelector("#dynamicContent")
 const anotherDynamic = document.querySelector("#anotherDynamic")
 const dynaicPost = document.querySelector("#dynaicPost")

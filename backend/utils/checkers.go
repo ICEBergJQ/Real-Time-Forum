@@ -21,6 +21,7 @@ func PostExists(db *sql.DB, postID string) bool {
 	}
 	return exists
 }
+
 func CommentExists(db *sql.DB, commentID string) bool {
 	var exists bool
 	query := `SELECT EXISTS(SELECT 1 FROM comments WHERE comment_id = ?)`
@@ -34,6 +35,8 @@ func CommentExists(db *sql.DB, commentID string) bool {
 func CategoriesChecker(db *sql.DB, categoryNames []string) ([]int, string, error) {
 	if len(categoryNames) < 1 {
 		return nil, "", fmt.Errorf("no categories provided")
+	} else if !IfCategoryisunique(categoryNames) {
+		return nil, "", fmt.Errorf("duplicated categories")
 	}
 
 	type Category struct {
@@ -66,6 +69,17 @@ func CategoriesChecker(db *sql.DB, categoryNames []string) ([]int, string, error
 		ids = append(ids, category.ID)
 	}
 	return ids, CategoryNames, nil
+}
+
+func IfCategoryisunique(categories []string) bool {
+	for i, v := range categories {
+		for i2, v2 := range categories {
+			if v2 == v && i != i2 {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 func GetUserName(userid int, db *sql.DB) (string, error) {

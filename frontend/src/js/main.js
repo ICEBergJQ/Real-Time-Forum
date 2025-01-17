@@ -7,6 +7,8 @@ const likeBtn = document.querySelector('button.like-btn')
 const spinner = document.getElementById('spinner');
 const toast = document.querySelector('.toast')
 const loadMore = document.querySelector('main>button.load-more')
+const postsContainer = document.querySelector('main .post-list')
+const mainContent = document.querySelector('.main-content')
 
 // const profileName = document.querySelector('.profile')
 ///TODO

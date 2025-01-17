@@ -19,7 +19,7 @@ func HasUserReacted(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/reaction" {
 		err := fmt.Errorf("unauthorized")
-		utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "unauthorized path")
+		utils.CreateResponseAndLogger(w, http.StatusUnauthorized, err, "unauthorized path")
 		return
 	}
 	var reaction models.Reactions
@@ -31,7 +31,7 @@ func HasUserReacted(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := json.NewDecoder(r.Body).Decode(&reaction); err != nil {
-		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Invalid JSON payload")
 		return
 	}
 	defer r.Body.Close()

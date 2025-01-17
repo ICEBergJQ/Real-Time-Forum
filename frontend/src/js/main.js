@@ -16,6 +16,7 @@ const loadMore = document.querySelector('main>button.load-more')
 
 let categories = []
 let articles = []
+ 
 
 function createElem(tag, className, content) {
     const element = document.createElement(tag)

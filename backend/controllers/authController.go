@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"html"
 	"net/http"
 	"time"
@@ -145,10 +146,11 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookie, err := r.Cookie("session_token")
-	if err != nil {
-		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "user not logged-in")
-		return
-	}
+	fmt.Println(cookie.Name)
+	// if err != nil {
+	// 	utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "user not logged-in")
+	// 	return
+	// }
 	query := "DELETE FROM sessions WHERE session_id = ?"
 	_, err = config.DB.Exec(query, cookie.Value)
 	if err != nil {

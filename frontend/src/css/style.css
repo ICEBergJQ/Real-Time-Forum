@@ -343,7 +343,7 @@ h2 {
   background: #fefefe;
   margin: 10px 0;
   transition: box-shadow 0.3s;
-  overflow: scroll;
+  /* overflow: scroll; */
 }
 
 .card-content:hover {

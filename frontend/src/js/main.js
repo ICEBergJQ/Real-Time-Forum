@@ -10,11 +10,6 @@ const loadMore = document.querySelector('main>button.load-more')
 const postsContainer = document.querySelector('main .post-list')
 const mainContent = document.querySelector('.main-content')
 
-// const profileName = document.querySelector('.profile')
-///TODO
-//return created date with the created comment also in post
-//merge likedislike with postcomment in interact file.js
-//hide filter that needs logged user
 
 let categories = []
 let articles = []

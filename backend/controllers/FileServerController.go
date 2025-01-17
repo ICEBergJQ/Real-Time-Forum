@@ -4,18 +4,18 @@ import (
 	"net/http"
 	"path/filepath"
 
-	// "encoding/json"
-	// "forum/config"
-	// "forum/models"
-	// "html/template"
-	// "log"
 	"forum/config"
+	"forum/utils"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	// Always serve index.html for non-static requests
+	if r.Method != http.MethodGet {
+		utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, nil, "Method not allowed")
+		return
+	}
 	if r.URL.Path != "/" {
-		http.NotFound(w, r)
+		indexPath := filepath.Join(config.STATIC_DIR, "error.html")
+		http.ServeFile(w, r, indexPath)
 		return
 	}
 	indexPath := filepath.Join(config.STATIC_DIR, "index.html")

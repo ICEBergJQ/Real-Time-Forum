@@ -2,7 +2,6 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
 
     a.preventDefault();
 
-    // a.stopImmediatePropagation();
     const username = document.querySelector("#signUpModal #username").value.trim()
     const email = document.querySelector("#email").value.trim()
     const password = document.querySelector("#signUpModal #password").value.trim()
@@ -28,9 +27,6 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
     })
         .then(res => {
             if (!res.ok) {
-                // displayToast('var(--red)', res.statusText)
-                // throw new Error("something went wrong!")
-
                 return res.json().then(errorData => {
                     throw new Error(errorData.Message || 'Something went wrong');
                 });
@@ -40,9 +36,6 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
         .then(() => {
             //display a popup
             displayToast('var(--green)', 'registered, please login')
-            // alert('registered, please login')
-            ///redirect to login page
-            // window.location.href = "/"
             displayPopup("openLogin")
         })
         .catch(err => displayToast('var(--red)', err))

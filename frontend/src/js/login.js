@@ -7,7 +7,6 @@ form.addEventListener('submit', (e) => {
     ///username or email
     const username = document.querySelector("#username").value.trim()
     const password = document.querySelector("#password").value.trim()
-    ///    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/  // At least 8 chars, 1 letter, 1 number
 
     if (username == "" || password == "") {
         displayToast('var(--red)', "all fields are required!!")
@@ -38,7 +37,6 @@ form.addEventListener('submit', (e) => {
             ///testing TODO use cookie
             localStorage.setItem("logged", 1)
             displayToast('var(--green)', "redirecting...!")
-            // localStorage.setItem("username", data.user.username)
                     setTimeout(() => {
                         window.location.href = "/"
 

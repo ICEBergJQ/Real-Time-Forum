@@ -97,7 +97,6 @@
         <div class="nav-actions">
           <button class="btn login">Login</button>
           <button class="btn start-topic">Sign Up</button>
-          <!-- <button class="btn logout hidden">Logout</button> -->
           <button class="btn logout">Logout</button>
           <button class="btn createPostBtn">Create Post</button>
         </div>
@@ -117,7 +116,6 @@
     <div id="logoutdynamic"></div>
 
     <!-- Main Content -->
-    <!-- <main id="main-content" class="main-content"></main> -->
     <main class="main-content">
       <section class="feed">
         <h2 >POSTS</h2>
@@ -192,15 +190,6 @@
       });
     </script>
     <script>
-      // document.querySelectorAll('.dropdown > a').forEach(item => {
-      //   item.addEventListener('click', function (e) {
-      //     e.preventDefault(); // Prevent default link behavior
-      //     console.log(e)
-
-      //     const dropdownMenu = this.nextElementSibling; // Get the sibling <ul>
-      //     dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-      //   });
-      // });
       document.querySelectorAll(".dropdown > ul").forEach((menu) => {
         menu.style.display = "none";
       });

@@ -149,7 +149,7 @@ function fetchPosts(from) {
             } else {
                 displayToast('var(--info)', "NO POsts!!")
             }
-            console.log('sdqsd')
+         
             spinner.style.display = 'none !important';
 
         }).catch(err => displayToast('var(--red)', `get posts : ${err}`))

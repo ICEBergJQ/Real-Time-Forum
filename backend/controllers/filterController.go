@@ -77,7 +77,7 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 		cursor = response.Posts[len(response.Posts)-1].CreatedAt
 		response.Postsremaining = RowCounter(`SELECT COUNT(*) AS count
 		FROM Posts
-		WHERE created_at < ? ORDER BY created_at;`, cursor, db)
+		WHERE created_at < ? ORDER BY created_at DESC;`, cursor, db)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

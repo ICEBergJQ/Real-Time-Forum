@@ -48,7 +48,8 @@ func FilterRoute(db *sql.DB) {
 					controllers.Logout(w,r)
 					return
 				}
-				query = `SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE user_id = ` + strconv.Itoa(id)
+				query = `SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE user_id = ` + strconv.Itoa(id) + 
+				` AND created_at < ? ORDER BY created_at DESC limit ?`
 				controllers.FilterPosts(query, req.Cursor, db, w, r)
 			default:
 				http.Error(w, "Unsupported filter method", http.StatusBadRequest)

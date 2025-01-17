@@ -3,6 +3,7 @@ package routes
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -19,12 +20,14 @@ func FilterRoute(db *sql.DB) {
 				http.Error(w, "Invalid input", http.StatusBadRequest)
 				return
 			}
+			
 			query := ""
 			switch req.FilterMethod {
 			case "getlikedposts":
 				id, err := utils.UserIDFromToken(r, db)
 				if err != nil {
-					controllers.Logout(w,r)
+						fmt.Println("8888888888888888")
+					controllers.Logout(w, r)
 					return
 				}
 				query = `SELECT p.post_id, p.user_id, p.category_name, p.title, p.content, p.created_at
@@ -32,7 +35,7 @@ func FilterRoute(db *sql.DB) {
 						JOIN Reactions l ON p.post_id = l.post_id
 						WHERE l.reaction_type = 'like' AND l.user_id = ` + strconv.Itoa(id) +
 					` AND p.created_at < ? ORDER BY p.created_at DESC limit ?`
-
+				fmt.Println("44444444")
 				controllers.FilterPosts(query, req.Cursor, db, w, r)
 			case "filterbycategories":
 				_, _, err := utils.CategoriesChecker(db, req.Categories)
@@ -45,11 +48,11 @@ func FilterRoute(db *sql.DB) {
 			case "getcreatedposts":
 				id, err := utils.UserIDFromToken(r, db)
 				if err != nil {
-					controllers.Logout(w,r)
+					controllers.Logout(w, r)
 					return
 				}
-				query = `SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE user_id = ` + strconv.Itoa(id) + 
-				` AND created_at < ? ORDER BY created_at DESC limit ?`
+				query = `SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE user_id = ` + strconv.Itoa(id) +
+					` AND created_at < ? ORDER BY created_at DESC limit ?`
 				controllers.FilterPosts(query, req.Cursor, db, w, r)
 			default:
 				http.Error(w, "Unsupported filter method", http.StatusBadRequest)

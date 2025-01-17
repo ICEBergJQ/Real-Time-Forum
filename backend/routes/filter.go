@@ -32,7 +32,7 @@ func FilterRoute(db *sql.DB) {
 						FROM posts p
 						JOIN Reactions l ON p.post_id = l.post_id
 						WHERE l.reaction_type = 'like' AND l.user_id = ` + strconv.Itoa(id) +
-					` AND p.created_at < ? ORDER BY p.created_at DESC limit ?`
+					` AND l.comment_id = 'none' AND p.created_at < ? ORDER BY p.created_at DESC limit ?`
 				controllers.FilterPosts(query, req.Cursor, db, w, r)
 			case "filterbycategories":
 				_, _, err := utils.CategoriesChecker(db, req.Categories)

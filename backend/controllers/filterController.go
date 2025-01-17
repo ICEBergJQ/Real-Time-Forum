@@ -27,6 +27,7 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 	logged := true 
 	rows, err := db.Query(query, cursor, 20)
 	if err != nil {
+		fmt.Println(err)
 		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
 	}

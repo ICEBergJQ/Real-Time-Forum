@@ -207,6 +207,5 @@ window.displayPopup = displayPopup
 window.listPosts = listPosts
 window.fetchPosts = fetchPosts
 window.displayComments = displayComments
-window.listSinglePost = listSinglePost
 window.listSingleComment = listSingleComment
 window.closeModal = closeModal

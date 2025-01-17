@@ -51,7 +51,7 @@ createPostForm.onsubmit = (e) => {
                 form.reset()
                 window.location.href = "/"
 
-            }, 700)
+            }, 1000)
         })
         .catch(() => displayToast('var(--red)', "creating post Error"));
 }

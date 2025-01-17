@@ -8,7 +8,6 @@ function filterPosts(filtermethod) {
         return
     }
     if (filtermethod === 'filterbycategories' && !categories.length) {
-        console.log(121)
         displayToast('var(--info)', 'please select a category to filter by')
         return
     }
@@ -30,7 +29,6 @@ function filterPosts(filtermethod) {
         }
         return res.json()
     }).then(data => {
-        console.log(data)
         checkIfLoggedout(data)
         
         document.querySelector('.dropdown-menu').style.display = "none";

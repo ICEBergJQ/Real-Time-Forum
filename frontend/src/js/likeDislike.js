@@ -15,7 +15,6 @@ function interact(e, post_id, comment_id, reaction_type) {
         }),
     })
         .then(res => {
-            console.log(res)
 
             if (!res.ok)
                 throw new Error('post interaction Error ' + res.status)
@@ -27,8 +26,6 @@ function interact(e, post_id, comment_id, reaction_type) {
             checkIfLoggedout(data)
 
             let currentElem = e.target
-            console.log(e.target)
-            console.log(data)
             let count = currentElem.children[1].textContent
             let otherElem = null
             let otherCount = null

@@ -3,7 +3,6 @@ package routes
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -20,13 +19,12 @@ func FilterRoute(db *sql.DB) {
 				http.Error(w, "Invalid input", http.StatusBadRequest)
 				return
 			}
-			
+
 			query := ""
 			switch req.FilterMethod {
 			case "getlikedposts":
 				id, err := utils.UserIDFromToken(r, db)
 				if err != nil {
-						fmt.Println("8888888888888888")
 					controllers.Logout(w, r)
 					return
 				}
@@ -35,7 +33,6 @@ func FilterRoute(db *sql.DB) {
 						JOIN Reactions l ON p.post_id = l.post_id
 						WHERE l.reaction_type = 'like' AND l.user_id = ` + strconv.Itoa(id) +
 					` AND p.created_at < ? ORDER BY p.created_at DESC limit ?`
-				fmt.Println("44444444")
 				controllers.FilterPosts(query, req.Cursor, db, w, r)
 			case "filterbycategories":
 				_, _, err := utils.CategoriesChecker(db, req.Categories)

@@ -90,7 +90,7 @@ function popPost(e, id) {
 }
 function checkIfLoggedout(data) {
 
-    if (data.Message === 'user logged-out successfully') {
+    if (data.Message === 'user logged-out successfully' || data.Message === "user not logged-in") {
         localStorage.removeItem("logged")
         window.location.href = "/";
         return

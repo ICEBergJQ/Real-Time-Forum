@@ -29,6 +29,15 @@ func containsAll(s string) bool {
     return hasUpper && hasLower && hasNumber && hasSpecial
 }
 
+func printable(s string) bool {
+    for _, char := range s {
+        if char < 33 || char > 126 {
+            return false
+        }
+    }
+    return true
+}
+
 func Validation(user models.User, flag bool) error {
 	if flag {
 		if _, err := mail.ParseAddress(user.Email); err != nil {
@@ -45,8 +54,11 @@ func Validation(user models.User, flag bool) error {
 		one number, 
 		one printable ASCII special character`)
     }
-    if user.Username == "" {
+    if user.Username == ""{
         return errors.New("username cannot be empty")
+    }
+    if !printable(user.Username) {
+        return errors.New("username must be printable")
     }
     return nil
 }

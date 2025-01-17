@@ -94,13 +94,11 @@ const listPosts = (posts, fromWhere) => {
     // articles = posts
     if (fromWhere === 'fromFilter') {
         postsContainer.innerHTML = ''
-        console.log('hi')
         articles = []
     }
 
     if (posts) {
         if (fromWhere === "fromloadmore") {
-            console.log("fromloadmore")
             articles = posts
         } else {
 
@@ -144,7 +142,6 @@ function fetchPosts(from) {
             return res.json()
         })
         .then(data => {
-            console.log(data)
             spinner.style.display = 'none';
             if (data.posts && data.posts.length > 0) {
 

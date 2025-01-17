@@ -9,8 +9,6 @@ createPostForm.onsubmit = (e) => {
     const content = postContent.value.trim()
     const categories = Array.from(document.querySelectorAll('input[type=checkbox]:checked'), elem => elem.value)
 
-    console.log(categories.length)
-    console.log(categories)
 
     if (!title || !content || !categories.length) {
         displayToast('var(--red)', 'all fields are required!')
@@ -32,7 +30,6 @@ createPostForm.onsubmit = (e) => {
         })
     })
         .then(res => {
-            console.log(res)
             if (!res.ok)
                 throw error
             return res.json()

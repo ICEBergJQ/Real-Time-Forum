@@ -67,7 +67,6 @@ const hideToast = (mill) => {
 
     timer = setTimeout(() => {
         toast.style.animation = "none"
-        console.log(mill)
         toast.style.top = "-105px"
     }, mill);
 

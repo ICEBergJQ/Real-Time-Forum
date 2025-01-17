@@ -27,7 +27,6 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
         body: JSON.stringify({ username, email, password }),
     })
         .then(res => {
-            console.log('Response status:', res);
             if (!res.ok) {
                 // displayToast('var(--red)', res.statusText)
                 // throw new Error("something went wrong!")

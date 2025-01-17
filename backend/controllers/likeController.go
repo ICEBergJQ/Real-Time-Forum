@@ -54,7 +54,6 @@ func HasUserReacted(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
 		return
 	}
-	fmt.Println(reaction.Comment_id)
 	if reactionFromDB.Reaction_Type == reaction.Reaction_Type {
 		hasReacted = "remove"
 	} else if reactionFromDB.Reaction_Type != reaction.Reaction_Type {

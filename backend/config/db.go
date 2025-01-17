@@ -31,17 +31,4 @@ func CreateDatabaseTables(db *sql.DB, dbPath string) {
 	if err != nil {
 		log.Fatal("Failed to execute the schema: ", err)
 	}
-
-	// sqlBytes, err := os.ReadFile("../database/seed.sql")
-	// if err != nil {
-	// 	log.Fatalf("Failed to read seeds.sql: %v", err)
-	// }
-
-	// // Execute the SQL statements
-	// _, err = db.Exec(string(sqlBytes))
-	// if err != nil {
-	// 	log.Fatalf("Failed to execute SQL commands: %v", err)
-	// }
-
-	// fmt.Println("Database seeded successfully!")
 }

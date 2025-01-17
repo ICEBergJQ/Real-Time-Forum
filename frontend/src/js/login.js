@@ -39,11 +39,11 @@ form.addEventListener('submit', (e) => {
             localStorage.setItem("logged", 1)
             displayToast('var(--green)', "redirecting...!")
             // localStorage.setItem("username", data.user.username)
-            setTimeout(() => {
-                window.location.href = "/"
+                    setTimeout(() => {
+                        window.location.href = "/"
 
-                form.reset()
-            }, 700)
+                        form.reset()
+                    }, 700)
             spinner.style.display = 'none'
 
         })

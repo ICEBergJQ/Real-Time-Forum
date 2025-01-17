@@ -40,15 +40,18 @@ createPostForm.onsubmit = (e) => {
         )
         .then(data => {
             checkIfLoggedout(data)
-            listSinglePost(data)
+            //listSinglePost(data)
 
             displayToast('var(--info)', 'post created successfully!!!')
             popupOverlay.classList.add("hidden")
             createPostForm.reset()
             // alert("data.message)
             // fetchPosts();
-
+            setTimeout(() => {
+                form.reset()
                 window.location.href = "/"
+
+            }, 700)
         })
         .catch(() => displayToast('var(--red)', "creating post Error"));
 }

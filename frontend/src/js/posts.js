@@ -80,6 +80,15 @@ createPostBtn.onclick = () => showCreatePostModal()
 
 let cursor = formatDate(new Date())
 
+const removeDuplicates = (arr) => {
+    const map = new Map();
+    arr.forEach(item => {
+        if (!map.has(item.id)) {
+            map.set(item.id, item);
+        }
+    });
+    return [...map.values()];
+};
 const listPosts = (posts, fromWhere) => {
     spinner.style.display = 'none !important';
     // articles = posts
@@ -98,6 +107,8 @@ const listPosts = (posts, fromWhere) => {
             articles.push(...posts)
         }
     }
+   // articles = removeDuplicates(articles);
+
     !articles.length ?
         displayToast('var(--info', 'No Post Found!!')
 
@@ -149,7 +160,7 @@ function fetchPosts(from) {
             } else {
                 displayToast('var(--info)', "NO POsts!!")
             }
-         
+
             spinner.style.display = 'none !important';
 
         }).catch(err => displayToast('var(--red)', `get posts : ${err}`))

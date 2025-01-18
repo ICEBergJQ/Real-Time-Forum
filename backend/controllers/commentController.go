@@ -80,8 +80,9 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	var Cookie bool
 	logged := true
-	var comments []forum.Comment
+	var response forum.CommentResponse
 	postID := r.URL.Query().Get("id")
 	if postID == "" {
 		http.Error(w, "Missing id parameter", http.StatusBadRequest)
@@ -97,7 +98,7 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	userid, err := utils.UserIDFromToken(r, db)
 	if err != nil {
 		logged = false
-		utils.DeleteCookie(w,r)
+		Cookie = utils.DeleteCookie(w,r)
 	}
 
 	for rows.Next() {
@@ -125,11 +126,14 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		FROM Reactions
 		WHERE reaction_type = 'dislike'
 		AND comment_id = ?;`, comment.ID, db)
-		comments = append(comments, comment)
+		response.Comments = append(response.Comments, comment)
+	}
+	if Cookie {
+		response.Message = "user logged-out successfully"
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(comments); err != nil {
+	if err := json.NewEncoder(w).Encode(response); err != nil {
 		http.Error(w, "Failed to encode response: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
 	}

@@ -24,10 +24,10 @@ func CreateQuery(categories []string) string {
 }
 
 func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	logged := true 
+	logged := true
+	var cookie bool
 	rows, err := db.Query(query, cursor, 20)
 	if err != nil {
-		fmt.Println(err)
 		http.Error(w, "Internal server error: "+fmt.Sprintf("%v", err), http.StatusInternalServerError)
 		return
 	}
@@ -36,7 +36,7 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 	userid, err := utils.UserIDFromToken(r, db)
 	if err != nil {
 		logged = false
-		utils.DeleteCookie(w,r)
+		cookie = utils.DeleteCookie(w, r)
 	}
 
 	var response forum.PostResponse
@@ -80,6 +80,9 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 		response.Postsremaining = RowCounter(`SELECT COUNT(*) AS count
 		FROM Posts
 		WHERE created_at < ? ORDER BY created_at DESC;`, cursor, db)
+	}
+	if cookie {
+		response.Message = "user logged-out successfully"
 	}
 
 	w.Header().Set("Content-Type", "application/json")

@@ -98,7 +98,7 @@ func UserIDFromToken(r *http.Request, db *sql.DB) (int, error) {
 func DeleteCookie(w http.ResponseWriter, r *http.Request) bool {
 	cookie, err := r.Cookie("session_token")
 	if err != nil {
-		return false
+		return true
 	}
 	query := "DELETE FROM sessions WHERE session_id = ?"
 	_, err = config.DB.Exec(query, cookie.Value)

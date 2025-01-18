@@ -12,8 +12,8 @@ import (
 
 func HasUserReacted(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		err := fmt.Errorf("methode not allowed")
-		utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Methode Not Allowed")
+		err := fmt.Errorf("method not allowed")
+		utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Method Not Allowed")
 		return
 	}
 

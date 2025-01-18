@@ -93,3 +93,10 @@ function checkIfLoggedout(msg) {
         return
     }
 }
+function checkIfLoggedoutNoRedirect(msg) {
+
+    if (msg === 'user logged-out successfully' || msg === "user not logged-in") {
+        localStorage.removeItem("logged")
+        return
+    }
+}

@@ -132,7 +132,7 @@ function fetchPosts(from) {
             return res.json()
         })
         .then(data => {
-            //checkIfLoggedout(data.Message)
+            checkIfLoggedoutNoRedirect(data.Message)
             spinner.style.display = 'none';
             if (data.posts && data.posts.length > 0) {
 
@@ -173,7 +173,7 @@ async function getComment(postId) {
         if (!res.ok) throw new Error('something wrong with salah')
 
         const coms = await res.json()
-        checkIfLoggedout(coms.Message)
+        checkIfLoggedoutNoRedirect(coms.Message)
  
         return coms.comments || []
 

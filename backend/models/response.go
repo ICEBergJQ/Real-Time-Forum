@@ -7,4 +7,5 @@ type Response struct {
 type PostResponse struct {
 	Posts          []Post `json:"posts"`
 	Postsremaining int    `json:"postsremaing"`
+	Message        string
 }

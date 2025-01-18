@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"time"
 
 	"forum/config"
 	"forum/models"
@@ -46,7 +47,7 @@ func TokenCheck(user_id int, r *http.Request, db *sql.DB) error {
 				return err
 			}
 			return nil
-		}else{
+		} else {
 			return err
 		}
 	}
@@ -84,12 +85,34 @@ func UserIDFromToken(r *http.Request, db *sql.DB) (int, error) {
 			query := "DELETE FROM sessions WHERE session_id = ?"
 			_, err = config.DB.Exec(query, session.SessionID)
 			if err != nil {
-				return 0,err
+				return 0, err
 			}
 			return 0, fmt.Errorf("token expired")
 		} else {
-			return 0,err
+			return 0, err
 		}
 	}
 	return session.UserID, nil
+}
+
+func DeleteCookie(w http.ResponseWriter, r *http.Request) bool {
+	cookie, err := r.Cookie("session_token")
+	if err != nil {
+		return false
+	}
+	query := "DELETE FROM sessions WHERE session_id = ?"
+	_, err = config.DB.Exec(query, cookie.Value)
+	if err != nil {
+		return true
+	}
+	deleteCookie := &http.Cookie{
+		Name:     "session_token",
+		Value:    "",
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   false,
+		Expires:  time.Now().Add(config.DELETE_COOKIE_DATE),
+	}
+	http.SetCookie(w, deleteCookie)
+	return true
 }

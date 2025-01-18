@@ -36,6 +36,7 @@ func FilterPosts(query string, cursor string, db *sql.DB, w http.ResponseWriter,
 	userid, err := utils.UserIDFromToken(r, db)
 	if err != nil {
 		logged = false
+		utils.DeleteCookie(w,r)
 	}
 
 	var response forum.PostResponse

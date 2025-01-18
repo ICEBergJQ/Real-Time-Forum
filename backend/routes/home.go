@@ -7,6 +7,6 @@ import (
 )
 
 func HomeRoute() {
-	http.HandleFunc("/static/", controllers.ServeFile)
+	controllers.ServeFiles()
 	http.HandleFunc("/", controllers.Index)
 }

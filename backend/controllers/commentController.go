@@ -97,6 +97,7 @@ func GetComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	userid, err := utils.UserIDFromToken(r, db)
 	if err != nil {
 		logged = false
+		utils.DeleteCookie(w,r)
 	}
 
 	for rows.Next() {

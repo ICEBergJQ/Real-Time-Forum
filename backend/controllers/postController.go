@@ -89,6 +89,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	var Cookie bool 
 	logged := true
 	query := "SELECT post_id, user_id, category_name, title, content, created_at FROM posts WHERE created_at < ? ORDER BY created_at DESC limit ?;"
 	rows, err := db.Query(query, cursor, 20)
@@ -100,6 +101,7 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 	userid, err := utils.UserIDFromToken(r, db)
 	if err != nil {
 		logged = false
+		Cookie = utils.DeleteCookie(w,r)
 	}
 	var response forum.PostResponse
 
@@ -140,6 +142,9 @@ func GetPosts(cursor string, db *sql.DB, w http.ResponseWriter, r *http.Request)
 		response.Postsremaining = RowCounter(`SELECT COUNT(*) AS count
 		FROM Posts
 		WHERE created_at < ? ORDER BY created_at;`, cursor, db)
+	}
+	if Cookie {
+		response.Message = "user logged-out successfully"
 	}
 
 	w.Header().Set("Content-Type", "application/json")

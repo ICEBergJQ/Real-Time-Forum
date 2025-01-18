@@ -29,7 +29,9 @@ function filterPosts(filtermethod) {
         }
         return res.json()
     }).then(data => {
-        checkIfLoggedout(data.Message)
+        if (logged === '1'){
+            checkIfLoggedout(data.Message)
+        }
 
         
         document.querySelector('.dropdown-menu').style.display = "none";

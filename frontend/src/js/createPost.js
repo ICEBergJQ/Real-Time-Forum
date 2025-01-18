@@ -35,7 +35,8 @@ createPostForm.onsubmit = (e) => {
         }
         )
         .then(data => {
-            checkIfLoggedout(data)
+            checkIfLoggedout(data.Message)
+
 
             displayToast('var(--info)', 'post created successfully!!!')
             popupOverlay.classList.add("hidden")

@@ -20,11 +20,11 @@ export default function Article(post) {
       </div>
       </div>
       <div>
-      <p class="post-snippet card-content">${post.content.length > 100 ? `
+      <pre class="post-snippet card-content">${post.content.length > 100 ? `
         ${post.content.slice(0, 76)}
         <button onclick="popPost(event, '${post.id}')">Read More...
         </button>`:post.content}
-      </p>
+      </pre>
       </div>
 
       <div class="post-details">

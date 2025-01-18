@@ -85,9 +85,9 @@ function popPost(e, id) {
     const post = articles.find(p => p.id == id)
     e.target.parentElement.textContent = post.content
 }
-function checkIfLoggedout(data) {
+function checkIfLoggedout(msg) {
 
-    if (data.Message === 'user logged-out successfully' || data.Message === "user not logged-in") {
+    if (msg === 'user logged-out successfully' || msg === "user not logged-in") {
         localStorage.removeItem("logged")
         window.location.href = "/";
         return

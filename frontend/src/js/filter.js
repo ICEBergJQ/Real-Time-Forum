@@ -29,7 +29,8 @@ function filterPosts(filtermethod) {
         }
         return res.json()
     }).then(data => {
-        checkIfLoggedout(data)
+        checkIfLoggedout(data.Message)
+
         
         document.querySelector('.dropdown-menu').style.display = "none";
         //list filtered posts

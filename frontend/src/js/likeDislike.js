@@ -23,7 +23,8 @@ function interact(e, post_id, comment_id, reaction_type) {
             return res.json()
         })
         .then(data => {
-            checkIfLoggedout(data)
+            checkIfLoggedout(data.Message)
+
 
             let currentElem = e.target
             let count = currentElem.children[1].textContent

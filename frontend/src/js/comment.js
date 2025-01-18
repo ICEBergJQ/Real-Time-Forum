@@ -37,7 +37,8 @@ function postComment(e, Post_id) {
         return res.json()
 
     }).then(data => {
-        checkIfLoggedout(data)
+        checkIfLoggedout(data.Message)
+
         displayToast('var(--green)', 'comment added succesfully!!')
         listSingleComment(Post_id, e.target.parentElement.parentElement, data)
         let commentsCount = e.target.parentElement.parentElement.querySelector('h2 span')

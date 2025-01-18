@@ -132,7 +132,7 @@ function fetchPosts(from) {
             return res.json()
         })
         .then(data => {
-            checkIfLoggedout(data)
+            checkIfLoggedout(data.Message)
             spinner.style.display = 'none';
             if (data.posts && data.posts.length > 0) {
 
@@ -173,7 +173,9 @@ async function getComment(postId) {
         if (!res.ok) throw new Error('something wrong with salah')
 
         const coms = await res.json()
-        return coms || []
+        checkIfLoggedout(coms.Message)
+ 
+        return coms.comments || []
 
     } catch (err) {
         displayToast('var(--red)', `can't get comment ${err}`)

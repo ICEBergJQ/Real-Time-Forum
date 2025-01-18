@@ -6,13 +6,19 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
     const email = document.querySelector("#email").value.trim()
     const password = document.querySelector("#signUpModal #password").value.trim()
     const confirmPassword = document.querySelector("#confirm-password").value.trim()
-    
+
 
     if (username == "" || email == "" || password == "" || confirmPassword == "") {
         displayToast('var(--red)', "all fields are required!!")
         return
-    } else if (password.length < 6) {
-        displayToast('var(--red)', "Password must be at least 6 characters long !!")
+    } else if (username.length < 3 || username.length > 20) {
+        displayToast('var(--red)', "username must be between  3 and 20 chars !!")
+        return
+    } else if (email.length < 5 || email.length > 40) {
+        displayToast('var(--red)', "email must be between  3 and 40 chars !!")
+        return
+    } else if (password.length < 6 || password.length > 20) {
+        displayToast('var(--red)', "Password must be between  6 and 20 chars !!")
         return
     }
     else if (password !== confirmPassword) {

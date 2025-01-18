@@ -132,6 +132,7 @@ function fetchPosts(from) {
             return res.json()
         })
         .then(data => {
+            checkIfLoggedout(data)
             spinner.style.display = 'none';
             if (data.posts && data.posts.length > 0) {
 

@@ -127,12 +127,12 @@ function fetchPosts(from) {
     fetch(url)
         .then(res => {
             if (!res.ok) {
-                throw new Error("something went wrong with !!:!")
+                throw new Error("something went wrong, please try again")
             }
             return res.json()
         })
         .then(data => {
-            checkIfLoggedout(data.Message)
+            //checkIfLoggedout(data.Message)
             spinner.style.display = 'none';
             if (data.posts && data.posts.length > 0) {
 

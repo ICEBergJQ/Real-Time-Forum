@@ -11,7 +11,7 @@ confirmLogout.onclick = () => {
         headers: { "Content-Type": "application/json" }
     })
         .then(res => {
-            if (!res.ok) throw new Error("Failed to load logout modal")
+            if (!res.ok) throw new Error("something went wrong, please try again")
             return res.json()
         })
         .then(data => {

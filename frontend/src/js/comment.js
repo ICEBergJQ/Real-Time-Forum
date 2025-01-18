@@ -29,7 +29,7 @@ function postComment(e, Post_id) {
         body: JSON.stringify({ Post_id, Content })
     }).then(res => {
         if (!res.ok) {
-            displayToast('var(--red)', "Something went wrong!");
+            displayToast('var(--red)', "Something went wrong, please try again");
 
             throw new Error(data?.Message || "Invalid credentials");
 

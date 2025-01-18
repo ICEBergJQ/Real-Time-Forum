@@ -34,7 +34,7 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
         .then(res => {
             if (!res.ok) {
                 return res.json().then(errorData => {
-                    throw new Error(errorData.Message || 'Something went wrong');
+                    throw new Error(errorData.Message || 'Something went wrong, please try again');
                 });
             }
             return res.json()

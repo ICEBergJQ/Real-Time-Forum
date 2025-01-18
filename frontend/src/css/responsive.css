@@ -26,7 +26,10 @@
     .post-preview {
         padding: 0.5rem;
     }
-
+    .popup{
+        max-width: 550px;
+        box-sizing: border-box;
+        }
     .footer-sections {
         flex-direction: column;
         align-items: center;
@@ -39,7 +42,7 @@
     /* Adjust container padding and margin */
     .container {
         width: 100%;
-        padding: 0 10px;
+        padding: 0;
     }
 
     /* Navbar adjustments */

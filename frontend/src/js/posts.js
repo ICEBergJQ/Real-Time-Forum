@@ -79,15 +79,6 @@ createPostBtn.onclick = () => showCreatePostModal()
 
 let cursor = formatDate(new Date())
 
-const removeDuplicates = (arr) => {
-    const map = new Map();
-    arr.forEach(item => {
-        if (!map.has(item.id)) {
-            map.set(item.id, item);
-        }
-    });
-    return [...map.values()];
-};
 const listPosts = (posts, fromWhere) => {
     spinner.style.display = 'none !important';
     if (fromWhere === 'fromFilter') {
@@ -132,7 +123,9 @@ function fetchPosts(from) {
             return res.json()
         })
         .then(data => {
-            checkIfLoggedoutNoRedirect(data.Message)
+            if (logged === '1'){
+                checkIfLoggedout(data.Message)
+            }
             spinner.style.display = 'none';
             if (data.posts && data.posts.length > 0) {
 
@@ -173,7 +166,9 @@ async function getComment(postId) {
         if (!res.ok) throw new Error('something wrong with salah')
 
         const coms = await res.json()
-        checkIfLoggedoutNoRedirect(coms.Message)
+        if (logged === '1'){
+            checkIfLoggedout(coms.Message)
+        }
  
         return coms.comments || []
 

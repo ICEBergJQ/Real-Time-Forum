@@ -13,7 +13,7 @@ const mainContent = document.querySelector('.main-content')
 
 let categories = []
 let articles = []
- 
+
 
 function createElem(tag, className, content) {
     const element = document.createElement(tag)
@@ -83,20 +83,33 @@ const formatDate = (date) => {
 //load more content...
 function popPost(e, id) {
     const post = articles.find(p => p.id == id)
-    e.target.parentElement.textContent = post.content
+    const parent = e.target.parentElement;
+    parent.textContent = post.content;
+    const readless = document.createElement('button');
+    readless.textContent = '...Read Less';
+    readless.addEventListener('click', (event) => {
+        readlesss(event, id);
+    });
+    parent.appendChild(readless);
+}
+
+function readlesss(e, id) {
+    const post = articles.find(p => p.id == id)
+    const parent = e.target.parentElement;
+    const content = `${post.content.slice(0, 76)}`;
+    parent.textContent = content;
+    const readmore = document.createElement('button');
+    readmore.textContent = 'Read More...';
+    readmore.addEventListener('click', (event) => {
+        popPost(event, id);
+    });
+    parent.appendChild(readmore);
 }
 function checkIfLoggedout(msg) {
 
     if (msg === 'user logged-out successfully' || msg === "user not logged-in") {
         localStorage.removeItem("logged")
         window.location.href = "/";
-        return
-    }
-}
-function checkIfLoggedoutNoRedirect(msg) {
-
-    if (msg === 'user logged-out successfully' || msg === "user not logged-in") {
-        localStorage.removeItem("logged")
         return
     }
 }

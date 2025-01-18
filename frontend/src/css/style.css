@@ -1,7 +1,12 @@
-:root {
+ :root {
   --red: #dc143c;
   --green: #34a440;
   --info: #1296b8;
+}
+.close-icon{
+  width: 30px;
+  height: 30px;
+  pointer-events: none;
 }
 
 .toast {
@@ -21,11 +26,17 @@
   padding: 0px 9px;
   box-shadow: 0 0 2px #ddd;
 }
+/* readmore content */
+ 
 .post-snippet button {
   background-color: transparent;
   cursor: pointer;
+  color: #aaa;
+  margin: 0 3px;
 }
-
+.post-snippet button:hover {
+  color: #00aaff;
+}
 .liked {
   background-color: #00aaff !important;
 }
@@ -160,9 +171,9 @@
 .dropdown-menu {
   margin: 0;
   position: absolute;
-  top: 100%;
+  top: 164%;
   left: 43px;
-  background-color: #222;
+  background-color: #101020;
   border-radius: 10px;
   cursor: pointer;
   display: flex;
@@ -216,14 +227,14 @@
 
 /* Default state */
 .dropdown-menu label {
-  background-color: rgb(190, 190, 190);
+  background-color: rgb(223, 244, 255);
   color: black;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Checked state */
 .dropdown-menu input[type="checkbox"]:checked+label {
-  background-color: #6799b3;
+  background-color: #0af;
   color: white;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
@@ -243,7 +254,7 @@
   width: 100%;
   padding: 0.75rem;
   border-radius: 25px;
-  background-color: #434444;
+  background-color: #0056b3;
   color: #fff;
   font-size: 16px;
   font-weight: bold;
@@ -299,6 +310,8 @@ h2 {
 .post-title {
   font-size: 20px;
   margin: 0 0 10px;
+  overflow-wrap: break-word;
+
 }
 
 .post-preview {
@@ -344,6 +357,8 @@ h2 {
   margin: 10px 0;
   transition: box-shadow 0.3s;
   /* overflow: scroll; */
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .card-content:hover {

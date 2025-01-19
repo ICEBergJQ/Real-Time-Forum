@@ -23,7 +23,7 @@ func CreateComment(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 	if len(newComment.Content) == 0 || len(newComment.Content) > 300 {
-		http.Error(w, "Invalid input", http.StatusBadRequest)
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, nil, "comment cannot be empty or longer than 300 characters")
 		return
 	}
 	tx, err := db.Begin()

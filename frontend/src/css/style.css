@@ -357,10 +357,12 @@ h2 {
   margin: 10px 0;
   transition: box-shadow 0.3s;
   /* overflow: scroll; */
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
 }
+.comment-body pre, .post-snippet{
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 
+}
 .card-content:hover {
   box-shadow: 0 0px 4px #ddd;
 }

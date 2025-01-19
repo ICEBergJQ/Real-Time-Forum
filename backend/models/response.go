@@ -1,7 +1,7 @@
 package models
 
 type Response struct {
-	Message string
+	Message string `json:"Message"`
 }
 
 type PostResponse struct {

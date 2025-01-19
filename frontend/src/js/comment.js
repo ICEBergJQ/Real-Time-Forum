@@ -29,14 +29,14 @@ function postComment(e, Post_id) {
         body: JSON.stringify({ Post_id, Content })
     }).then(res => {
         if (!res.ok) {
-            displayToast('var(--red)', "Something went wrong, please try again");
 
-            throw new Error(data?.Message || "Invalid credentials");
-
+            return res.json().then(data => { 
+                throw new Error(data.Message || "Invalid input")
+            })
         }
         return res.json()
 
-    }).then(data => {
+    }).then(data => { 
         checkIfLoggedout(data.Message)
 
         displayToast('var(--green)', 'comment added succesfully!!')

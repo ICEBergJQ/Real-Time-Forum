@@ -4,9 +4,7 @@ export default function Comment(postID, { id, author,reaction, createdat, conten
             <div class="comment card-content">
               <div class="comment-header">
                 <img src="./static/src/Unknown_person.jpg" alt="User Avatar" class="user-avatar">
-                <div class="comment-details">
-                  <p><strong>${author}</strong> <span class="user-role"></span></p>
-                  <p class="comment-time time">${createdat}</p>
+                <div class="comment-details"><p><strong>${author}</strong> <span class="user-role"></span></p><p class="comment-time time">${createdat}</p>
                 </div>
               </div>
               <div class="comment-body">

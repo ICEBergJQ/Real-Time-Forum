@@ -7,10 +7,11 @@ PATH_TO_DOCKERFILE="docker/Dockerfile"
 
 # Check if the container already exists and stop/remove it
 echo -e "\n$(printf '=%.0s' {1..85})\n"
-if [ "$(docker ps -a -q -f name=$CONTAINER_NAME)" ]; then
+if [ "$(docker ps -a -f name=$CONTAINER_NAME)" ]; then
   echo "Stopping and removing existing container: $CONTAINER_NAME"
   docker stop $CONTAINER_NAME
   docker rm $CONTAINER_NAME
+  docker system prune -a
 else
   echo "No container found with the name $CONTAINER_NAME."
 fi
@@ -30,9 +31,11 @@ docker run -d -p 8080:8080 --name $CONTAINER_NAME $IMAGE_NAME
 echo -e "\n$(printf '=%.0s' {1..85})\n"
 
 # Check if the image exists and remove it
-if [ "$(docker images -q $IMAGE_NAME)" ]; then
+if [ "$(docker images $IMAGE_NAME)" ]; then
   echo "Removing Docker image: $IMAGE_NAME"
   docker rmi -f $IMAGE_NAME
+  docker system prune -a
+
 else
   echo "No image found with the name $IMAGE_NAME."
 fi

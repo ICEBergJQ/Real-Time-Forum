@@ -4,19 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Community Page</title>
-    <link rel="stylesheet" href="static/src/css/main.css" />
+    <link rel="stylesheet" href="../src/css/main.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons/css/all/all.css">
     <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.oaistatic.com/assets/favicon-dark-32x32-gt5kfzyp.webp" media="(prefers-color-scheme: dark)">
-    <link rel="stylesheet" href="static/src/css/login.css" />
-    <link rel="stylesheet" href="static/src/css/post.css" />
-    <link rel="stylesheet" href="static/src/css/register.css" />
-    <link rel="stylesheet" href="static/src/css/signup.css" />
-    <link rel="stylesheet" href="static/src/css/style.css" />
-    <link rel="stylesheet" href="static/src/css/responsive.css" />
-    <link rel="stylesheet" href="static/src/css/logout.css" />
+    <link rel="stylesheet" href="../src/css/login.css" />
+    <link rel="stylesheet" href="../src/css/post.css" />
+    <link rel="stylesheet" href="../src/css/register.css" />
+    <link rel="stylesheet" href="../src/css/signup.css" />
+    <link rel="stylesheet" href="../src/css/style.css" />
+    <link rel="stylesheet" href="../src/css/responsive.css" />
+    <link rel="stylesheet" href="../src/css/logout.css" />
   </head>
 
   <body>
@@ -34,13 +35,11 @@
           <ul class="nav-links">
             <li>
               <a href="/">
-              <i class="fa fa-home" style="font-size: 18px"></i> 
-              Home</a>
-            
+              <i class="fa fa-home" style="font-size: 18px"></i> Home</a>
             </li>
             <li class="dropdown">
-              <a href="/categories">Categories</a>
-              <ul class="dropdown-menu">
+              <a href="/categories">Chat</a>
+              <!-- <ul class="dropdown-menu">
                 <li>
                   <input
                     type="checkbox"
@@ -87,13 +86,14 @@
                   <label for="ed">Education</label>
                 </li>
                 <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
-              </ul>
+              </ul> -->
             </li>
-            <li onclick="filterPosts('getcreatedposts')">created posts</li>
-            <li onclick="filterPosts('getlikedposts')">liked posts</li>
+            <li onclick="filterPosts('getcreatedposts')">Created posts</li>
+            <li onclick="filterPosts('getlikedposts')">Liked posts</li>
           </ul>
         </nav>
-
+        <div class="menu"><i class="fi fi-br-menu-burger"></i></div>
+        
         <div class="nav-actions">
           <button class="btn login">Login</button>
           <button class="btn start-topic">Sign Up</button>
@@ -157,20 +157,20 @@
             </ul>
           </div>
         </div>
-        <p>&copy; 2024 My Forum. All rights reserved.</p>
+        <p>&copy; 2025 Phorum. All rights reserved.</p>
       </div>
     </footer>
 
     <!-- scriptsss -->
-    <script src="static/src/js/main.js"></script>
-    <script type="module" src="static/src/js/posts.js"></script>
-    <script src="static/src/js/likeDislike.js" defer></script>
-    <script src="static/src/js/register.js" defer></script>
-    <script src="static/src/js/login.js" defer></script>
-    <script src="static/src/js/createPost.js" defer></script>
-    <script src="static/src/js/logout.js" defer></script>
-    <script src="static/src/js/comment.js"></script>
-    <script src="static/src/js/filter.js"></script>
+    <script src="../src/js/main.js"></script>
+    <script type="module" src="../src/js/posts.js"></script>
+    <script src="../src/js/likeDislike.js" defer></script>
+    <script src="../src/js/register.js" defer></script>
+    <script src="../src/js/login.js" defer></script>
+    <script src="../src/js/createPost.js" defer></script>
+    <script src="../src/js/logout.js" defer></script>
+    <script src="../src/js/comment.js"></script>
+    <script src="../src/js/filter.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const commentBtns = document.querySelectorAll(".comment-btn");

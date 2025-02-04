@@ -115,6 +115,9 @@
 }
 
 .nav-links {
+  li {
+    margin-inline: 10px;
+  }
   display: flex;
   gap: 1rem;
   margin: 0;

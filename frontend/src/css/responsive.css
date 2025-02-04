@@ -1,6 +1,11 @@
 /* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (max-width: 768px) {
-
+.menu {
+    display: none;
+}
+@media only screen and (max-width: 800px) {
+    .menu {
+        display: block;
+    }
     .main-content {
         padding: 2rem 1rem;
     }
@@ -8,6 +13,9 @@
 
 /* Small Devices (Mobile) */
 @media screen and (max-width: 600px) {
+    .menu {
+        display: block;
+    }
     .container {
         width: 100%;
         padding: 0 1rem;
@@ -38,6 +46,9 @@
 }
 
 @media (max-width: 480px) {
+    .menu {
+        display: block;
+    }
 
     /* Adjust container padding and margin */
     .container {

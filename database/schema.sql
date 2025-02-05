@@ -58,6 +58,14 @@ CREATE TABLE IF NOT EXISTS sessions (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS chat (
+    sender INTEGER PRIMARY KEY AUTOINCREMENT, 
+    receiver INTEGER PRIMARY KEY AUTOINCREMENT, 
+    message TEXT NOT NULL,
+    date TEXT NOT NULL,
+    
+);
+
 INSERT OR IGNORE INTO categories (category_name) VALUES
     ('Technology'),
     ('Sport'),

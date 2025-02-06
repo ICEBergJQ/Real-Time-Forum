@@ -1,15 +1,85 @@
 .menu {
     display: none;
-    i {
-        font-size: 30px;
-    }
+    position: absolute;
+    right: 10px;
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
+#arrow {
+    transition: transform 0.3s ease-in-out;
+}
+
+#arrow.active {
+    transform: rotate(90deg);
+}
+
+/*jdid*/
+
+.hidden-menu {
+    position: absolute;
+    top: 70px; /* Places menu below navbar */
+    left: 50%;
+    /* transform: translateX(-50%); */
+    width: 90%;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Show when active */
+.hidden-menu.active {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(10px);
+}
+
+/* Menu Items */
+.hidden-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.hidden-menu ul li {
+    padding: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.hidden-menu ul li:last-child {
+    border-bottom: none;
+}
+
+.hidden-menu ul li a {
+    text-decoration: none;
+    color: white;
+    display: block;
+}
+
+/*...*/
+.menu.active {
+    transform: rotate(90deg);
+}
+.navbar,.container{
+        padding-inline: 0;
+        margin-inline: 0;
+    
 }
 @media only screen and (max-width: 893px) {
     .nav-links,.nav-actions{
         display: none;
     }
+    .hidden-menu {
+        width: 95%;
+    }
     .menu {
         display: block;
+        a {
+            font-size: 30px;
+        }
     }
     .main-content {
         padding: 2rem 1rem;
@@ -23,17 +93,6 @@
     }
     .container {
         width: 100%;
-        padding: 0 1rem;
-    }
-
-    .navbar .container {
-        /* flex-direction: column; */
-        align-items: center;
-    }
-
-    .nav-links {
-        /* flex-direction: column; */
-        gap: 0.5rem;
     }
 
     .post-preview {
@@ -50,9 +109,18 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 400px) {
+    h1 {
+        font-size: 25px;
+    }
+    h2 {
+        font-size: 20px;
+    }
     .menu {
         display: block;
+        a {
+            font-size: 25px;
+        }
     }
 
     /* Adjust container padding and margin */
@@ -60,17 +128,10 @@
         width: 100%;
         padding: 0;
     }
+    .hidden-menu{
+        top: 55px;
+    }
 
-
-    /* .navbar .container .dropdown-menu {
-        left: 0px;
-        top: 36%;
-    } */
-
-    /* .nav-links {
-        flex-direction: column;
-        gap: 0.5rem;
-    } */
 
     /* Main content */
     .main-content {
@@ -159,8 +220,4 @@
     .sign-up-text {
         font-size: 13px;
     }
-
-    /* .nav-links {
-        margin-left: 5%;
-    } */
 }

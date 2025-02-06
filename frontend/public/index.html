@@ -11,6 +11,7 @@
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons/css/all/all.css">
     <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.oaistatic.com/assets/favicon-dark-32x32-gt5kfzyp.webp" media="(prefers-color-scheme: dark)">
+    <!-- change to static/ later -->
     <link rel="stylesheet" href="../src/css/login.css" />
     <link rel="stylesheet" href="../src/css/post.css" />
     <link rel="stylesheet" href="../src/css/register.css" />
@@ -28,7 +29,7 @@
       <div class="container">
         <div class="logo">
           <h1>
-            <a href="/">Phorum</a>
+            <a href="/" id="logo">Phorum</a>
           </h1>
         </div>
         <nav class="navbar">
@@ -37,71 +38,90 @@
               <a href="/">
               <i class="fa fa-home" style="font-size: 18px"></i> Home</a>
             </li>
-            <li class="dropdown">
-              <a href="/categories"><i class="fi fi-rs-comments"></i> Chat</a>
-              <!-- <ul class="dropdown-menu">
-                <li>
-                  <input
-                    type="checkbox"
-                    id="tech"
-                    name="categories"
-                    value="Technology"
-                  />
-                  <label for="tech">Technology</label>
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    id="sp"
-                    name="categories"
-                    value="Sport"
-                  />
-                  <label for="sp">Sport</label>
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    id="he"
-                    name="categories"
-                    value="Health"
-                  />
-                  <label for="he">Health</label>
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    id="li"
-                    name="categories"
-                    value="Lifestyle"
-                  />
-                  <label for="li">Lifestyle</label>
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    id="ed"
-                    name="categories"
-                    value="Education"
-                  />
-                  <label for="ed">Education</label>
-                </li>
-                <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
-              </ul> -->
+            <!-- <li class="dropdown">
+              <a href="/chat"><i class="fi fi-rs-comments"></i> Chat</a>
+            </li> -->
+            <li onclick="filterPosts('getcreatedposts')">
+              <i class="fa fa-list-alt" aria-hidden="true"></i> Created posts
             </li>
-            <li onclick="filterPosts('getcreatedposts')"><i class="fi fi-sr-ballot"></i> Created posts</li>
-            <li onclick="filterPosts('getlikedposts')"><i class="fi fi-rs-heart"></i> Liked posts</li>
+            <li onclick="filterPosts('getlikedposts')">
+              <i class="fa fa-heart-o" aria-hidden="true"></i> Liked posts
+            </li>
           </ul>
         </nav>
-        <div class="menu"><i class="fi fi-br-menu-burger"></i></div>
+        <div class="menu" onclick="toggleMenu()"><a><i class="fa fa-bars" aria-hidden="true" ></i></div></a>
         
         <div class="nav-actions">
-          <button class="btn login"><i class="fi fi-br-enter"></i> Login</button>
-          <button class="btn start-topic"><i class="fi fi-rr-edit"></i> Sign Up</button>
-          <button class="btn logout"><i class="fi fi-br-exit"></i> Logout</button>
+          <button class="btn login"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</button>
+          <button class="btn start-topic"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sign Up</button>
+          <button class="btn logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</button>
           <button class="btn createPostBtn"><i class="fi fi-sr-apps-add"></i> Create Post</button>
         </div>
       </div>
+      <div class="hidden-menu" id="hiddenMenu">
+        <ul>
+          <li class="dropdown">
+            <a href="/categories" onclick="toggleCategories()"><i class="fa fa-tags" aria-hidden="true"></i>
+              Categories <i class="fa fa-angle-right" aria-hidden="true" id="arrow"></i></a>
+            <ul class="sub-menu">
+              <li>
+                <input
+                  type="checkbox"
+                  id="tech"
+                  name="categories"
+                  value="Technology"
+                />
+                <label for="tech"><i class="fa fa-tag" aria-hidden="true"></i> Technology</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="sp"
+                  name="categories"
+                  value="Sport"
+                />
+                <label for="sp"><i class="fa fa-tag" aria-hidden="true"></i> Sport</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="he"
+                  name="categories"
+                  value="Health"
+                />
+                <label for="he"><i class="fa fa-tag" aria-hidden="true"></i> Health</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="li"
+                  name="categories"
+                  value="Lifestyle"
+                />
+                <label for="li"><i class="fa fa-tag" aria-hidden="true"></i> Lifestyle</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="ed"
+                  name="categories"
+                  value="Education"
+                />
+                <label for="ed"><i class="fa fa-tag" aria-hidden="true"></i> Education</label>
+              </li>
+              <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
+            </ul>
+          </li>
+          <li onclick="filterPosts('getcreatedposts')"><i class="fa fa-list-alt" aria-hidden="true"></i> Created posts</li>
+          <li onclick="filterPosts('getlikedposts')"><i class="fa fa-heart-o" aria-hidden="true"></i> Liked posts</li>
+            <li><button class="btn login"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</button></li>
+            <li><button class="btn start-topic"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sign Up</button></li>
+            <li><button class="btn logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</button></li>
+
+        </ul>
+      </div>
     </header>
+
 
     <!-- for login -->
     <div id="dynamicContent"></div>
@@ -135,7 +155,7 @@
       <div class="container">
         <div class="footer-sections">
           <div>
-            <h4>Forum</h4>
+            <h4>Phorum</h4>
             <ul>
               <li><a class="foo">Categories</a></li>
               <li><a class="foo">Popular Posts</a></li>
@@ -212,6 +232,23 @@
         });
       });
 
+      function toggleMenu() {
+        let menu = document.getElementById("hiddenMenu");
+        let menuButton = document.querySelector(".menu");
+
+        // Toggle visibility
+        menu.classList.toggle("active");
+
+        // Rotate menu button
+        menuButton.classList.toggle("active");
+      }
+
+      function toggleCategories() {
+        let arrow = document.getElementById("arrow");
+        arrow.classList.toggle("active");
+      }
+
+
       // Add click event listener to the window to hide dropdowns
       window.addEventListener("click", function (e) {
         // Check if the clicked element is not inside a dropdown
@@ -219,6 +256,16 @@
           document.querySelectorAll(".dropdown > ul").forEach((menu) => {
             menu.style.display = "none";
           });
+        }
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth > 893) {
+          let menu = document.getElementById("hiddenMenu");
+          let menuButton = document.querySelector(".menu");
+
+          menu.classList.remove("active");
+          menuButton.classList.remove("active");
         }
       });
     </script>

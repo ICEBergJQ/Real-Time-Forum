@@ -290,6 +290,9 @@
 /* main */
 
 .main-content {
+  /* hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh */
+  display: flex;
+  justify-content: center;
   padding: 2rem;
   flex-grow: 1;
 }

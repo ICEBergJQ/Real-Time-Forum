@@ -135,8 +135,61 @@
     <!-- for logout -->
     <div id="logoutdynamic"></div>
 
+    
     <!-- Main Content -->
     <main class="main-content">
+      <section class="filter-section">
+        <div class="filter-div">
+          <ul class="filter-menu">
+            <li>
+              <input
+                type="checkbox"
+                id="tech"
+                name="categories"
+                value="Technology"
+              />
+              <label for="tech"><i class="fa fa-tag" aria-hidden="true"></i> Technology</label>
+            </li>
+            <li>
+              <input
+                type="checkbox"
+                id="sp"
+                name="categories"
+                value="Sport"
+              />
+              <label for="sp"><i class="fa fa-tag" aria-hidden="true"></i> Sport</label>
+            </li>
+            <li>
+              <input
+                type="checkbox"
+                id="he"
+                name="categories"
+                value="Health"
+              />
+              <label for="he"><i class="fa fa-tag" aria-hidden="true"></i> Health</label>
+            </li>
+            <li>
+              <input
+                type="checkbox"
+                id="li"
+                name="categories"
+                value="Lifestyle"
+              />
+              <label for="li"><i class="fa fa-tag" aria-hidden="true"></i> Lifestyle</label>
+            </li>
+            <li>
+              <input
+                type="checkbox"
+                id="ed"
+                name="categories"
+                value="Education"
+              />
+              <label for="ed"><i class="fa fa-tag" aria-hidden="true"></i> Education</label>
+            </li>
+          </ul>
+            <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
+        </div>
+      </section>
       <section class="feed">
         <h2 >POSTS</h2>
         <div class="post-list">
@@ -144,7 +197,15 @@
         </div>
       </section>
       <button class="load-more">Load More</button>
+      <section class="chat-section">
+        <div class="users">
+          <div id="user1">leehwak</div>
+        </div>
+      </section>
     </main>
+
+
+
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
       rel="stylesheet"

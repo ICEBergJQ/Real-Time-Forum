@@ -32,3 +32,71 @@ button{
 .hidden {
     display: none;
   }
+
+
+  /* test test test test */
+
+  .filter-section, .chat-section {
+    width: 250px; /* Adjust width as needed */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Filter Section Styling */
+.filter-div {
+    background: #f8f8f8;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Filter Menu */
+.filter-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.filter-menu li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Button Styling */
+.sbtf {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.sbtf:hover {
+    background: #0056b3;
+}
+
+/* Chat Section Styling */
+.chat-section {
+    background: #f1f1f1;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* User List */
+.users {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#user1 {
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+}

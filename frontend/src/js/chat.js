@@ -2,6 +2,7 @@ import chatComponent from "./chat.js";
 
 const socket = new WebSocket("ws://localhost:8080/ws");
 socket.addEventListener("message", (event) => {
+    socket.send(event.data)
     console.log("Message from server:", event.data);
 });
 

@@ -10,7 +10,11 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var upgrader = websocket.Upgrader{}
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
 
 type Data struct {
 	Sender   int    `json:"sender"`
@@ -27,7 +31,7 @@ func ChatHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		fmt.Println("err : ", err)
 		return
 	}
-	// userid add it to the map  Messages[user_id] = conn 
+	// userid add it to the map  Messages[user_id] = conn
 	id, err := utils.UserIDFromToken(r, db)
 	Messages[id] = conn
 	defer func() {

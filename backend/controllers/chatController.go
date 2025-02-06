@@ -42,7 +42,6 @@ func ChatHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		// add data the databse
-		
 		Messages[msg.Receiver].WriteJSON(msg)
 		conn.WriteJSON(msg)
 	}

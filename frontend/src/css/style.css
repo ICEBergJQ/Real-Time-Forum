@@ -291,9 +291,9 @@
 
 .main-content {
   /* hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh */
+  padding: 0;
   display: flex;
   justify-content: center;
-  padding: 2rem;
   flex-grow: 1;
 }
 
@@ -471,7 +471,7 @@ article i {
 .footer {
   background: #20202e;
   color: #fff;
-  padding: 2rem 0rem 2rem 0;
+  padding: 2rem 1rem 2rem 1rem;
   margin-top: 8rem;
 }
 

@@ -69,6 +69,9 @@
     
 }
 @media only screen and (max-width: 893px) {
+    .filter-section, .chat-section {
+        display: none;
+    }
     .nav-links,.nav-actions{
         display: none;
     }
@@ -81,9 +84,9 @@
             font-size: 30px;
         }
     }
-    .main-content {
+    /* .main-content {
         padding: 2rem 1rem;
-    }
+    } */
 }
 
 /* Small Devices (Mobile) */
@@ -134,9 +137,9 @@
 
 
     /* Main content */
-    .main-content {
+    /* .main-content {
         padding: 1rem;
-    }
+    } */
 
     /* Feed adjustments */
     .feed {

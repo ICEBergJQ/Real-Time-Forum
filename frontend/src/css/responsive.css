@@ -60,16 +60,20 @@
 }
 
 /*...*/
-.menu.active {
-    transform: rotate(90deg);
-}
+.menu.active
 .navbar,.container{
         padding-inline: 0;
         margin-inline: 0;
     
 }
+.chat-section.hidden {
+    display: none;
+}
 @media only screen and (max-width: 893px) {
-    .filter-section, .chat-section {
+    .chat-button {
+        display: flex;
+    }
+    .filter-section {
         display: none;
     }
     .nav-links,.nav-actions{
@@ -84,9 +88,9 @@
             font-size: 30px;
         }
     }
-    /* .main-content {
-        padding: 2rem 1rem;
-    } */
+    .main-content {
+        justify-content: center;
+    }
 }
 
 /* Small Devices (Mobile) */
@@ -137,11 +141,10 @@
 
 
     /* Main content */
-    /* .main-content {
-        padding: 1rem;
-    } */
+    .main-content {
+        justify-content: center;
+    }
 
-    /* Feed adjustments */
     .feed {
         margin: 0;
     }

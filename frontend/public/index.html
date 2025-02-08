@@ -123,20 +123,15 @@
     </header>
 
 
-    <!-- for login -->
     <div id="dynamicContent"></div>
 
-    <!-- for register -->
     <div id="anotherDynamic"></div>
 
-    <!-- for creating post -->
     <div id="dynaicPost"></div>
 
-    <!-- for logout -->
     <div id="logoutdynamic"></div>
 
-    
-    <!-- Main Content -->
+
     <main class="main-content">
       <section class="filter-section">
         <div class="filter-div">
@@ -194,16 +189,30 @@
         <div class="post-list">
           <div id="spinner"></div>
         </div>
+        <button class="load-more">Load More</button>
       </section>
-      <button class="load-more">Load More</button>
-      <section class="chat-section">
-        <div class="users">
-          <div id="user1">leehwak</div>
+      <section class="chat-section" id="chat">
+        <div class="chat-users">
+          <div class="chat-user">leehwak</div>
+          <div class="chat-user">leehwaknigga</div>
+        </div>
+
+        <div id="chat-box" class="chat-box">
+          <div class="chat-header">
+            <span id="chat-username">Chat</span>
+            <button class="close-chat" onclick="closeChat()">✖</button>
+          </div>
+          <div class="chat-messages"></div>
+          <input type="text" class="chat-input" placeholder="Type a message..." />
         </div>
       </section>
     </main>
 
+    <button id="chat-toggle" class="chat-button" onclick="toggleChat()">
+      <i class="fa fa-comments-o" aria-hidden="true"></i>
+    </button>
 
+    
 
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
@@ -211,7 +220,7 @@
     />
 
     <!-- Footer -->
-    <footer class="footer">
+    <!-- <footer class="footer">
       <div class="container">
         <div class="footer-sections">
           <div>
@@ -239,7 +248,7 @@
         </div>
         <p>&copy; 2025 Phorum. All rights reserved.</p>
       </div>
-    </footer>
+    </footer> -->
 
     <!-- scriptsss -->
     <script src="static/src/js/main.js"></script>
@@ -270,6 +279,12 @@
       });
     </script>
     <script>
+      const usersContainer = document.querySelector(".chat-users");
+      const chatBox = document.getElementById("chat-box");
+      const chatUsername = document.getElementById("chat-username");
+      const closeChatBtn = document.querySelector(".close-chat");
+      const chatSection = document.getElementById("chat")
+      
       document.querySelectorAll(".dropdown > ul").forEach((menu) => {
         menu.style.display = "none";
       });
@@ -319,13 +334,56 @@
         }
       });
 
+    document.addEventListener("DOMContentLoaded", () => {
+      // Event delegation to handle dynamic users
+      usersContainer.addEventListener("click", (event) => {
+        if (event.target.classList.contains("chat-user")) {
+          openChat(event.target);
+        }
+    });
+
+    function openChat(user) {
+      chatUsername.textContent = user.textContent;
+      chatBox.style.display = "flex";
+    }
+
+    function closeChat() {
+      chatBox.style.display = "none";
+    }
+
+  closeChatBtn.addEventListener("click", closeChat);
+});
+      function closeChat() {
+        chatBox.style.display = "none";
+      }
+
+      function toggleChat() {
+        chatSection.classList.toggle("hidden");
+        document.querySelectorAll(".feed").forEach((e) => {
+          e.classList.toggle("hidden");
+        });
+        closeChat();
+      }
+      
+
       window.addEventListener("resize", function () {
         if (window.innerWidth > 893) {
           let menu = document.getElementById("hiddenMenu");
           let menuButton = document.querySelector(".menu");
+          
+          document.querySelectorAll(".feed").forEach((e) => {
+            e.classList.remove("hidden");
+          });
+
+          chatSection.classList.remove("hidden");
 
           menu.classList.remove("active");
           menuButton.classList.remove("active");
+        } else {
+          document.querySelectorAll(".feed").forEach((e) => {
+            e.classList.remove("hidden");
+          });
+          chatSection.classList.add("hidden");
         }
       });
     </script>

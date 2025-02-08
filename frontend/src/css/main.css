@@ -9,7 +9,6 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    /* for dev  */
     background-color: var(--dark);
     color: #333;
 }
@@ -87,13 +86,14 @@ button{
 }
 
 /* User List */
-.users {
+.chat-users {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-#user1 {
+.chat-user {
+    cursor: pointer;
     padding: 10px;
     background: #007bff;
     color: white;

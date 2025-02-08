@@ -8,6 +8,7 @@ const dynamicContent = document.querySelector("#dynamicContent")
 const anotherDynamic = document.querySelector("#anotherDynamic")
 const dynaicPost = document.querySelector("#dynaicPost")
 const logoutDynamic = document.querySelector("#logoutdynamic");
+const loadMore = document.querySelector(".load-more")
 
 anotherDynamic.innerHTML = registerForm()
 dynamicContent.innerHTML = loginForm()

@@ -1,11 +1,12 @@
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS users (
-    -- add age & gender
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
+    age INTEGER NOT NULL,
+    gender TEXT NOT NULL CHECK (gender IN ('male', 'female')),
     created_at TEXT DEFAULT (datetime('now', '+1 hour')) NOT NULL
 );
 
@@ -56,8 +57,8 @@ CREATE TABLE IF NOT EXISTS sessions (
 
 CREATE TABLE IF NOT EXISTS chat_messages (
     message TEXT NOT NULL,
-    sender_id INTEGER NOT NULL,
-    receiver_id INTEGER NOT NULL,
+    sender TEXT NOT NULL,
+    receiver TEXT NOT NULL,
     sent_at TEXT DEFAULT (datetime('now', '+1 hour')) NOT NULL,
     FOREIGN KEY (sender_id) REFERENCES users (user_id),
     FOREIGN KEY (receiver_id) REFERENCES users (user_id)

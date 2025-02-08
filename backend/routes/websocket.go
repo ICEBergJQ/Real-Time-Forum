@@ -3,16 +3,13 @@ package routes
 import (
 	"database/sql"
 	"net/http"
-
 	"forum/controllers"
 )
 
-func websocket(db *sql.DB) {
+func WebsocketRoutes(db *sql.DB) {
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPost {
-			controllers.ChatHandler(db, w, r)
-		} else {
-			http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-		}
+		controllers.ChatHandler(db, w, r)
 	})
+	// route for users and states
 }
+

@@ -60,8 +60,8 @@ CREATE TABLE IF NOT EXISTS chat_messages (
     sender TEXT NOT NULL,
     receiver TEXT NOT NULL,
     sent_at TEXT DEFAULT (datetime('now', '+1 hour')) NOT NULL,
-    FOREIGN KEY (sender_id) REFERENCES users (user_id),
-    FOREIGN KEY (receiver_id) REFERENCES users (user_id)
+    FOREIGN KEY (sender) REFERENCES users (user_id),
+    FOREIGN KEY (receiver) REFERENCES users (user_id)
 );
 
 

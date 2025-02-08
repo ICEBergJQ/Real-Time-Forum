@@ -82,6 +82,9 @@
     .hidden-menu {
         width: 95%;
     }
+    .chat-section {
+        width: 400px;
+    }
     .menu {
         display: block;
         a {

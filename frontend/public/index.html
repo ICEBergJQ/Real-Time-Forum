@@ -192,10 +192,34 @@
         <button class="load-more">Load More</button>
       </section>
       <section class="chat-section" id="chat">
+        <input type="text" id="userSearch" placeholder="Search users..." class="search-bar" />
         <div class="chat-users">
           <div class="chat-user">leehwak</div>
           <div class="chat-user">leehwaknigga</div>
+          <div class="chat-user">user1</div>
+          <div class="chat-user">user2</div>
+          <div class="chat-user">user3</div>
+          <div class="chat-user">user4</div>
+          <div class="chat-user">user5</div>
+          <div class="chat-user">user6</div>
+          <div class="chat-user">user7</div>
+          <div class="chat-user">user8</div>
+          <div class="chat-user">user9</div>
+          <div class="chat-user">user10</div>
+          <div class="chat-user">user11</div>
+          <div class="chat-user">user12</div>
+          <div class="chat-user">user13</div>
+          <div class="chat-user">user14</div>
+          <div class="chat-user">user15</div>
+          <div class="chat-user">user16</div>
+          <div class="chat-user">user17</div>
+          <div class="chat-user">user18</div>
+          <div class="chat-user">user19</div>
+          <div class="chat-user">user20</div>
+          <div class="chat-user">user21</div>
+          <div class="chat-user">user22</div>
         </div>
+        
 
         <div id="chat-box" class="chat-box">
           <div class="chat-header">
@@ -386,6 +410,13 @@
           chatSection.classList.add("hidden");
         }
       });
+
+      if (window.innerWidth < 893) {
+        document.querySelectorAll(".feed").forEach((e) => {
+            e.classList.remove("hidden");
+          });
+          chatSection.classList.add("hidden");
+      }
     </script>
     <link
       rel="stylesheet"

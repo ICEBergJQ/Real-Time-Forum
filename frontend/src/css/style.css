@@ -535,6 +535,7 @@ footer .container>p {
 /* fffff */
 
 
+
 .chat-section {
   position: relative; /* Ensures child elements like chat-box are positioned correctly */
 }
@@ -555,6 +556,7 @@ footer .container>p {
 }
 
 .chat-header {
+  max-width: 100%;
   margin: 5px;
   display: flex;
   justify-content: space-between;
@@ -574,7 +576,7 @@ footer .container>p {
 }
 
 .chat-input {
-  width: 100%;
+  max-width: 100%;
   padding: 10px;
   border: none;
   outline: none;
@@ -588,4 +590,17 @@ footer .container>p {
   font-size: 18px;
   color: white;
   cursor: pointer;
+}
+
+.chat-users {
+  max-height: 100%;
+  overflow: auto;
+}
+.search-bar {
+  max-width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
 }

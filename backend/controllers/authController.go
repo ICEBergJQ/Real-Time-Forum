@@ -123,6 +123,9 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
 		return
 	}
+	// Add user to online users map
+	AddOnlineUser(userFromDb.ID, config.DB)
+
 	cookie := &http.Cookie{
 		Name:     "session_token",
 		Value:    token,
@@ -135,8 +138,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	utils.CreateResponseAndLogger(w, http.StatusOK, nil, "user logged-in successfully")
 }
 
-// LogoutUser handles user logout
-
+// Logout handles user logout
 func Logout(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		err := errors.New("method not allowed")
@@ -149,6 +151,14 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "user not logged-in")
 		return
 	}
+
+	// Get user ID before deleting session
+	var userID int
+	err = config.DB.QueryRow("SELECT user_id FROM sessions WHERE session_id = ?", cookie.Value).Scan(&userID)
+	if err == nil {
+		RemoveOnlineUser(userID)
+	}
+
 	query := "DELETE FROM sessions WHERE session_id = ?"
 	_, err = config.DB.Exec(query, cookie.Value)
 	if err != nil {

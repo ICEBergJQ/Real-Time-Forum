@@ -24,4 +24,10 @@ func WebsocketRoutes(db *sql.DB) {
 		handler := controllers.GetUsersHandler(db)
 		handler(w, r)
 	})
+
+	// for online users
+	http.HandleFunc("/users/online", func(w http.ResponseWriter, r *http.Request) {
+		handler := controllers.GetOnlineUsersHandler(db)
+		handler(w, r)
+	})
 }

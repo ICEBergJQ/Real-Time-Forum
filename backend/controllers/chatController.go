@@ -26,7 +26,7 @@ type Message struct {
 }
 
 type ChatHistoryRequest struct {
-	OtherUserID int `json:"other_user_id"`
+	OtherUserID int `json:"receiver"`
 }
 
 type User struct {

@@ -16,11 +16,6 @@ var (
 	mutex       sync.RWMutex
 )
 
-// type User struct {
-// 	UserID   int    `json:"user_id"`
-// 	Username string `json:"username"`
-// }
-
 // AddOnlineUser adds a user to the online users map
 func AddOnlineUser(userID int, db *sql.DB) error {
 	var username string

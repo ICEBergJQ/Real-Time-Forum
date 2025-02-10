@@ -18,6 +18,8 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+var connection map[int]*websocket.Conn
+
 type Message struct {
 	Sender   int    `json:"sender"`
 	Receiver int    `json:"receiver"`
@@ -41,7 +43,7 @@ func GetAllUsers(db *sql.DB, currentUserID int) ([]User, error) {
 		WHERE user_id != ? 
 		ORDER BY username ASC
 	`
-	
+
 	rows, err := db.Query(query, currentUserID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch users: %v", err)
@@ -111,9 +113,9 @@ func GetChatHistory(db *sql.DB, userID1, userID2 int) ([]Message, error) {
 		WHERE (sender_id = ? AND receiver_id = ?) 
 		   OR (sender_id = ? AND receiver_id = ?)
 		ORDER BY sent_at DESC 
-		LIMIT 50
+		LIMIT 10 OFFSET 10
 	`
-
+	// add offset to the query
 	rows, err := db.Query(query, userID1, userID2, userID2, userID1)
 	if err != nil {
 		return nil, err
@@ -141,6 +143,7 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 			fmt.Println("Error upgrading WebSocket:", err)
 			return
 		}
+		connection = make(map[int]*websocket.Conn)
 		defer conn.Close()
 
 		userID, err := utils.UserIDFromToken(r, db)
@@ -166,7 +169,11 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 				fmt.Printf("Error storing message: %v\n", err)
 				continue
 			}
-
+			// add user to connection
+			// mapp[msg.Receiver].conn.WriteJSON(msg)
+			if err := connection[msg.Receiver].WriteJSON(msg); err != nil {
+				fmt.Printf("Error sending confirmation: %v\n", err)
+			}
 			if err := conn.WriteJSON(msg); err != nil {
 				fmt.Printf("Error sending confirmation: %v\n", err)
 			}

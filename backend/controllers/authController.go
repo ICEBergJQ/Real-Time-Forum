@@ -15,7 +15,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// RegisterUser handles user registration
+// RegisterUser handles user registration 
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		err := errors.New("method not allowed")
@@ -32,6 +32,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	user.Username = html.EscapeString(user.Username)
 	user.Email = html.EscapeString(user.Email)
 	user.Password = html.EscapeString(user.Password)
+	user.Gender = html.EscapeString(user.Gender)
 
 	if err := utils.Validation(user, true); err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
@@ -43,8 +44,8 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query := "INSERT INTO users (username, email, password) VALUES (?, ?, ?)"
-	_, err := config.DB.Exec(query, user.Username, user.Email, user.Password)
+	query := "INSERT INTO users (username, email, password, age, gender) VALUES (?, ?, ?, ?, ?)"
+	_, err := config.DB.Exec(query, user.Username, user.Email, user.Password, user.Age, user.Gender)
 	if err != nil {
 		if err.Error() == "UNIQUE constraint failed: users.username" {
 			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Username already exists")

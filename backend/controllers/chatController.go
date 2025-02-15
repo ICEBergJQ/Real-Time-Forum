@@ -18,7 +18,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-var connection map[int]*websocket.Conn
+var connection map[int][]*websocket.Conn
 
 type Message struct {
 	Sender   int    `json:"sender"`
@@ -107,6 +107,8 @@ func StoreMessage(db *sql.DB, msg Message) error {
 }
 
 func GetChatHistory(db *sql.DB, userID1, userID2 int) ([]Message, error) {
+	// add offset to the query
+	// OFFSET := from front-end
 	query := `
 		SELECT sender_id, receiver_id, message, sent_at 
 		FROM chat_messages 
@@ -115,7 +117,6 @@ func GetChatHistory(db *sql.DB, userID1, userID2 int) ([]Message, error) {
 		ORDER BY sent_at DESC 
 		LIMIT 10 OFFSET 10
 	`
-	// add offset to the query
 	rows, err := db.Query(query, userID1, userID2, userID2, userID1)
 	if err != nil {
 		return nil, err
@@ -143,15 +144,17 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 			fmt.Println("Error upgrading WebSocket:", err)
 			return
 		}
-		connection = make(map[int]*websocket.Conn)
+		connection = make(map[int][]*websocket.Conn)
 		defer conn.Close()
-
+		
 		userID, err := utils.UserIDFromToken(r, db)
 		if err != nil {
 			fmt.Println("Unauthorized:", err)
 			return
 		}
-
+		mutex.Lock()
+		connection[userID] = append(connection[userID], conn)
+		mutex.Unlock()
 		// Handle incoming messages
 		for {
 			var msg Message
@@ -159,21 +162,32 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 					fmt.Printf("websocket error: %v\n", err)
 				}
+				// instead of break i need to handle close websocket and delete the user from the map
+				delete(connection, userID)
 				break
 			}
 
 			msg.Sender = userID
 			msg.Date = time.Now().Format("2006-01-02 15:04:05")
+			
 
 			if err := StoreMessage(db, msg); err != nil {
 				fmt.Printf("Error storing message: %v\n", err)
 				continue
 			}
 			// add user to connection
-			// mapp[msg.Receiver].conn.WriteJSON(msg)
-			if err := connection[msg.Receiver].WriteJSON(msg); err != nil {
-				fmt.Printf("Error sending confirmation: %v\n", err)
+			con, ok := connection[msg.Receiver]
+			if ok {
+				for _, co := range con {
+					err := co.WriteJSON(msg)
+					if err != nil {
+						fmt.Printf("Error sending confirmation: %v\n", err)
+					}
+				}
 			}
+			// if err := connection[msg.Receiver].WriteJSON(msg); err != nil {
+			// 	fmt.Printf("Error sending confirmation: %v\n", err)
+			// }
 			if err := conn.WriteJSON(msg); err != nil {
 				fmt.Printf("Error sending confirmation: %v\n", err)
 			}

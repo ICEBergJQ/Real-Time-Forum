@@ -23,7 +23,6 @@ func AddOnlineUser(userID int, db *sql.DB) error {
 	if err != nil {
 		return fmt.Errorf("failed to get username: %v", err)
 	}
-
 	mutex.Lock()
 	onlineUsers[userID] = User{
 		UserID:   userID,
@@ -34,7 +33,7 @@ func AddOnlineUser(userID int, db *sql.DB) error {
 	return nil
 }
 
-// removes a user from the online users 
+// removes a user from the online users
 func RemoveOnlineUser(userID int) {
 	mutex.Lock()
 	delete(onlineUsers, userID)

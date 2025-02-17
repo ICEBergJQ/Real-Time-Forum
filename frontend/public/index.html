@@ -9,7 +9,9 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons/css/all/all.css">
     <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.oaistatic.com/assets/favicon-dark-32x32-gt5kfzyp.webp" media="(prefers-color-scheme: dark)">
+    <!-- change to static/ later -->
     <link rel="stylesheet" href="static/src/css/login.css" />
     <link rel="stylesheet" href="static/src/css/post.css" />
     <link rel="stylesheet" href="static/src/css/register.css" />
@@ -21,145 +23,223 @@
 
   <body>
     <span class="toast"></span>
-
+    
     <!-- Navigation Bar -->
     <header class="navbar">
       <div class="container">
         <div class="logo">
           <h1>
-            <a href="/">Phorum</a>
+            <a href="/" id="logo">Phorum</a>
           </h1>
         </div>
         <nav class="navbar">
           <ul class="nav-links">
             <li>
               <a href="/">
-              <i class="fa fa-home" style="font-size: 18px"></i> 
-              Home</a>
-            
-            </li>
-            <li class="dropdown">
-              <a href="/categories">Categories</a>
-              <ul class="dropdown-menu">
-                <li>
-                  <input
-                    type="checkbox"
-                    id="tech"
-                    name="categories"
-                    value="Technology"
-                  />
-                  <label for="tech">Technology</label>
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    id="sp"
-                    name="categories"
-                    value="Sport"
-                  />
-                  <label for="sp">Sport</label>
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    id="he"
-                    name="categories"
-                    value="Health"
-                  />
-                  <label for="he">Health</label>
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    id="li"
-                    name="categories"
-                    value="Lifestyle"
-                  />
-                  <label for="li">Lifestyle</label>
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    id="ed"
-                    name="categories"
-                    value="Education"
-                  />
-                  <label for="ed">Education</label>
-                </li>
-                <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
-              </ul>
-            </li>
-            <li onclick="filterPosts('getcreatedposts')">created posts</li>
-            <li onclick="filterPosts('getlikedposts')">liked posts</li>
-          </ul>
-        </nav>
-
-        <div class="nav-actions">
-          <button class="btn login">Login</button>
-          <button class="btn start-topic">Sign Up</button>
-          <button class="btn logout">Logout</button>
-          <button class="btn createPostBtn">Create Post</button>
+                <i class="fa fa-home" style="font-size: 18px"></i> Home</a>
+              </li>
+              <!-- <li class="dropdown">
+                <a href="/chat"><i class="fi fi-rs-comments"></i> Chat</a>
+              </li> -->
+              <li onclick="filterPosts('getcreatedposts')">
+                <i class="fa fa-list-alt" aria-hidden="true"></i> Created posts
+              </li>
+              <li onclick="filterPosts('getlikedposts')">
+                <i class="fa fa-heart-o" aria-hidden="true"></i> Liked posts
+              </li>
+            </ul>
+          </nav>
+          <div class="menu" onclick="toggleMenu()"><a><i class="fa fa-bars" aria-hidden="true" ></i></div></a>
+          <div class="nav-actions">
+            <button class="btn logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</button>
+            <button class="btn createPostBtn"><i class="fi fi-sr-apps-add"></i> Create Post</button>
+          </div>
         </div>
+      <div class="overlay" id="overlay">
+      <div class="hidden-menu" id="hiddenMenu">
+        <ul class="menu-list">
+          <li class="dropdown">
+            <a href="/categories" onclick="toggleCategories()"><i class="fa fa-tags" aria-hidden="true"></i>
+              Categories <i class="fa fa-angle-right" aria-hidden="true" id="arrow"></i></a>
+            <ul class="sub-menu">
+              <li>
+                <input
+                  type="checkbox"
+                  id="tech"
+                  name="categories"
+                  value="Technology"
+                />
+                <label for="tech"><i class="fa fa-tag" aria-hidden="true"></i> Technology</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="sp"
+                  name="categories"
+                  value="Sport"
+                />
+                <label for="sp"><i class="fa fa-tag" aria-hidden="true"></i> Sport</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="he"
+                  name="categories"
+                  value="Health"
+                />
+                <label for="he"><i class="fa fa-tag" aria-hidden="true"></i> Health</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="li"
+                  name="categories"
+                  value="Lifestyle"
+                />
+                <label for="li"><i class="fa fa-tag" aria-hidden="true"></i> Lifestyle</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="ed"
+                  name="categories"
+                  value="Education"
+                  />
+                  <label for="ed"><i class="fa fa-tag" aria-hidden="true"></i> Education</label>
+              </li>
+              <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
+            </ul>
+          </li>
+          <li onclick="filterPosts('getcreatedposts')"><i class="fa fa-list-alt" aria-hidden="true"></i> Created posts</li>
+          <li onclick="filterPosts('getlikedposts')"><i class="fa fa-heart-o" aria-hidden="true"></i> Liked posts</li>
+          <li onclick=""><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</li>
+        </ul>
+      </div>
       </div>
     </header>
 
-    <!-- for login -->
+    
     <div id="dynamicContent"></div>
-
-    <!-- for register -->
+    
     <div id="anotherDynamic"></div>
-
-    <!-- for creating post -->
+    
     <div id="dynaicPost"></div>
-
-    <!-- for logout -->
+    
     <div id="logoutdynamic"></div>
-
-    <!-- Main Content -->
+    
+    
     <main class="main-content">
-      <section class="feed">
-        <h2 >POSTS</h2>
+      
+
+      <section class="filter-section">
+        <div class="filter-div">
+          <ul class="filter-menu">
+            <li>
+              <input
+                type="checkbox"
+                id="tech"
+                name="categories"
+                value="Technology"
+              />
+              <label for="tech"><i class="fa fa-tag" aria-hidden="true"></i> Technology</label>
+            </li>
+            <li>
+              <input
+                type="checkbox"
+                id="sp"
+                name="categories"
+                value="Sport"
+              />
+              <label for="sp"><i class="fa fa-tag" aria-hidden="true"></i> Sport</label>
+            </li>
+            <li>
+              <input
+                type="checkbox"
+                id="he"
+                name="categories"
+                value="Health"
+              />
+              <label for="he"><i class="fa fa-tag" aria-hidden="true"></i> Health</label>
+            </li>
+            <li>
+              <input
+                type="checkbox"
+                id="li"
+                name="categories"
+                value="Lifestyle"
+              />
+              <label for="li"><i class="fa fa-tag" aria-hidden="true"></i> Lifestyle</label>
+            </li>
+            <li>
+              <input
+                type="checkbox"
+                id="ed"
+                name="categories"
+                value="Education"
+              />
+              <label for="ed"><i class="fa fa-tag" aria-hidden="true"></i> Education</label>
+            </li>
+          </ul>
+            <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
+        </div>
+      </section>
+      <section class="feed" id="feed">
         <div class="post-list">
           <div id="spinner"></div>
         </div>
+        <button class="load-more">Load More</button>
       </section>
-      <button class="load-more">Load More</button>
+      <section class="chat-section" id="chat">
+        <input type="text" id="userSearch" placeholder="Search users..." class="search-bar" />
+        <div class="chat-users">
+          <div class="chat-user">leehwak</div>
+          <div class="chat-user">leehwaknigga</div>
+          <div class="chat-user">user1</div>
+          <div class="chat-user">user2</div>
+          <div class="chat-user">user3</div>
+          <div class="chat-user">user4</div>
+          <div class="chat-user">user5</div>
+          <div class="chat-user">user6</div>
+          <div class="chat-user">user7</div>
+          <div class="chat-user">user8</div>
+          <div class="chat-user">user9</div>
+          <div class="chat-user">user10</div>
+          <div class="chat-user">user11</div>
+          <div class="chat-user">user12</div>
+          <div class="chat-user">user13</div>
+          <div class="chat-user">user14</div>
+          <div class="chat-user">user15</div>
+          <div class="chat-user">user16</div>
+          <div class="chat-user">user17</div>
+          <div class="chat-user">user18</div>
+          <div class="chat-user">user19</div>
+          <div class="chat-user">user20</div>
+          <div class="chat-user">user21</div>
+          <div class="chat-user">user22</div>
+        </div>
+        
+
+        <div id="chat-box" class="chat-box">
+          <div class="chat-header">
+            <span id="chat-username">Chat</span>
+            <button class="close-chat" onclick="closeChat()">✖</button>
+          </div>
+          <div class="chat-messages"></div>
+          <input type="text" class="chat-input" placeholder="Type a message..." />
+        </div>
+      </section>
     </main>
+
+    <button id="chat-toggle" class="chat-button" onclick="toggleChat()">
+      <i class="fa fa-comments-o" aria-hidden="true"></i>
+    </button>
+
+    
+
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
       rel="stylesheet"
     />
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-sections">
-          <div>
-            <h4>Forum</h4>
-            <ul>
-              <li><a class="foo">Categories</a></li>
-              <li><a class="foo">Popular Posts</a></li>
-              <li><a class="foo">Help</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Legal</h4>
-            <ul>
-              <li><a class="foo">Terms of Service</a></li>
-              <li><a class="foo">Privacy Policy</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Support</h4>
-            <ul>
-              <li><a class="foo">Contact Us</a></li>
-              <li><a class="foo">Report Issue</a></li>
-            </ul>
-          </div>
-        </div>
-        <p>&copy; 2024 My Forum. All rights reserved.</p>
-      </div>
-    </footer>
 
     <!-- scriptsss -->
     <script src="static/src/js/main.js"></script>
@@ -190,6 +270,16 @@
       });
     </script>
     <script>
+      const usersContainer = document.querySelector(".chat-users");
+      const chatBox = document.getElementById("chat-box");
+      const chatUsername = document.getElementById("chat-username");
+      const closeChatBtn = document.querySelector(".close-chat");
+      const chatSection = document.getElementById("chat")
+      const feed = document.getElementById("feed");
+      const menu = document.getElementById("hiddenMenu");
+      const menuButton = document.querySelector(".menu");
+      const overlay = document.querySelector(".overlay");
+      
       document.querySelectorAll(".dropdown > ul").forEach((menu) => {
         menu.style.display = "none";
       });
@@ -212,6 +302,23 @@
         });
       });
 
+      function toggleMenu() {
+        menu.classList.toggle("active");
+        menuButton.classList.toggle("active");
+        overlay.classList.toggle("active");
+        if (chatSection.style.display != "none") {
+          closeChat();
+          chatSection.classList.add("hidden");
+          feed.classList.remove("hidden");
+        }
+      }
+
+      function toggleCategories() {
+        let arrow = document.getElementById("arrow");
+        arrow.classList.toggle("active");
+      }
+
+
       // Add click event listener to the window to hide dropdowns
       window.addEventListener("click", function (e) {
         // Check if the clicked element is not inside a dropdown
@@ -221,6 +328,65 @@
           });
         }
       });
+
+      document.addEventListener("DOMContentLoaded", () => {
+      // Event delegation to handle dynamic users
+        usersContainer.addEventListener("click", (event) => {
+        if (event.target.classList.contains("chat-user")) {
+          openChat(event.target);
+        }
+      });
+
+      function openChat(user) {
+        chatUsername.textContent = user.textContent;
+        chatBox.style.display = "flex";
+      }
+        closeChatBtn.addEventListener("click", closeChat);
+      });
+
+      function closeChat() {
+        chatBox.style.display = "none";
+      }
+
+      function toggleChat() {
+        chatSection.classList.toggle("hidden");
+        feed.classList.toggle("hidden");
+        menu.classList.remove("active");
+        menuButton.classList.remove("active");
+        closeChat();
+      }
+      
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth > 893) {
+          let menu = document.getElementById("hiddenMenu");
+          let menuButton = document.querySelector(".menu");
+          
+          feed.classList.remove("hidden");
+          chatSection.classList.remove("hidden");
+
+          menu.classList.remove("active");
+          menuButton.classList.remove("active");
+          overlay.classList.remove("active")
+        } else {
+          if (feed.style.display != "none" && chatSection.style.display != "none") {
+            chatSection.classList.add("hidden");
+            feed.classList.remove("hidden");
+          }
+        }
+      });
+
+      overlay.addEventListener("click", ()=> {
+        toggleMenu();
+      });
+      menu.addEventListener("click", function (event) {
+        event.stopPropagation(); // Prevents the overlay from closing the menu
+      });
+
+      if (window.innerWidth < 893) {
+        feed.classList.remove("hidden"); 
+        chatSection.classList.add("hidden");
+      }
     </script>
     <link
       rel="stylesheet"

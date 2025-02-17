@@ -26,16 +26,7 @@ if (logged === '1') {
     ///nav btns
     navLogoutBtn.style.display = "inline-block"
     createPostBtn.style.display = "inline-block"
-
-    //hide login / register
-    loginBtn.style.display = "none"
-    registerBtn.style.display = "none"
-
-    //display filter options
-
 } else {
-    loginBtn.style.display = "inline-block"
-    registerBtn.style.display = "inline-block"
     navLogoutBtn.style.display = "none"
     createPostBtn.style.display = "none"
 }

@@ -11,6 +11,16 @@ export default function registerForm() {
             <form class="for">
                    <label for="username">username</label>
                 <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender">
+                    <option value="" disabled selected>Select your gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+                
+                <label for="birthdate">Birthdate:</label>
+                <input type="date" id="birthdate" name="birthdate" required>
     
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" required>

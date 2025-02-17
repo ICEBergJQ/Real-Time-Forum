@@ -8,6 +8,7 @@ const dynamicContent = document.querySelector("#dynamicContent")
 const anotherDynamic = document.querySelector("#anotherDynamic")
 const dynaicPost = document.querySelector("#dynaicPost")
 const logoutDynamic = document.querySelector("#logoutdynamic");
+const loadMore = document.querySelector(".load-more")
 
 anotherDynamic.innerHTML = registerForm()
 dynamicContent.innerHTML = loginForm()
@@ -71,8 +72,8 @@ window.addEventListener("click", (event) => {
 
 // Show the login modal when the login button is clicked
 
-loginBtn.addEventListener("click", showLoginModal)
-registerBtn.onclick = () => showRegisterModal()
+// loginBtn.addEventListener("click", showLoginModal)
+// registerBtn.onclick = () => showRegisterModal()
 createPostBtn.onclick = () => showCreatePostModal()
 
 //get poosts

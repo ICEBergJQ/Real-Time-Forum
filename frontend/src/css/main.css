@@ -9,9 +9,8 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    /* for dev  */
     background-color: var(--dark);
-    color: #333;
+    color: #222831;
 }
 
 a{
@@ -22,7 +21,6 @@ h1 a{
     color: #fff;
 }
 ul{
-
     list-style: none;
 }
 
@@ -33,3 +31,77 @@ button{
 .hidden {
     display: none;
   }
+
+
+  /* test test test test */
+
+  .filter-section, .chat-section {
+    width: 250px; /* Adjust width as needed */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Filter Section Styling */
+.filter-div {
+    color:rgb(255, 255, 255);
+    margin-top: 2px;
+    background: #393E46;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Filter Menu */
+.filter-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.filter-menu li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Button Styling */
+.sbtf {
+    width: 100%;
+    padding: 10px;
+    background: #00ADB5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sbtf:hover {
+    opacity: 0.8;
+}
+
+/* Chat Section Styling */
+.chat-section {
+    background: #393E46;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    margin-top: 2px;
+}
+
+/* User List */
+.chat-users {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-user {
+    cursor: pointer;
+    padding: 10px;
+    background: #00ADB5;
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    text-align: center;
+}

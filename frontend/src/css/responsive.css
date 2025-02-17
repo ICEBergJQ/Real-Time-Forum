@@ -1,26 +1,115 @@
-/* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (max-width: 768px) {
+.menu {
+    display: none;
+    position: absolute;
+    right: 10px;
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
+#arrow {
+    transition: transform 0.3s ease-in-out;
+}
 
+#arrow.active {
+    transform: rotate(90deg);
+}
+.menu.active {
+    transform: rotate(90deg);
+}
+
+/*jdid*/
+
+.hidden-menu {
+    position: relative;
+    top: 70px;
+    left: 50%;
+    width: 90%;
+    background: #393E46;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Show when active */
+.hidden-menu.active {
+    display: block;
+    opacity: 2;
+    transform: translateX(-50%) translateY(10px);
+}
+.overlay.active {
+    display: block;
+}
+
+/* Menu Items */
+.hidden-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-list li {
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    padding-top:5px;
+    cursor: pointer;
+    
+}
+
+.hidden-menu ul li:last-child {
+    border-bottom: none;
+}
+
+.hidden-menu ul li a {
+    text-decoration: none;
+    color: white;
+    display: block;
+}
+
+/*...*/
+.menu.active
+.navbar,.container{
+        padding-inline: 0;
+        margin-inline: 0;
+    
+}
+.chat-section.hidden {
+    display: none;
+}
+@media only screen and (max-width: 893px) {
+    .chat-button {
+        display: flex;
+    }
+    .filter-section {
+        display: none;
+    }
+    .nav-links,.nav-actions{
+        display: none;
+    }
+    .hidden-menu {
+        width: 95%;
+    }
+    .chat-section {
+        width: 400px;
+    }
+    .menu {
+        display: block;
+        a {
+            font-size: 30px;
+        }
+    }
     .main-content {
-        padding: 2rem 1rem;
+        justify-content: center;
     }
 }
 
-/* Small Devices (Mobile) */
 @media screen and (max-width: 600px) {
+    .menu {
+        display: block;
+    }
     .container {
         width: 100%;
-        padding: 0 1rem;
-    }
-
-    .navbar .container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .nav-links {
-        flex-direction: column;
-        gap: 0.5rem;
     }
 
     .post-preview {
@@ -37,36 +126,35 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 400px) {
+    h1 {
+        font-size: 25px;
+    }
+    h2 {
+        font-size: 20px;
+    }
+    .menu {
+        display: block;
+        a {
+            font-size: 25px;
+        }
+    }
 
     /* Adjust container padding and margin */
     .container {
         width: 100%;
         padding: 0;
     }
-
-    /* Navbar adjustments */
-    .navbar .container {
-        flex-direction: column;
-        text-align: center;
+    .hidden-menu{
+        top: 55px;
     }
 
-    .navbar .container .dropdown-menu {
-        left: -25px;
-        top: 36%;
-    }
-
-    .nav-links {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
 
     /* Main content */
     .main-content {
-        padding: 1rem;
+        justify-content: center;
     }
 
-    /* Feed adjustments */
     .feed {
         margin: 0;
     }
@@ -147,10 +235,5 @@
 
     .sign-up-text {
         font-size: 13px;
-    }
-
-    .nav-links {
-        margin-left: 5%;
-        display: inline-block;
     }
 }

@@ -72,8 +72,8 @@ window.addEventListener("click", (event) => {
 
 // Show the login modal when the login button is clicked
 
-loginBtn.addEventListener("click", showLoginModal)
-registerBtn.onclick = () => showRegisterModal()
+// loginBtn.addEventListener("click", showLoginModal)
+// registerBtn.onclick = () => showRegisterModal()
 createPostBtn.onclick = () => showCreatePostModal()
 
 //get poosts

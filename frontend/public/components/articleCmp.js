@@ -11,7 +11,7 @@ export default function Article(post) {
         
         <p class="time">By <strong>${post.author}</strong> | Category: <em>${post.categories.map(cat =>
     ` 
-    <span> ${cat}</span>`
+    <span><i class="fa fa-tag" aria-hidden="true"></i> ${cat}</span>`
   )}
         </em> <br>
          ${post.createdat}</p>
@@ -34,7 +34,7 @@ export default function Article(post) {
         <i class="fa fa-thumbs-o-down" style="font-size:18px"></i> Dislike
           (<span>${post.dislikes_count}</span>)
           </button>
-        <button class="btn comment-btn" onclick="displayComments(event,'${post.id}' )">💬 Comment</button>
+        <button class="btn comment-btn" onclick="displayComments(event,'${post.id}' )"><i class="fa fa-comments-o" aria-hidden="true"></i> Comment</button>
       </div>
       <!-- Comments Section (Initially Hidden) -->
       <div class="container-comment hidden">

@@ -23,7 +23,7 @@
 
   <body>
     <span class="toast"></span>
-
+    
     <!-- Navigation Bar -->
     <header class="navbar">
       <div class="container">
@@ -36,30 +36,28 @@
           <ul class="nav-links">
             <li>
               <a href="/">
-              <i class="fa fa-home" style="font-size: 18px"></i> Home</a>
-            </li>
-            <!-- <li class="dropdown">
-              <a href="/chat"><i class="fi fi-rs-comments"></i> Chat</a>
-            </li> -->
-            <li onclick="filterPosts('getcreatedposts')">
-              <i class="fa fa-list-alt" aria-hidden="true"></i> Created posts
-            </li>
-            <li onclick="filterPosts('getlikedposts')">
-              <i class="fa fa-heart-o" aria-hidden="true"></i> Liked posts
-            </li>
-          </ul>
-        </nav>
-        <div class="menu" onclick="toggleMenu()"><a><i class="fa fa-bars" aria-hidden="true" ></i></div></a>
-        
-        <div class="nav-actions">
-          <button class="btn login"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</button>
-          <button class="btn start-topic"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sign Up</button>
-          <button class="btn logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</button>
-          <button class="btn createPostBtn"><i class="fi fi-sr-apps-add"></i> Create Post</button>
+                <i class="fa fa-home" style="font-size: 18px"></i> Home</a>
+              </li>
+              <!-- <li class="dropdown">
+                <a href="/chat"><i class="fi fi-rs-comments"></i> Chat</a>
+              </li> -->
+              <li onclick="filterPosts('getcreatedposts')">
+                <i class="fa fa-list-alt" aria-hidden="true"></i> Created posts
+              </li>
+              <li onclick="filterPosts('getlikedposts')">
+                <i class="fa fa-heart-o" aria-hidden="true"></i> Liked posts
+              </li>
+            </ul>
+          </nav>
+          <div class="menu" onclick="toggleMenu()"><a><i class="fa fa-bars" aria-hidden="true" ></i></div></a>
+          <div class="nav-actions">
+            <button class="btn logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</button>
+            <button class="btn createPostBtn"><i class="fi fi-sr-apps-add"></i> Create Post</button>
+          </div>
         </div>
-      </div>
+      <div class="overlay" id="overlay">
       <div class="hidden-menu" id="hiddenMenu">
-        <ul>
+        <ul class="menu-list">
           <li class="dropdown">
             <a href="/categories" onclick="toggleCategories()"><i class="fa fa-tags" aria-hidden="true"></i>
               Categories <i class="fa fa-angle-right" aria-hidden="true" id="arrow"></i></a>
@@ -106,33 +104,33 @@
                   id="ed"
                   name="categories"
                   value="Education"
-                />
-                <label for="ed"><i class="fa fa-tag" aria-hidden="true"></i> Education</label>
+                  />
+                  <label for="ed"><i class="fa fa-tag" aria-hidden="true"></i> Education</label>
               </li>
               <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
             </ul>
           </li>
           <li onclick="filterPosts('getcreatedposts')"><i class="fa fa-list-alt" aria-hidden="true"></i> Created posts</li>
           <li onclick="filterPosts('getlikedposts')"><i class="fa fa-heart-o" aria-hidden="true"></i> Liked posts</li>
-            <li><button class="btn login"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</button></li>
-            <li><button class="btn start-topic"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sign Up</button></li>
-            <li><button class="btn logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</button></li>
-
+          <li onclick=""><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</li>
         </ul>
+      </div>
       </div>
     </header>
 
-
+    
     <div id="dynamicContent"></div>
-
+    
     <div id="anotherDynamic"></div>
-
+    
     <div id="dynaicPost"></div>
-
+    
     <div id="logoutdynamic"></div>
-
-
+    
+    
     <main class="main-content">
+      
+
       <section class="filter-section">
         <div class="filter-div">
           <ul class="filter-menu">
@@ -185,7 +183,7 @@
             <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
         </div>
       </section>
-      <section class="feed">
+      <section class="feed" id="feed">
         <div class="post-list">
           <div id="spinner"></div>
         </div>
@@ -243,37 +241,6 @@
       rel="stylesheet"
     />
 
-    <!-- Footer -->
-    <!-- <footer class="footer">
-      <div class="container">
-        <div class="footer-sections">
-          <div>
-            <h4>Phorum</h4>
-            <ul>
-              <li><a class="foo">Categories</a></li>
-              <li><a class="foo">Popular Posts</a></li>
-              <li><a class="foo">Help</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Legal</h4>
-            <ul>
-              <li><a class="foo">Terms of Service</a></li>
-              <li><a class="foo">Privacy Policy</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Support</h4>
-            <ul>
-              <li><a class="foo">Contact Us</a></li>
-              <li><a class="foo">Report Issue</a></li>
-            </ul>
-          </div>
-        </div>
-        <p>&copy; 2025 Phorum. All rights reserved.</p>
-      </div>
-    </footer> -->
-
     <!-- scriptsss -->
     <script src="static/src/js/main.js"></script>
     <script type="module" src="static/src/js/posts.js"></script>
@@ -308,6 +275,10 @@
       const chatUsername = document.getElementById("chat-username");
       const closeChatBtn = document.querySelector(".close-chat");
       const chatSection = document.getElementById("chat")
+      const feed = document.getElementById("feed");
+      const menu = document.getElementById("hiddenMenu");
+      const menuButton = document.querySelector(".menu");
+      const overlay = document.querySelector(".overlay");
       
       document.querySelectorAll(".dropdown > ul").forEach((menu) => {
         menu.style.display = "none";
@@ -332,14 +303,14 @@
       });
 
       function toggleMenu() {
-        let menu = document.getElementById("hiddenMenu");
-        let menuButton = document.querySelector(".menu");
-
-        // Toggle visibility
         menu.classList.toggle("active");
-
-        // Rotate menu button
         menuButton.classList.toggle("active");
+        overlay.classList.toggle("active");
+        if (chatSection.style.display != "none") {
+          closeChat();
+          chatSection.classList.add("hidden");
+          feed.classList.remove("hidden");
+        }
       }
 
       function toggleCategories() {
@@ -358,34 +329,30 @@
         }
       });
 
-    document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("DOMContentLoaded", () => {
       // Event delegation to handle dynamic users
-      usersContainer.addEventListener("click", (event) => {
+        usersContainer.addEventListener("click", (event) => {
         if (event.target.classList.contains("chat-user")) {
           openChat(event.target);
         }
-    });
+      });
 
-    function openChat(user) {
-      chatUsername.textContent = user.textContent;
-      chatBox.style.display = "flex";
-    }
+      function openChat(user) {
+        chatUsername.textContent = user.textContent;
+        chatBox.style.display = "flex";
+      }
+        closeChatBtn.addEventListener("click", closeChat);
+      });
 
-    function closeChat() {
-      chatBox.style.display = "none";
-    }
-
-  closeChatBtn.addEventListener("click", closeChat);
-});
       function closeChat() {
         chatBox.style.display = "none";
       }
 
       function toggleChat() {
         chatSection.classList.toggle("hidden");
-        document.querySelectorAll(".feed").forEach((e) => {
-          e.classList.toggle("hidden");
-        });
+        feed.classList.toggle("hidden");
+        menu.classList.remove("active");
+        menuButton.classList.remove("active");
         closeChat();
       }
       
@@ -395,27 +362,30 @@
           let menu = document.getElementById("hiddenMenu");
           let menuButton = document.querySelector(".menu");
           
-          document.querySelectorAll(".feed").forEach((e) => {
-            e.classList.remove("hidden");
-          });
-
+          feed.classList.remove("hidden");
           chatSection.classList.remove("hidden");
 
           menu.classList.remove("active");
           menuButton.classList.remove("active");
+          overlay.classList.remove("active")
         } else {
-          document.querySelectorAll(".feed").forEach((e) => {
-            e.classList.remove("hidden");
-          });
-          chatSection.classList.add("hidden");
+          if (feed.style.display != "none" && chatSection.style.display != "none") {
+            chatSection.classList.add("hidden");
+            feed.classList.remove("hidden");
+          }
         }
       });
 
+      overlay.addEventListener("click", ()=> {
+        toggleMenu();
+      });
+      menu.addEventListener("click", function (event) {
+        event.stopPropagation(); // Prevents the overlay from closing the menu
+      });
+
       if (window.innerWidth < 893) {
-        document.querySelectorAll(".feed").forEach((e) => {
-            e.classList.remove("hidden");
-          });
-          chatSection.classList.add("hidden");
+        feed.classList.remove("hidden"); 
+        chatSection.classList.add("hidden");
       }
     </script>
     <link

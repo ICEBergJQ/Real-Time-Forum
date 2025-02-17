@@ -12,16 +12,18 @@
 #arrow.active {
     transform: rotate(90deg);
 }
+.menu.active {
+    transform: rotate(90deg);
+}
 
 /*jdid*/
 
 .hidden-menu {
-    position: absolute;
-    top: 70px; /* Places menu below navbar */
+    position: relative;
+    top: 70px;
     left: 50%;
-    /* transform: translateX(-50%); */
     width: 90%;
-    background: rgba(0, 0, 0, 0.9);
+    background: #393E46;
     color: white;
     padding: 15px;
     border-radius: 10px;
@@ -34,8 +36,11 @@
 /* Show when active */
 .hidden-menu.active {
     display: block;
-    opacity: 1;
+    opacity: 2;
     transform: translateX(-50%) translateY(10px);
+}
+.overlay.active {
+    display: block;
 }
 
 /* Menu Items */
@@ -44,9 +49,12 @@
     padding: 0;
 }
 
-.hidden-menu ul li {
-    padding: 10px;
+.menu-list li {
     border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    padding-top:5px;
+    cursor: pointer;
+    
 }
 
 .hidden-menu ul li:last-child {
@@ -96,7 +104,6 @@
     }
 }
 
-/* Small Devices (Mobile) */
 @media screen and (max-width: 600px) {
     .menu {
         display: block;

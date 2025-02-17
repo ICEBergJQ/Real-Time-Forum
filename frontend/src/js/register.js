@@ -6,6 +6,8 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
     const email = document.querySelector("#email").value.trim()
     const password = document.querySelector("#signUpModal #password").value.trim()
     const confirmPassword = document.querySelector("#confirm-password").value.trim()
+    const age = document.querySelector("#age").value
+    const gender = document.querySelector("#gender").value
 
 
     if (username == "" || email == "" || password == "" || confirmPassword == "") {
@@ -29,7 +31,7 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
     fetch("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, age, gender ,password }),
     })
         .then(res => {
             if (!res.ok) {

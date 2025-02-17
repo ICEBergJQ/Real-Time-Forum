@@ -14,6 +14,15 @@ export default function registerForm() {
     
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" placeholder="Enter your age" required>
+
+                <input type="radio" id="gender" name="gender" value="male">
+                <label for="male">male</label><br>
+
+                <input type="radio" id="gender" name="gender" value="female">
+                <label for="female">female</label><br>
     
                 <label for="password">Password</label>
                 <input type="password"   id="password" name="password" placeholder="Enter your password" required>

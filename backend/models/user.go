@@ -6,7 +6,7 @@ type User struct {
 	ID        int       `json:"id"`
 	Username  string    `json:"username"`
 	Email     string    `json:"email"`
-	Age       int       `json:"age"`
+	Age       string    `json:"age"`
 	Gender    string    `json:"gender"`
 	Password  string    `json:"password"`
 	CreatedAt time.Time `json:"createdat"`

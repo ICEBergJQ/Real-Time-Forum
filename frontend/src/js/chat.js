@@ -1,87 +1,47 @@
-import chatComponent from "../../public/components/chatCmp.js";
-// import chatComponent from '../../public/components/postFormCmp.js'
+// Create the shared worker (make sure the path is correct)
+const worker = new SharedWorker('chatWorker.js');
 
-document.body.insertAdjacentHTML("beforeend", chatComponent());
+// When the worker is ready, communicate with it
+worker.port.start();
 
-let socket;
+// Handle incoming messages from the shared worker
+worker.port.onmessage = function (event) {
+    const message = event.data;
+    console.log('Message from worker:', message);
+    displayMessage(message); // Update the UI with the message
+};
 
-async function connectWebSocket() {
-    const userID = await fetchUserID();
-    if (!userID) return;
-
-    socket = new WebSocket(`ws://localhost:8080/ws?id=${userID}`);
-     // Send messages
-     sendMessageBtn.addEventListener("click", () => {
-        const message = messageInput.value;
-        if (message.trim() !== "") {
-            socket.send(message);
-            messageInput.value = "";
-        }
-    });
-
-    socket.onmessage = function(event) {
-        const message = JSON.parse(event.data);
-        console.log("Received message:", message);
-        // Display message if it's meant for this user
-        if (message.receiverID === userID) {
-            displayMessage(message);
-        }
+// Function to send messages to the shared worker (which will forward them to the WebSocket)
+function sendMessage(messageContent) {
+    const message = {
+        type: 'chat', // Custom message type
+        content: messageContent
     };
+
+    worker.port.postMessage(message); // Send the message to the worker
 }
 
-connectWebSocket();
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    // Insert the chat component into the page
-    document.getElementById("chat_id").innerHTML = chatComponent();
-
-    const chatModal = document.getElementById("chat");
-    const openChatBtn = document.getElementById("open-chat");
-    const closeChatBtn = document.getElementById("close-chat");
-    const sendMessageBtn = document.getElementById("send-message");
-    const messageInput = document.getElementById("chat-input");
-    const chatMessages = document.getElementById("chat-messages");
-
-    // WebSocket connection to server
-    // const socket = new WebSocket("ws://localhost:8080/ws");
-
-    // Open chat
-    openChatBtn.addEventListener("click", () => {
-        chatModal.classList.remove("hidden");
-    });
-
-    // Close chat
-    closeChatBtn.addEventListener("click", () => {
-        chatModal.classList.add("hidden");
-    });
-
-    // Receive messages
-    // socket.onmessage = function (event) {
-    //     const newMessage = document.createElement("div");
-    //     newMessage.classList.add("message");
-    //     newMessage.textContent = event.data;
-    //     chatMessages.appendChild(newMessage);
-    // };
-
-   
+// Event listener for sending messages
+document.getElementById('sendButton').addEventListener('click', () => {
+    const messageInput = document.getElementById('messageInput');
+    const messageContent = messageInput.value;
+    if (messageContent) {
+        sendMessage(messageContent);
+        messageInput.value = ''; // Clear the input field
+    }
 });
 
-async function fetchUserID() {
-    try {
-        const response = await fetch("/api/user_id");
-        if (!response.ok) throw new Error("Failed to fetch user ID");
-        const data = await response.json();
-        localStorage.setItem("userID", data.user_id); // Store user ID
-        return data.user_id;
-    } catch (error) {
-        console.error("Error fetching user ID:", error);
-        return null;
-    }
+// Display message in the UI
+function displayMessage(message) {
+    const messageContainer = document.getElementById('messageContainer');
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message.content; // Display message content
+    messageContainer.appendChild(messageElement); // Append message to the container
 }
 
-// Call it on page load
-fetchUserID();
-
-
-/// send username and message to backend 
+// HTML for the chat UI (already explained in previous messages)
+document.body.innerHTML = `
+    <div id="messageContainer" style="max-height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
+    <input type="text" id="messageInput" placeholder="Type a message" style="width: 80%;" />
+    <button id="sendButton">Send</button>
+`;

@@ -93,3 +93,30 @@ form input:focus {
 .close:hover {
     color: #333;
 }
+
+
+#gender {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    background-color: white;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    appearance: none; /* Hides default dropdown arrow */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23444'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+}
+
+/* Add hover and focus effects */
+#gender:hover {
+    border-color: #007bff;
+}
+
+#gender:focus {
+    border-color: #007bff;
+    outline: none;
+}

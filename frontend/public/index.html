@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Page</title>
+  <link rel="stylesheet" href="static/src/css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="icon" type="image/png" sizes="32x32"
+    href="https://cdn.oaistatic.com/assets/favicon-dark-32x32-gt5kfzyp.webp" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="static/src/css/login.css" />
+  <link rel="stylesheet" href="static/src/css/post.css" />
+  <link rel="stylesheet" href="static/src/css/register.css" />
+  <link rel="stylesheet" href="static/src/css/signup.css" />
+  <link rel="stylesheet" href="static/src/css/style.css" />
+  <link rel="stylesheet" href="static/src/css/responsive.css" />
+  <link rel="stylesheet" href="static/src/css/logout.css" />
+  <link rel="stylesheet" href="static/src/css/chat.css" />
+</head>
+
+<body>
+  <span class="toast"></span>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container">
+      <div class="logo">
+        <h1>
+          <a href="/">Phorum</a>
+        </h1>
+      </div>
+      <nav class="navbar">
+        <ul class="nav-links">
+          <li>
+            <a href="/">
+              <i class="fa fa-home" style="font-size: 18px"></i>
+              Home</a>
+
+          </li>
+          <li class="dropdown">
+            <a href="/categories">Categories</a>
+            <ul class="dropdown-menu">
+              <li>
+                <input type="checkbox" id="tech" name="categories" value="Technology" />
+                <label for="tech">Technology</label>
+              </li>
+              <li>
+                <input type="checkbox" id="sp" name="categories" value="Sport" />
+                <label for="sp">Sport</label>
+              </li>
+              <li>
+                <input type="checkbox" id="he" name="categories" value="Health" />
+                <label for="he">Health</label>
+              </li>
+              <li>
+                <input type="checkbox" id="li" name="categories" value="Lifestyle" />
+                <label for="li">Lifestyle</label>
+              </li>
+              <li>
+                <input type="checkbox" id="ed" name="categories" value="Education" />
+                <label for="ed">Education</label>
+              </li>
+              <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
+            </ul>
+          </li>
+          <li onclick="filterPosts('getcreatedposts')">created posts</li>
+          <li onclick="filterPosts('getlikedposts')">liked posts</li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn login">Login</button>
+        <button class="btn start-topic">Sign Up</button>
+        <button class="btn logout">Logout</button>
+        <button class="btn createPostBtn">Create Post</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- for login -->
+  <div id="dynamicContent"></div>
+
+  <!-- for register -->
+  <div id="anotherDynamic"></div>
+
+  <!-- for creating post -->
+  <div id="dynaicPost"></div>
+
+  <!-- for logout -->
+  <div id="logoutdynamic"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="feed">
+      <h2>POSTS</h2>
+      <div class="post-list">
+        <div id="spinner"></div>
+      </div>
+    </section>
+    <button class="load-more">Load More</button>
+  </main>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+
+  <section class="chat-section" id="chat">
+    <!-- <input type="text" id="userSearch" placeholder="Search users..." class="search-bar" /> -->
+    <div class="chat-users" id="chat-users">
+      <!-- Chat users will appear here dynamically -->
+    </div>
+
+    <div id="chat-box" class="chat-box">
+      <div class="chat-header">
+        <span id="chat-username">Chat</span>
+        <button class="close-chat" onclick="closeChat()">✖</button>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <input type="text" class="chat-input" placeholder="Type a message..." />
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-sections">
+        <div>
+          <h4>Forum</h4>
+          <ul>
+            <li><a class="foo">Categories</a></li>
+            <li><a class="foo">Popular Posts</a></li>
+            <li><a class="foo">Help</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a class="foo">Terms of Service</a></li>
+            <li><a class="foo">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <ul>
+            <li><a class="foo">Contact Us</a></li>
+            <li><a class="foo">Report Issue</a></li>
+          </ul>
+        </div>
+      </div>
+      <p>&copy; 2024 My Forum. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- scriptsss -->
+  <script src="static/src/js/main.js"></script>
+  <script type="module" src="static/src/js/posts.js"></script>
+  <script src="static/src/js/likeDislike.js" defer></script>
+  <script src="static/src/js/register.js" defer></script>
+  <script src="static/src/js/login.js" defer></script>
+  <script src="static/src/js/createPost.js" defer></script>
+  <script src="static/src/js/logout.js" defer></script>
+  <script src="static/src/js/comment.js"></script>
+  <script src="static/src/js/filter.js"></script>
+  <script type="module" src="static/src/js/chat.js"></script>
+  <script src="static/public/components/chatCmp.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const commentBtns = document.querySelectorAll(".comment-btn");
+
+      commentBtns.forEach((btn, index) => {
+        btn.addEventListener("click", () => {
+          // Use index to find the correct comment section
+          const commentContainer =
+            document.querySelectorAll(".container-comment")[index];
+
+          // Toggle visibility of the comment container
+          if (commentContainer) {
+            commentContainer.classList.toggle("hidden");
+          }
+        });
+      });
+    });
+  </script>
+  <script>
+    document.querySelectorAll(".dropdown > ul").forEach((menu) => {
+      menu.style.display = "none";
+    });
+
+    // Add click event listeners to toggle dropdown menus
+    document.querySelectorAll(".dropdown > a").forEach((item) => {
+      item.addEventListener("click", function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const dropdownMenu = this.nextElementSibling; // Get the sibling <ul>
+        const isVisible = dropdownMenu.style.display === "block";
+
+        // Hide all dropdown menus
+        document.querySelectorAll(".dropdown > ul").forEach((menu) => {
+          menu.style.display = "none";
+        });
+
+        // Toggle the clicked dropdown menu
+        dropdownMenu.style.display = isVisible ? "none" : "block";
+      });
+    });
+
+    // Add click event listener to the window to hide dropdowns
+    window.addEventListener("click", function (e) {
+      // Check if the clicked element is not inside a dropdown
+      if (!e.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown > ul").forEach((menu) => {
+          menu.style.display = "none";
+        });
+      }
+    });
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <noscript>Your browser does not support JavaScript!</noscript>
+</body>
+
+</html>

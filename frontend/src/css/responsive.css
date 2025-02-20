@@ -1,0 +1,156 @@
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (max-width: 768px) {
+
+    .main-content {
+        padding: 2rem 1rem;
+    }
+}
+
+/* Small Devices (Mobile) */
+@media screen and (max-width: 600px) {
+    .container {
+        width: 100%;
+        padding: 0 1rem;
+    }
+
+    .navbar .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .post-preview {
+        padding: 0.5rem;
+    }
+    .popup{
+        max-width: 550px;
+        box-sizing: border-box;
+        }
+    .footer-sections {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Adjust container padding and margin */
+    .container {
+        width: 100%;
+        padding: 0;
+    }
+
+    /* Navbar adjustments */
+    .navbar .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .navbar .container .dropdown-menu {
+        left: -25px;
+        top: 36%;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    /* Main content */
+    .main-content {
+        padding: 1rem;
+    }
+
+    /* Feed adjustments */
+    .feed {
+        margin: 0;
+    }
+
+    /* Post previews */
+    .post-preview {
+        font-size: 14px;
+    }
+
+    .post-preview h3 {
+        font-size: 16px;
+    }
+
+    .post-preview p {
+        font-size: 12px;
+    }
+
+    .post-preview a {
+        font-size: 12px;
+    }
+
+    /* Buttons */
+    .nav-actions .btn,
+    .post-details .btn {
+        font-size: 12px;
+        padding: 0.3rem 0.5rem;
+    }
+
+    .reply-input {
+        width: 91%;
+    }
+
+    /* Footer adjustments */
+    .footer {
+        text-align: center;
+    }
+
+    .footer-sections {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    /* Modal adjustments */
+    .modal-content {
+        width: 69%;
+        padding: 1rem;
+    }
+
+    /* Categories */
+    .categories-container label {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    /* log */
+
+    h2.log {
+        font-size: 19px;
+    }
+
+    .log {
+        font-size: 18px;
+    }
+
+    .for label {
+        font-size: 12px;
+    }
+
+    .for input {
+        font-size: 12px;
+    }
+
+    .btn_s {
+        font-size: 12px;
+        width: 99%;
+    }
+
+    .sign-up-text {
+        font-size: 13px;
+    }
+
+    .nav-links {
+        margin-left: 5%;
+        display: inline-block;
+    }
+}

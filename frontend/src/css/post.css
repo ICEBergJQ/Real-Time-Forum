@@ -1,0 +1,113 @@
+/* create post */
+
+.popup-overlay {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 4;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.popup-overlay.hidden {
+    display: none;
+}
+
+.popup {
+    position: relative;
+    background: #fff;
+    padding: 50px;
+    border-radius: 5px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+#content {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 50px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+textarea {
+    resize: none;
+}
+
+/* categories css */
+
+/* Hide the native checkbox */
+.categories-container input[type="checkbox"] {
+    display: none;
+}
+
+/* Label styled as a button */
+.categories-container label {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 16px;
+    border: 1px solid gray;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    /* Prevent text selection */
+    text-align: center;
+    outline: none;
+}
+
+/* Default state */
+.categories-container label {
+    background-color: white;
+    color: black;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Checked state */
+.categories-container input[type="checkbox"]:checked+label {
+    background-color: #00aaff;
+    color: white;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+
+.sbtn {
+    margin-top: 50px;
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 25px;
+    background-color: #00aaff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sbtn:hover {
+    background-color: #0d4764;
+}

@@ -1,0 +1,504 @@
+ :root {
+  --red: #dc143c;
+  --green: #34a440;
+  --info: #1296b8;
+}
+.close-icon{
+  width: 30px;
+  height: 30px;
+  pointer-events: none;
+}
+
+.toast {
+  color: #fff;
+  position: fixed;
+  z-index: 10;
+  top: -105px;
+  padding: 15px 35px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: top 0.3s ease-in-out;
+}
+.post-header p span{
+  background-color: #eceafa;
+  padding: 0px 9px;
+  box-shadow: 0 0 2px #ddd;
+}
+/* readmore content */
+ 
+.post-snippet button {
+  background-color: transparent;
+  cursor: pointer;
+  color: #aaa;
+  margin: 0 3px;
+}
+.post-snippet button:hover {
+  color: #00aaff;
+}
+.liked {
+  background-color: #00aaff !important;
+}
+
+.disliked {
+  background-color: #f84343 !important;
+}
+
+@keyframes bounce {
+  0% {
+    top: -55px;
+  }
+
+  20% {
+    top: 10px;
+  }
+
+  40% {
+    top: -10px;
+  }
+
+  60% {
+    top: 5px;
+  }
+
+  80% {
+    top: -5px;
+  }
+
+  100% {
+    top: 40px;
+  }
+}
+
+.load-more {
+  display: none;
+  background-color: #00aaff;
+  border-radius: 10px;
+  outline: none;
+  margin: 3rem auto;
+  font-size: 1rem;
+  padding: 10px 2rem;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Navbar */
+
+.logo {
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.logo:hover {
+  color: #00aaff;
+  transition: color 0.3s;
+}
+
+.navbar {
+  background: #20202e;
+  color: #fff;
+  padding: 1rem 0;
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* .nav-links { */
+/* Ensures the dropdown menu is positioned relative to its parent */
+/* } */
+
+.nav-links li a {
+  color: #fff;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.nav-links li a:hover {
+  color: #00aaff;
+}
+
+.nav-links li {
+  color: #fff;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.nav-links li:hover {
+  color: #00aaff;
+}
+
+/* Spinner Box Styling */
+#spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 100px auto;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.dropdown-menu {
+  margin: 0;
+  position: absolute;
+  top: 164%;
+  left: 43px;
+  background-color: #101020;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  display: none;
+  box-shadow: 0 0 5px #ddd;
+}
+
+.dropdown-menu li {
+  width: 150px;
+  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.dropdown-menu input {
+  display: block;
+  padding: 10px 15px;
+  color: #ebe1e1;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+/* .dropdown-menu .cat:hover {
+    background-color: #4495ca;
+} */
+
+.dropdown-menu input[type="checkbox"] {
+  display: none;
+}
+
+/* Label styled as a button */
+.dropdown-menu label {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 16px;
+  border: 1px solid #222;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+  /* Prevent text selection */
+  text-align: center;
+  outline: none;
+  width: 70%;
+}
+
+/* Default state */
+.dropdown-menu label {
+  background-color: rgb(223, 244, 255);
+  color: black;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Checked state */
+.dropdown-menu input[type="checkbox"]:checked+label {
+  background-color: #0af;
+  color: white;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-menu b {
+  background-color: #00aaff;
+  color: white;
+}
+
+.post-avatar {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-menu .sbtf {
+  margin-top: 20px;
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 25px;
+  background-color: #0056b3;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 10px;
+}
+
+.dropdown-menu .sbtf:hover {
+  background-color: #0d4764;
+}
+
+/* Show dropdown menu on hover */
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.nav-actions .btn {
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  background: #00aaff;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.nav-actions .btn.start-topic {
+  background: #0056b3;
+}
+
+.nav-actions .btn:hover {
+  opacity: 0.8;
+}
+
+/* main */
+
+.main-content {
+  padding: 2rem;
+  flex-grow: 1;
+}
+
+/* Feed and Filters */
+.feed {
+  max-width: 800px;
+  margin: auto;
+}
+
+h2 {
+  color: #00aaff;
+}
+
+/* Post Previews */
+.post-title {
+  font-size: 20px;
+  margin: 0 0 10px;
+  overflow-wrap: break-word;
+
+}
+
+.post-preview {
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.3s;
+  box-shadow: 0 2px 4px #aaa;
+}
+
+.post-preview:hover {
+  box-shadow: 0 0px 4px #aaa;
+}
+
+.post-preview h3 {
+  margin: 0 0 0.5rem;
+  color: #0056b3;
+}
+
+.post-preview .time {
+  margin: 0.5rem 0;
+  color: #797878;
+  font-size: 13px;
+}
+
+.comment-details p {
+  margin: 5px;
+}
+
+.comment-time {
+  margin-top: 0;
+  color: #797878;
+}
+
+.card-content {
+  box-shadow: 0 4px 4px #ddd;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fefefe;
+  margin: 10px 0;
+  transition: box-shadow 0.3s;
+  /* overflow: scroll; */
+}
+.comment-body pre, .post-snippet{
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+
+}
+.card-content:hover {
+  box-shadow: 0 0px 4px #ddd;
+}
+
+.comment-body p {
+  background-color: rgb(241 241 241);
+  padding: 10px;
+  box-shadow: 0 4px 4px #ddd;
+  border-radius: 10px;
+}
+
+.post-preview a {
+  font-size: 23px;
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #474343;
+  font-weight: bold;
+}
+
+.post-preview a:hover {
+  color: #0056b3;
+}
+
+/* Post Details */
+.post-details {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.post-details .btn:hover {
+  background: #ddd;
+}
+
+.post-details .like-btn,
+.post-details .dislike-btn,
+.comment button,
+.post-details .comment-btn {
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #dff4ff;
+  color: #0a0202;
+  transition: background-color 0.3s;
+  border: 1px solid #ccc;
+}
+
+article span,
+article i {
+  pointer-events: none;
+}
+
+
+
+
+.container-comment {
+  margin-top: 15px;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.reply-section {
+  margin-top: 15px;
+}
+
+.reply-input {
+  width: 100%;
+  min-height: 50px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.send-btn {
+  margin-top: 10px;
+  padding: 0.5rem 1rem;
+  background-color: #00aaff;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+
+.send-btn:hover {
+  background-color: #196a92;
+  transition: all 0.5s;
+}
+
+/* Footer */
+.footer {
+  background: #20202e;
+  color: #fff;
+  padding: 2rem 0rem 2rem 0;
+  margin-top: 8rem;
+}
+
+footer .container>p {
+  text-align: center;
+
+}
+
+.footer-sections {
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer-sections ul {
+  margin: 0;
+  padding: 0;
+}
+
+.footer-sections ul li {
+  margin: 0.5rem 0;
+}
+
+.footer-sections ul li .foo {
+  color: #00aaff;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.footer-sections ul li a:hover {
+  color: #0056b3;
+}

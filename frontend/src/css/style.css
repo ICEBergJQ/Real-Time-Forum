@@ -597,3 +597,7 @@ article i {
   border-radius: 5px;
   font-size: 14px;
 }
+
+.main-content.hidden, .chat-button.hidden {
+  display: none;
+}

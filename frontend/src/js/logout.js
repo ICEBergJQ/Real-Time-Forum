@@ -2,7 +2,6 @@ const logoutBtn = document.querySelector(".btn.logout");
 const logoutModal = document.querySelector("#logoutModal");
 const closeLogoutModal = logoutModal.querySelector(".close");
 const confirmLogout = logoutModal.querySelector("#confirmLogout");
-
 //check if it's logged in alreadty bedore access logout
 // Handle logout confirmation
 confirmLogout.onclick = () => {

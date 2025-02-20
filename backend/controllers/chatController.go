@@ -21,8 +21,8 @@ var upgrader = websocket.Upgrader{
 var connection map[int][]*websocket.Conn
 
 type Message struct {
-	Sender   int    `json:"sender"`
-	Receiver int    `json:"receiver"`
+	Sender   string `json:"sender"`
+	Receiver string `json:"receiver"`
 	Message  string `json:"message"`
 	Date     string `json:"date"`
 }
@@ -96,7 +96,7 @@ func GetUsersHandler(db *sql.DB) http.HandlerFunc {
 
 func StoreMessage(db *sql.DB, msg Message) error {
 	_, err := db.Exec(
-		`INSERT INTO chat_messages (message, sender_id, receiver_id, sent_at) 
+		`INSERT INTO chat_messages (message, sender, receiver, sent_at) 
 		VALUES (?, ?, ?, ?)`,
 		msg.Message, msg.Sender, msg.Receiver, msg.Date,
 	)
@@ -139,6 +139,10 @@ func GetChatHistory(db *sql.DB, userID1, userID2 int) ([]Message, error) {
 // handles WebSocket connections
 func ChatHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// if r.Method != http.MethodPost {
+		// 	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		// 	return
+		// }
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			fmt.Println("Error upgrading WebSocket:", err)
@@ -146,10 +150,15 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 		}
 		connection = make(map[int][]*websocket.Conn)
 		defer conn.Close()
-		
+
 		userID, err := utils.UserIDFromToken(r, db)
 		if err != nil {
 			fmt.Println("Unauthorized:", err)
+			return
+		}
+		username, err := utils.GetUserName(userID, db)
+		if err != nil {
+			fmt.Println("can't get username:", err)
 			return
 		}
 		mutex.Lock()
@@ -166,17 +175,20 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 				delete(connection, userID)
 				break
 			}
-
-			msg.Sender = userID
+			msg.Sender = username
 			msg.Date = time.Now().Format("2006-01-02 15:04:05")
-			
 
 			if err := StoreMessage(db, msg); err != nil {
 				fmt.Printf("Error storing message: %v\n", err)
 				continue
 			}
-			// add user to connection
-			con, ok := connection[msg.Receiver]
+			
+			user_id, err := utils.GetUserid(username, db)
+			if err != nil {
+				fmt.Println("Unauthorized:", err)
+				return
+			}
+			con, ok := connection[user_id]
 			if ok {
 				for _, co := range con {
 					err := co.WriteJSON(msg)
@@ -185,9 +197,6 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 					}
 				}
 			}
-			// if err := connection[msg.Receiver].WriteJSON(msg); err != nil {
-			// 	fmt.Printf("Error sending confirmation: %v\n", err)
-			// }
 			if err := conn.WriteJSON(msg); err != nil {
 				fmt.Printf("Error sending confirmation: %v\n", err)
 			}

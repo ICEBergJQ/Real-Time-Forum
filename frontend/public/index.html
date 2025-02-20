@@ -17,7 +17,6 @@
   <link rel="stylesheet" href="static/src/css/responsive.css" />
   <link rel="stylesheet" href="static/src/css/logout.css" />
   <link rel="stylesheet" href="static/src/css/chat.css" />
-
 </head>
 
 <body>
@@ -91,8 +90,6 @@
   <!-- for logout -->
   <div id="logoutdynamic"></div>
 
-  <div id="chat_id"></div>
-
   <!-- Main Content -->
   <main class="main-content">
     <section class="feed">
@@ -104,6 +101,22 @@
     <button class="load-more">Load More</button>
   </main>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+
+  <section class="chat-section" id="chat">
+    <!-- <input type="text" id="userSearch" placeholder="Search users..." class="search-bar" /> -->
+    <div class="chat-users" id="chat-users">
+      <!-- Chat users will appear here dynamically -->
+    </div>
+
+    <div id="chat-box" class="chat-box">
+      <div class="chat-header">
+        <span id="chat-username">Chat</span>
+        <button class="close-chat" onclick="closeChat()">✖</button>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <input type="text" class="chat-input" placeholder="Type a message..." />
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="footer">
@@ -147,6 +160,7 @@
   <script src="static/src/js/comment.js"></script>
   <script src="static/src/js/filter.js"></script>
   <script type="module" src="static/src/js/chat.js"></script>
+  <script src="static/public/components/chatCmp.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const commentBtns = document.querySelectorAll(".comment-btn");

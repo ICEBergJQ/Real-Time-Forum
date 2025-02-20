@@ -233,3 +233,5 @@ func GetChatHistoryHandler(db *sql.DB) http.HandlerFunc {
 		json.NewEncoder(w).Encode(messages)
 	}
 }
+
+

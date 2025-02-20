@@ -32,6 +32,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	user.Username = html.EscapeString(user.Username)
 	user.Email = html.EscapeString(user.Email)
 	user.Password = html.EscapeString(user.Password)
+	user.Gender = html.EscapeString(user.Gender)
 
 	if err := utils.Validation(user, true); err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
@@ -43,8 +44,8 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query := "INSERT INTO users (username, email, password) VALUES (?, ?, ?)"
-	_, err := config.DB.Exec(query, user.Username, user.Email, user.Password)
+	query := "INSERT INTO users (username, email, password, age, gender) VALUES (?, ?, ?, ?, ?)"
+	_, err := config.DB.Exec(query, user.Username, user.Email, user.Password, user.Age, user.Gender)
 	if err != nil {
 		if err.Error() == "UNIQUE constraint failed: users.username" {
 			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Username already exists")
@@ -123,6 +124,9 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
 		return
 	}
+	// Add user to online users map
+	AddOnlineUser(userFromDb.ID, config.DB)
+
 	cookie := &http.Cookie{
 		Name:     "session_token",
 		Value:    token,
@@ -135,8 +139,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	utils.CreateResponseAndLogger(w, http.StatusOK, nil, "user logged-in successfully")
 }
 
-// LogoutUser handles user logout
-
+// Logout handles user logout
 func Logout(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		err := errors.New("method not allowed")
@@ -149,6 +152,14 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "user not logged-in")
 		return
 	}
+
+	// Get user ID before deleting session
+	var userID int
+	err = config.DB.QueryRow("SELECT user_id FROM sessions WHERE session_id = ?", cookie.Value).Scan(&userID)
+	if err == nil {
+		RemoveOnlineUser(userID)
+	}
+
 	query := "DELETE FROM sessions WHERE session_id = ?"
 	_, err = config.DB.Exec(query, cookie.Value)
 	if err != nil {

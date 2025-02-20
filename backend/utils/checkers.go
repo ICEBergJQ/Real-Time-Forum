@@ -91,6 +91,15 @@ func GetUserName(userid int, db *sql.DB) (string, error) {
 	return username, nil
 }
 
+func GetUserid(username string, db *sql.DB) (int, error) {
+	user_id := 0
+	err := db.QueryRow(`SELECT user_id FROM users WHERE username = ?;`, username).Scan(&user_id)
+	if err != nil {
+		return 0, err
+	}
+	return user_id, nil
+}
+
 func IfPostReacted(postid string, userid int, db *sql.DB) string {
 	var reaction string
 	err := db.QueryRow(`SELECT reaction_type FROM Reactions WHERE post_id = ? AND user_id = ? AND comment_id = 'none'`, postid, userid).Scan(&reaction)

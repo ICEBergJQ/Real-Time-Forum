@@ -32,11 +32,7 @@ function renderUsers(filteredUsers = users) {
         }).catch(err => displayToast('var(--red)', `get users : ${err}`));
 }
 
-// userSearchInput.addEventListener('input', (event) => {
-//     const query = event.target.value.toLowerCase();
-//     const filteredUsers = users.filter(user => user.username.toLowerCase().includes(query));
-//     renderUsers(filteredUsers);
-// });
+
 
 function startChat(user) {
     chatUsername.textContent = `Chat with ${user}`;

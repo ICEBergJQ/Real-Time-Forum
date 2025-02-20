@@ -1,5 +1,10 @@
-function filterPosts(filtermethod) {
-    let categories = Array.from(document.querySelectorAll('nav input[type=checkbox]:checked'), elem => elem.value)
+function filterPosts(filtermethod, from) {
+    let categories
+    if (from === "menu") {
+        categories = Array.from(document.querySelectorAll('.filter-div input[type=checkbox]:checked'), elem => elem.value)
+    } else if (from === "section") {
+        categories = Array.from(document.querySelectorAll('.sub-menu input[type=checkbox]:checked'), elem => elem.value)
+    }
 
     if (logged !== '1' && (filtermethod === "getcreatedposts" || filtermethod === "getlikedposts")) {
         displayToast('var(--red)', 'you need to login!')
@@ -34,7 +39,7 @@ function filterPosts(filtermethod) {
         }
 
         
-        document.querySelector('.dropdown-menu').style.display = "none";
+        // document.querySelector('.dropdown-menu').style.display = "none";
         //list filtered posts
         Array.from(document.querySelectorAll('nav input[type=checkbox]:checked'), elem =>elem.checked = false)
         data.postsremaing ? loadMore.style.display = 'block' : loadMore.style.display = 'none'

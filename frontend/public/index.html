@@ -107,7 +107,7 @@
                   />
                   <label for="ed"><i class="fa fa-tag" aria-hidden="true"></i> Education</label>
               </li>
-              <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
+              <button onclick="filterPosts('filterbycategories', 'menu')" class="sbtf" id="hiddenMen" type="submit">filter</button>
             </ul>
           </li>
           <li onclick="filterPosts('getcreatedposts')"><i class="fa fa-list-alt" aria-hidden="true"></i> Created posts</li>
@@ -181,7 +181,7 @@
               <label for="ed"><i class="fa fa-tag" aria-hidden="true"></i> Education</label>
             </li>
           </ul>
-            <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
+            <button onclick="filterPosts('filterbycategories', 'section')" class="sbtf" id="section" type="submit">filter</button>
         </div>
       </section>
       <section class="feed" id="feed">

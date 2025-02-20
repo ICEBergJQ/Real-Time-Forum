@@ -51,8 +51,8 @@
           </nav>
           <div class="menu" onclick="toggleMenu()"><a><i class="fa fa-bars" aria-hidden="true" ></i></div></a>
           <div class="nav-actions">
-            <button class="btn logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</button>
             <button class="btn createPostBtn"><i class="fi fi-sr-apps-add"></i> Create Post</button>
+            <button class="btn logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</button>
           </div>
         </div>
       <div class="overlay" id="overlay">
@@ -112,7 +112,8 @@
           </li>
           <li onclick="filterPosts('getcreatedposts')"><i class="fa fa-list-alt" aria-hidden="true"></i> Created posts</li>
           <li onclick="filterPosts('getlikedposts')"><i class="fa fa-heart-o" aria-hidden="true"></i> Liked posts</li>
-          <li onclick=""><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</li>
+          <li class="btn createPostBtn" onclick="showCreatePostModal()"><i class="fi fi-sr-apps-add"></i> Create Post</li>
+          <li class="logout" onclick="showPopup(logoutModal)"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</li>
         </ul>
       </div>
       </div>
@@ -328,6 +329,10 @@
           });
         }
       });
+
+      function showCreatePostModal(){
+        popupOverlay.classList.remove("hidden")
+      }
 
       document.addEventListener("DOMContentLoaded", () => {
       // Event delegation to handle dynamic users

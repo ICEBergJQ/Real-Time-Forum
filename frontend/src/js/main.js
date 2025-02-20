@@ -1,3 +1,4 @@
+
 const logged = localStorage.getItem("logged")
 const navLogoutBtn = document.querySelector('button.logout')
 const registerBtn = document.querySelector(".start-topic") || ''
@@ -9,6 +10,8 @@ const toast = document.querySelector('.toast')
 const loadMore = document.querySelector('main>button.load-more')
 const postsContainer = document.querySelector('main .post-list')
 const mainContent = document.querySelector('.main-content')
+const navbar = document.querySelector(".navbar")
+const chatBtn = document.querySelector(".chat-button")
 
 
 let categories = []
@@ -23,12 +26,8 @@ function createElem(tag, className, content) {
 }
 
 if (logged === '1') {
-    ///nav btns
     navLogoutBtn.style.display = "inline-block"
     createPostBtn.style.display = "inline-block"
-} else {
-    navLogoutBtn.style.display = "none"
-    createPostBtn.style.display = "none"
 }
 
 const showPopup = (elem) => {

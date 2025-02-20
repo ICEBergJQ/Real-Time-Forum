@@ -41,7 +41,7 @@ const showRegisterModal = () => {
 }
 // Show create post modal when create post button is clicked
 
-const showCreatePostModal = () => {
+function showCreatePostModal(){
     popupOverlay.classList.remove("hidden")
 }
 
@@ -58,13 +58,6 @@ const displayPopup = (target) => {
 
 // Hide the modal when clicit pull origin developking outside the modal content
 window.addEventListener("click", (event) => {
-
-    if (event.target === loginModal) {
-        loginModal.classList.add("hidden")
-    }
-    if (event.target === registerModal) {
-        registerModal.classList.add("hidden")
-    }
     if (event.target === createPost) {
         createPost.classList.add("hidden")
     }
@@ -126,6 +119,9 @@ function fetchPosts(from) {
         .then(data => {
             if (logged === '1'){
                 checkIfLoggedout(data.Message)
+            } else {
+                toggleloginPage();
+                return;
             }
             spinner.style.display = 'none';
             if (data.posts && data.posts.length > 0) {
@@ -169,6 +165,8 @@ async function getComment(postId) {
         const coms = await res.json()
         if (logged === '1'){
             checkIfLoggedout(coms.Message)
+        } else {
+            toggleloginPage();
         }
  
         return coms.comments || []
@@ -186,6 +184,28 @@ const displayComments = async (e, postid) => {
     e.target.parentElement.nextElementSibling.querySelector('.replyContainer').insertAdjacentHTML("afterbegin", comms.map(com => Comment(postid, com)).join(''));
 }
 
+function toggleloginPage() {
+    if (logged === '1') {
+        mainContent.classList.remove("hidden")
+        navbar.classList.remove("hidden")
+        chatBtn.classList.remove("hidden")
+    } else {
+        mainContent.classList.add("hidden")
+        navbar.classList.add("hidden")
+        chatBtn.classList.add("hidden")
+        displayPopup("openLogin")
+    }
+}
+
+function checkIfLoggedout(msg) {
+
+    if (msg === 'user logged-out successfully' || msg === "user not logged-in") {
+        localStorage.removeItem("logged")
+        toggleloginPage();
+        window.location.href = "/";
+        return
+    }
+}
 window.displayPopup = displayPopup
 window.listPosts = listPosts
 window.fetchPosts = fetchPosts

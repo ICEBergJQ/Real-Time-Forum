@@ -87,5 +87,6 @@ function sendMessage(user) {
     message.value = '';
 }
 
-renderUsers();
-// }
+if (logged === '1') {
+    renderUsers();
+}

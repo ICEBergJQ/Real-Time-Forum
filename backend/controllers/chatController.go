@@ -158,7 +158,7 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 		}
 		username, err := utils.GetUserName(userID, db)
 		if err != nil {
-			fmt.Println("Unauthorized:", err)
+			fmt.Println("can't get username:", err)
 			return
 		}
 		mutex.Lock()

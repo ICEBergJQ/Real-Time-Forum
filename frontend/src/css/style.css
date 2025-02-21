@@ -561,15 +561,25 @@ article i {
 }
 
 .chat-messages {
-  flex: 1;
+  flex: 2;
   overflow-y: auto;
   padding: 10px;
   background: #222831;
   border-radius: 8px;
 }
-
+.chat-util{
+  display: flex;
+  justify-content: space-between;
+}
+.send-btn {
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-radius: 100%;
+  margin: 5px;
+}
 .chat-input {
-  max-width: 100%;
+  width: 100%;
   padding: 10px;
   border: none;
   outline: none;

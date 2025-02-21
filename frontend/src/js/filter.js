@@ -1,10 +1,5 @@
 function filterPosts(filtermethod, from) {
-    let categories
-    if (from === "menu") {
-        categories = Array.from(document.querySelectorAll('.filter-div input[type=checkbox]:checked'), elem => elem.value)
-    } else if (from === "section") {
-        categories = Array.from(document.querySelectorAll('.sub-menu input[type=checkbox]:checked'), elem => elem.value)
-    }
+    let categories = Array.from(document.querySelectorAll('#filter-menu input[type=checkbox]:checked'), elem => elem.value)
 
     if (logged !== '1' && (filtermethod === "getcreatedposts" || filtermethod === "getlikedposts")) {
         displayToast('var(--red)', 'you need to login!')

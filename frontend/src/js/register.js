@@ -6,7 +6,10 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
     const email = document.querySelector("#email").value.trim()
     const password = document.querySelector("#signUpModal #password").value.trim()
     const confirmPassword = document.querySelector("#confirm-password").value.trim()
+    const birthDate = document.querySelector("#birthdate").value.trim()
+    const gender = document.querySelector("#gender").value.trim()
 
+    let age = calculateAge(birthDate) + '';
 
     if (username == "" || email == "" || password == "" || confirmPassword == "") {
         displayToast('var(--red)', "all fields are required!!")
@@ -29,7 +32,7 @@ document.querySelector('#signUpModal .btn_s').addEventListener('click', function
     fetch("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, password, gender, age}),
     })
         .then(res => {
             if (!res.ok) {

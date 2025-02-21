@@ -58,10 +58,14 @@
       <div class="overlay" id="overlay">
       <div class="hidden-menu" id="hiddenMenu">
         <ul class="menu-list">
+          <li>
+            <a href="/">
+              <i class="fa fa-home" style="font-size: 18px"></i> Home</a>
+            </li>
           <li class="dropdown">
             <a href="/categories" onclick="toggleCategories()"><i class="fa fa-tags" aria-hidden="true"></i>
               Categories <i class="fa fa-angle-right" aria-hidden="true" id="arrow"></i></a>
-            <ul class="sub-menu">
+            <ul class="sub-menu" id="filter-menu">
               <li>
                 <input
                   type="checkbox"
@@ -107,13 +111,13 @@
                   />
                   <label for="ed"><i class="fa fa-tag" aria-hidden="true"></i> Education</label>
               </li>
-              <button onclick="filterPosts('filterbycategories', 'menu')" class="sbtf" id="hiddenMen" type="submit">filter</button>
+              <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
             </ul>
           </li>
-          <li onclick="filterPosts('getcreatedposts')"><i class="fa fa-list-alt" aria-hidden="true"></i> Created posts</li>
-          <li onclick="filterPosts('getlikedposts')"><i class="fa fa-heart-o" aria-hidden="true"></i> Liked posts</li>
-          <li class="btn createPostBtn" onclick="showCreatePostModal()"><i class="fi fi-sr-apps-add"></i> Create Post</li>
-          <li class="logout" onclick="showPopup(logoutModal)"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</li>
+          <li onclick="filterPosts('getcreatedposts'); closeMenu();"><i class="fa fa-list-alt" aria-hidden="true"></i> Created posts</li>
+          <li onclick="filterPosts('getlikedposts'); closeMenu();"><i class="fa fa-heart-o" aria-hidden="true"></i> Liked posts</li>
+          <li class="btn createPostBtn" onclick="showCreatePostModal(); closeMenu();"><i class="fi fi-sr-apps-add"></i> Create Post</li>
+          <li class="logout" onclick="showPopup(logoutModal);"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</li>
         </ul>
       </div>
       </div>
@@ -134,7 +138,7 @@
 
       <section class="filter-section">
         <div class="filter-div">
-          <ul class="filter-menu">
+          <ul class="filter-menu" id="filter-menu">
             <li>
               <input
                 type="checkbox"
@@ -181,7 +185,7 @@
               <label for="ed"><i class="fa fa-tag" aria-hidden="true"></i> Education</label>
             </li>
           </ul>
-            <button onclick="filterPosts('filterbycategories', 'section')" class="sbtf" id="section" type="submit">filter</button>
+            <button onclick="filterPosts('filterbycategories')" class="sbtf" type="submit">filter</button>
         </div>
       </section>
       <section class="feed" id="feed">
@@ -226,13 +230,16 @@
             <button class="close-chat" onclick="closeChat()">✖</button>
           </div>
           <div class="chat-messages"></div>
-          <input type="text" class="chat-input" placeholder="Type a message..." />
+          <div class="chat-util">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Type a message..." />
+            <button id="send-btn" class="send-btn" onclick="sendMessage()"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+          </div>
         </div>
       </section>
     </main>
 
     <button id="chat-toggle" class="chat-button" onclick="toggleChat()">
-      <i class="fa fa-comments-o" aria-hidden="true"></i>
+      <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
     </button>
 
     
@@ -252,6 +259,7 @@
     <script src="static/src/js/logout.js" defer></script>
     <script src="static/src/js/comment.js"></script>
     <script src="static/src/js/filter.js"></script>
+    <script src="static/src/js/chat.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const commentBtns = document.querySelectorAll(".comment-btn");
@@ -280,6 +288,8 @@
       const menu = document.getElementById("hiddenMenu");
       const menuButton = document.querySelector(".menu");
       const overlay = document.querySelector(".overlay");
+      const filter = document.querySelector(".filter-menu");
+      const filterbtn = document.querySelectorAll(".sbtf")
       
       document.querySelectorAll(".dropdown > ul").forEach((menu) => {
         menu.style.display = "none";
@@ -307,11 +317,29 @@
         menu.classList.toggle("active");
         menuButton.classList.toggle("active");
         overlay.classList.toggle("active");
+        menu.querySelectorAll('input[name="categories"]').forEach(radio => {
+        radio.checked = false;
+        });
         if (chatSection.style.display != "none") {
           closeChat();
           chatSection.classList.add("hidden");
           feed.classList.remove("hidden");
         }
+      }
+
+      filterbtn.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          closeMenu();
+        })
+      })
+
+      function closeMenu() {
+        menu.classList.remove("active");
+        overlay.classList.remove("active");
+        menuButton.classList.remove("active");
+        menu.querySelectorAll('input[name="categories"]').forEach(radio => {
+        radio.checked = false;
+        });
       }
 
       function toggleCategories() {
@@ -375,6 +403,9 @@
           overlay.classList.remove("active")
         } else {
           if (feed.style.display != "none" && chatSection.style.display != "none") {
+            filter.querySelectorAll('input[name="categories"]').forEach(radio => {
+              radio.checked = false;
+            });
             chatSection.classList.add("hidden");
             feed.classList.remove("hidden");
           }

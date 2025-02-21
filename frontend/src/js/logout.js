@@ -2,6 +2,7 @@ const logoutBtn = document.querySelector(".btn.logout");
 const logoutModal = document.querySelector("#logoutModal");
 const closeLogoutModal = logoutModal.querySelector(".close");
 const confirmLogout = logoutModal.querySelector("#confirmLogout");
+const postList = document.querySelector(".post-list");
 //check if it's logged in alreadty bedore access logout
 // Handle logout confirmation
 confirmLogout.onclick = () => {
@@ -20,7 +21,9 @@ confirmLogout.onclick = () => {
             localStorage.removeItem("logged")
 
             setTimeout(() => {
+                
                 window.location.href = "/";
+                postList.innerHTML = "";
 
             }, 700)
         }).catch(err => displayToast('var(--red)', "logout Error : " + err))

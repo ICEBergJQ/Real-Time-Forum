@@ -144,16 +144,16 @@ function fetchPosts(from) {
         }).catch(err => displayToast('var(--red)', `get posts : ${err}`))
 }
 
-
-fetch("/categories")
+if (logged === '1') {
+    fetch("/categories")
     .then(res => res.json())
     .then(categories => {
-
+        
         document.querySelector('#createPostForm .categories-container').innerHTML = categories.map(cat => `<input type="checkbox" id="${cat.category_name}" name="categories" value="${cat.category_name}">
             <label for="${cat.category_name}">${cat.category_name}</label> `).join('')
-    })
-    .catch(err => displayToast('var(--red)', `can't get categories${err}`))
-
+        })
+        .catch(err => displayToast('var(--red)', `can't get categories${err}`))
+}
 fetchPosts();
 
 async function getComment(postId) {

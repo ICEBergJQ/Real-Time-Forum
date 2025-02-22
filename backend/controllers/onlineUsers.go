@@ -67,7 +67,7 @@ func GetOnlineUsersHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		users := GetOnlineUsers()
-
+		
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(users); err != nil {
 			http.Error(w, "Failed to encode response", http.StatusInternalServerError)

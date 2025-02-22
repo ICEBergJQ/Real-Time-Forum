@@ -27,12 +27,10 @@ function renderUsers(filteredUsers = users) {
                 userDiv.classList.add('chat-user');
                 userDiv.textContent = users[i].username;
                 chatUsersDiv.appendChild(userDiv);
-                userDiv.onclick = () => startChat(users[i].username);
+                userDiv.onclick = () => startChat(users[i].username, Chathistory(offset = 0, users[i].username));
             }
         }).catch(err => displayToast('var(--red)', `get users : ${err}`));
 }
-
-
 
 function startChat(user) {
     chatUsername.textContent = `Chat with ${user}`;
@@ -42,9 +40,9 @@ function startChat(user) {
         if (event.key === "Enter") {
             event.preventDefault();
             sendMessage(user)
+            message.value = ''
         }
     })
-    // , sendMessage(users[i].username
 }
 
 function toggleChat() {
@@ -67,7 +65,7 @@ socket.addEventListener("open", () => {
 if (socket) {
     socket.onmessage = (event) => {
         displayToast('var(--green)', 'message added succesfully!!')
-        console.log(event.data);
+        // console.log(event.data);
     };
 
 }
@@ -79,10 +77,49 @@ function sendMessage(user) {
         receiver: user,
         message: message
     }))
-    console.log(user, message);
+    // console.log(user, message);
     message.value = '';
 }
 
+async function Chathistory(offset, user) {
+    await fetch("/chat-history", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            receiver: user,
+            offset: offset
+        })
+    }).then(messages => {
+        if (!messages.ok) {
+            displayToast('var(--red)', `Response Not 200 !!!`)
+        }
+        return messages.json()
+    }).then(data => {
+        console.log(data);
+        displayToast('var(--green)', 'chat added succesfully!!')
+    }).catch(err => displayToast('var(--red)', `get messages : ${err}`));
+
+}
+
+function OnlineUsers() {
+    let users=[];
+    fetch("/users/online").then(onlineUsers => {
+        if (!onlineUsers.ok) {
+            throw new Error("Response NOT 200 !!!!!");
+        }
+        return onlineUsers.json()
+    }).then(data => {
+        if (logged !== '1') {
+            alert("Need to log in !!!");
+        }
+        users.push(...data)
+        console.log('aaa',users);
+        
+    }).catch(err => displayToast('var(--red)', `get OnlineUsers : ${err}`));
+}
+
+
 if (logged === '1') {
-    renderUsers();
+    renderUsers(); 
+    OnlineUsers()
 }

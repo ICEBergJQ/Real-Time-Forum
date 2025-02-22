@@ -28,7 +28,8 @@ type Message struct {
 }
 
 type ChatHistoryRequest struct {
-	OtherUserID int `json:"receiver"`
+	OtherUserID string `json:"receiver"`
+	Offset      int    `json:"offset"`
 }
 
 type User struct {
@@ -106,18 +107,19 @@ func StoreMessage(db *sql.DB, msg Message) error {
 	return nil
 }
 
-func GetChatHistory(db *sql.DB, userID1, userID2 int) ([]Message, error) {
+func GetChatHistory(db *sql.DB, username string, MsgData ChatHistoryRequest) ([]Message, error) {
 	// add offset to the query
 	// OFFSET := from front-end
 	query := `
-		SELECT sender_id, receiver_id, message, sent_at 
+		SELECT sender, receiver, message, sent_at 
 		FROM chat_messages 
-		WHERE (sender_id = ? AND receiver_id = ?) 
-		   OR (sender_id = ? AND receiver_id = ?)
+		WHERE (sender = ? AND receiver = ?) 
+		   OR (sender = ? AND receiver = ?)
 		ORDER BY sent_at DESC 
-		LIMIT 10 OFFSET 10
+		LIMIT 10 OFFSET ?
 	`
-	rows, err := db.Query(query, userID1, userID2, userID2, userID1)
+	rows, err := db.Query(query, username, MsgData.OtherUserID, MsgData.OtherUserID, username, MsgData.Offset)
+	// fmt.Println(MsgData,userID1)
 	if err != nil {
 		return nil, err
 	}
@@ -132,17 +134,12 @@ func GetChatHistory(db *sql.DB, userID1, userID2 int) ([]Message, error) {
 		}
 		messages = append(messages, msg)
 	}
-
 	return messages, nil
 }
 
 // handles WebSocket connections
 func ChatHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// if r.Method != http.MethodPost {
-		// 	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		// 	return
-		// }
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			fmt.Println("Error upgrading WebSocket:", err)
@@ -182,7 +179,7 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 				fmt.Printf("Error storing message: %v\n", err)
 				continue
 			}
-			
+
 			user_id, err := utils.GetUserid(username, db)
 			if err != nil {
 				fmt.Println("Unauthorized:", err)
@@ -216,22 +213,24 @@ func GetChatHistoryHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
+		// convert userid into username
+		username, err := utils.GetUserName(userID, db)
+		if err != nil {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
 
 		var req ChatHistoryRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "Invalid request body", http.StatusBadRequest)
 			return
 		}
-
-		messages, err := GetChatHistory(db, userID, req.OtherUserID)
+		messages, err := GetChatHistory(db, username, req)
 		if err != nil {
 			http.Error(w, "Failed to fetch chat history", http.StatusInternalServerError)
 			return
 		}
-
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(messages)
 	}
 }
-
-

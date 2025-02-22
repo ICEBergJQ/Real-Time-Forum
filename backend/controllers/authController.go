@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"html"
 	"net/http"
 	"time"
@@ -125,7 +126,9 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Add user to online users map
-	AddOnlineUser(userFromDb.ID, config.DB)
+	if err := AddOnlineUser(userFromDb.ID, config.DB); err != nil {
+		fmt.Println("error in add online users ")
+	}
 
 	cookie := &http.Cookie{
 		Name:     "session_token",

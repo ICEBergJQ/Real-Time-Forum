@@ -124,8 +124,6 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
 		return
 	}
-	// Add user to online users map
-	AddOnlineUser(userFromDb.ID, config.DB)
 
 	cookie := &http.Cookie{
 		Name:     "session_token",

@@ -1,3 +1,6 @@
+let articles = []
+let categories = []
+
 function checkIfLoggedout(msg) {
 
     if (msg === 'user logged-out successfully' || msg === "user not logged-in") {

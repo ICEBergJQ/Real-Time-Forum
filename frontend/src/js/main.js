@@ -14,10 +14,6 @@ const navbar = document.querySelector(".navbar")
 const chatBtn = document.querySelector(".chat-button")
 
 
-let categories = []
-let articles = []
-
-
 function createElem(tag, className, content) {
     const element = document.createElement(tag)
     element.classList.add(className)

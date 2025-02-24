@@ -22,20 +22,29 @@ function sendMessage() {
   }
 }
 
-function displayMessage(username, content) {
+function displayMessage(username, content,flag) {
   const chatBox = document.querySelector(".chat-messages");
   const msgContainer = document.createElement("div");
   const msgDiv = document.createElement("div");
   msgContainer.classList.add("message-container");
-  msgDiv.classList.add("message-container");
+  msgDiv.classList.add("message");
+  if (flag){
+    msgContainer.classList.add("receiver");
+    msgDiv.classList.add("receiver");
+  }
   msgDiv.innerHTML = `<strong>${username}:</strong> ${content}`;
-  chatBox.appendChild(msgDiv);
+  msgContainer.appendChild(msgDiv);
+  chatBox.appendChild(msgContainer);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function displayHistory(data) {
+function displayHistory(data, username) {
   data.forEach((e)=>{
-    displayMessage(e.sender, e.message);
+    if (username == e.sender) {
+      displayMessage(e.sender, e.message, true);
+    } else {
+      displayMessage(e.sender, e.message);
+    }
   })
 }
 
@@ -91,7 +100,7 @@ function fetchChatHistory(user) {
         headers: {
           'Content-Type': 'application/json' // Tells the server the format of the request body
         },
-        body: JSON.stringify({ "receiver": 1 })
+        body: JSON.stringify({ receiver: user , offset : 0 })
         })
         .then(res => {
             if (!res.ok) {
@@ -108,7 +117,7 @@ function fetchChatHistory(user) {
             }
             if (data && data.length > 0) {
                 console.log(data);  
-                displayHistory(data);
+                displayHistory(data,user);
                 
             }
         }).catch(err => displayToast('var(--red)', `getting chat history : ${err}`))

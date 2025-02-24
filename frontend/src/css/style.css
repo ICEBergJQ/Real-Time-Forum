@@ -561,11 +561,50 @@ article i {
 }
 
 .chat-messages {
-  flex: 2;
+  display: flex;
+  flex: 1;
   overflow-y: auto;
-  padding: 10px;
   background: #222831;
   border-radius: 8px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.message-container {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  padding: 5px 0px;
+  border-radius: 8px;
+  word-wrap: break-word;
+  font-size: 14px;
+}
+
+.message-container.receiver {
+  justify-content: flex-start;
+}
+
+.message {
+  width: fit-content;
+  max-width: 90%;
+  padding: 5px 5px;
+  background-color: #00ADB5;
+  color: white;
+  padding: 5px 5px;
+  margin-right: 4px;
+  word-wrap: break-word;
+  border-radius: 15px 15px 0 15px;
+}
+
+.message.receiver {
+  width: fit-content;
+  max-width: 90%;
+  padding: 5px 5px;
+  background-color: #393E46;
+  color: #f1f1f1;
+  margin-left: 4px;
+  word-wrap: break-word;
+  border-radius: 15px 15px 15px 0;
 }
 .chat-util{
   display: flex;

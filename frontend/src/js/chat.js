@@ -24,11 +24,19 @@ function sendMessage() {
 
 function displayMessage(username, content) {
   const chatBox = document.querySelector(".chat-messages");
+  const msgContainer = document.createElement("div");
   const msgDiv = document.createElement("div");
-  msgDiv.classList.add("message");
+  msgContainer.classList.add("message-container");
+  msgDiv.classList.add("message-container");
   msgDiv.innerHTML = `<strong>${username}:</strong> ${content}`;
   chatBox.appendChild(msgDiv);
   chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function displayHistory(data) {
+  data.forEach((e)=>{
+    displayMessage(e.sender, e.message);
+  })
 }
 
 function displayUsers(data) {
@@ -78,7 +86,13 @@ function fetchUsers() {
 function fetchChatHistory(user) {
   let url = '/chat-history';
 
-    fetch(url)
+    fetch(url,{
+        method: 'POST', // Specifies the POST method
+        headers: {
+          'Content-Type': 'application/json' // Tells the server the format of the request body
+        },
+        body: JSON.stringify({ "receiver": 1 })
+        })
         .then(res => {
             if (!res.ok) {
                 throw new Error("something went wrong, please try again")
@@ -94,7 +108,7 @@ function fetchChatHistory(user) {
             }
             if (data && data.length > 0) {
                 console.log(data);  
-                displayUsers(data);
+                displayHistory(data);
                 
             }
         }).catch(err => displayToast('var(--red)', `getting chat history : ${err}`))

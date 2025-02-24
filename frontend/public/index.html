@@ -344,7 +344,7 @@
         usersContainer.addEventListener("click", (event) => {
         if (event.target.classList.contains("chat-user")) {
           openChat(event.target);
-          fetchChatHistory(event.target.textContent);
+          fetchChatHistory(event.target.textContent.trim());
         }
       });
 

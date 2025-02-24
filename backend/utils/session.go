@@ -99,7 +99,7 @@ func UserIDFromToken(r *http.Request, db *sql.DB) (int, error) {
 func GetUserIDHandler(w http.ResponseWriter, r *http.Request) {
 	userID, err := UserIDFromToken(r, config.DB)
 	if err != nil {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		http.Error(w, "no cockies: ", http.StatusUnauthorized)
 		return
 	}
 	response := map[string]int{"user_id": userID}

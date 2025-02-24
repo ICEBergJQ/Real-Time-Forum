@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"html"
 	"net/http"
 	"time"
@@ -124,10 +123,6 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Internal server error")
 		return
-	}
-	// Add user to online users map
-	if err := AddOnlineUser(userFromDb.ID, config.DB); err != nil {
-		fmt.Println("error in add online users ")
 	}
 
 	cookie := &http.Cookie{

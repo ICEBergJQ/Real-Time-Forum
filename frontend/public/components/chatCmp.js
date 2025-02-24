@@ -1,5 +1,5 @@
 // export default function chatComponent() {
-const socket = new WebSocket("ws://localhost:8080/ws");
+
 const users = [];
 const chatSection = document.getElementById('chat');
 const chatToggleButton = document.getElementById('chat-toggle');
@@ -47,38 +47,43 @@ function startChat(user) {
 
 function toggleChat() {
     chatSection.style.display = chatSection.style.display === 'none' ? 'block' : 'none';
-    renderUsers();
+    // renderUsers();
 }
 
 function closeChat() {
     chatBox.style.display = 'none';
 }
 
-socket.addEventListener("error", (error) => {
-    console.log(`WebSocket Error: ${error}`);
-});
+if (logged === "1") {
+    const socket = new WebSocket("ws://localhost:8080/ws");
 
-socket.addEventListener("open", () => {
-    console.log("WebSocket connection established.");
-});
+    socket.addEventListener("error", (error) => {
+        console.log(`WebSocket Error: ${error}`);
+    });
 
-if (socket) {
-    socket.onmessage = (event) => {
-        displayToast('var(--green)', 'message added succesfully!!')
-        // console.log(event.data);
-    };
+    socket.addEventListener("open", () => {
+        console.log("WebSocket connection established.");
+        OnlineUsers();
+        renderUsers();
+    });
 
-}
+    if (socket) {
+        socket.onmessage = (event) => {
+            displayToast('var(--green)', 'message added succesfully!!')
+            console.log('sssssssssss', event.data);
+        };
 
+    }
 
-function sendMessage(user) {
-    let message = document.querySelector(".chat-input").value
-    socket.send(JSON.stringify({
-        receiver: user,
-        message: message
-    }))
-    // console.log(user, message);
-    message.value = '';
+    function sendMessage(user) {
+        let message = document.querySelector(".chat-input").value
+        socket.send(JSON.stringify({
+            receiver: user,
+            message: message
+        }))
+        // console.log(user, message);
+        message.value = '';
+    }
 }
 
 async function Chathistory(offset, user) {
@@ -102,7 +107,7 @@ async function Chathistory(offset, user) {
 }
 
 function OnlineUsers() {
-    let users=[];
+    let users = [];
     fetch("/users/online").then(onlineUsers => {
         if (!onlineUsers.ok) {
             throw new Error("Response NOT 200 !!!!!");
@@ -113,13 +118,13 @@ function OnlineUsers() {
             alert("Need to log in !!!");
         }
         users.push(...data)
-        console.log('aaa',users);
-        
+        console.log('aaa', users);
+
     }).catch(err => displayToast('var(--red)', `get OnlineUsers : ${err}`));
 }
 
 
-if (logged === '1') {
-    renderUsers(); 
-    OnlineUsers()
-}
+// if (logged === '1') {
+// renderUsers();
+// OnlineUsers()
+// }

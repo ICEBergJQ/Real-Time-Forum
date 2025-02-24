@@ -21,7 +21,6 @@ var upgrader = websocket.Upgrader{
 // var connection map[int][]*websocket.Conn
 var connection = make(map[int][]*websocket.Conn)
 
-
 type Message struct {
 	Type     string `json:"type"`
 	Status   string `json:"status"`
@@ -241,7 +240,7 @@ func GetChatHistoryHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "user from token error: ", http.StatusUnauthorized)
 			return
 		}
-		// convert userid into username
+		
 		username, err := utils.GetUserName(userID, db)
 		if err != nil {
 			http.Error(w, "can't get username: ", http.StatusUnauthorized)

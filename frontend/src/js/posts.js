@@ -63,10 +63,6 @@ window.addEventListener("click", (event) => {
     }
 })
 
-// Show the login modal when the login button is clicked
-
-// loginBtn.addEventListener("click", showLoginModal)
-// registerBtn.onclick = () => showRegisterModal()
 createPostBtn.onclick = () => showCreatePostModal()
 
 //get poosts
@@ -184,28 +180,6 @@ const displayComments = async (e, postid) => {
     e.target.parentElement.nextElementSibling.querySelector('.replyContainer').insertAdjacentHTML("afterbegin", comms.map(com => Comment(postid, com)).join(''));
 }
 
-function toggleloginPage() {
-    if (logged === '1') {
-        mainContent.classList.remove("hidden")
-        navbar.classList.remove("hidden")
-        chatBtn.classList.remove("hidden")
-    } else {
-        mainContent.classList.add("hidden")
-        navbar.classList.add("hidden")
-        chatBtn.classList.add("hidden")
-        displayPopup("openLogin")
-    }
-}
-
-function checkIfLoggedout(msg) {
-
-    if (msg === 'user logged-out successfully' || msg === "user not logged-in") {
-        localStorage.removeItem("logged")
-        toggleloginPage();
-        window.location.href = "/";
-        return
-    }
-}
 window.displayPopup = displayPopup
 window.listPosts = listPosts
 window.fetchPosts = fetchPosts

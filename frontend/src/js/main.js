@@ -37,28 +37,11 @@ const showPopup = (elem) => {
 }
 
 // errors  
-const displayToast = (color, txt) => {
-    toast.textContent = txt
-    toast.style.top = "40px"
-    toast.style.background = color;
-    toast.style.animation = "bounce 0.5s ease-in-out"
-    hideToast(1500)
-}
+
 ///reset the delay
 toast.addEventListener('mouseenter', () => hideToast(10000))
 toast.addEventListener('mouseleave', () => hideToast(100))
 
-let timer
-const hideToast = (mill) => {
-    //clear prev timeout if exists
-    clearTimeout(timer)
-
-    timer = setTimeout(() => {
-        toast.style.animation = "none"
-        toast.style.top = "-105px"
-    }, mill);
-
-}
 //cursor
 const formatDate = (date) => {
     const year = date.getFullYear()
@@ -95,27 +78,4 @@ function readlesss(e, id) {
     });
     parent.appendChild(readmore);
 }
-function checkIfLoggedout(msg) {
 
-    if (msg === 'user logged-out successfully' || msg === "user not logged-in") {
-        localStorage.removeItem("logged")
-        window.location.href = "/";
-        return
-    }
-}
-
-function calculateAge(birthdate) {
-    const birthDate = new Date(birthdate);
-    const today = new Date();
-
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    const dayDiff = today.getDate() - birthDate.getDate();
-
-    // If birthday hasn't occurred yet this year, subtract 1 from age
-    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-        age--;
-    }
-
-    return age;
-}

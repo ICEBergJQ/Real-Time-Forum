@@ -599,6 +599,17 @@ article i {
   max-height: 100%;
   overflow: auto;
 }
+.chat-user {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chat-user.online {
+  .status{
+    color: #39db49;
+  }
+}
+
 .search-bar {
   max-width: 100%;
   padding: 8px;

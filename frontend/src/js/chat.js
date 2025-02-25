@@ -2,13 +2,21 @@ const socket = new WebSocket("ws://localhost:8080/ws");
 
 const userDivs = document.querySelectorAll('.chat-user');
 const usersBox = document.querySelector(".chat-users");
+const chatUsername = document.getElementById("chat-username");
 
 
 socket.onopen = () => console.log("Connected to WebSocket");
 
 socket.onmessage = (event) => {
   const msg = JSON.parse(event.data);
-  displayMessage(msg.sender, msg.message);
+  console.log(msg);
+  if (msg.sender === chatUsername.innerText.trim() && msg.message != "") {
+    displayMessage(msg.sender, msg.message,true);
+  } else if (msg.receiver === chatUsername.innerText.trim()){
+    displayMessage(msg.sender, msg.message);
+  } else {
+    setTimeout (fetchStatus(), 2000);
+  }
 };
 
 function sendMessage() {
@@ -63,8 +71,34 @@ function updateStatus(data) {
     user.classList.remove("online");
   })
   data.forEach(e => {
-    document.getElementById(e.username).classList.add("online")
+    let u = document.getElementById(e.username)
+    if (u) {
+      u.classList.add("online")
+    }
   });
+}
+
+function fetchStatus() {
+  let url = '/users/online';
+
+  fetch(url)
+      .then(res => {
+          if (!res.ok) {
+              throw new Error("something went wrong, please try again")
+          }
+          return res.json()
+      })
+      .then(data => {
+          if (logged === '1'){
+              checkIfLoggedout(data.Message)
+          } else {
+              toggleloginPage();
+              return;
+          }
+          if (data && data.length > 0) { 
+              updateStatus(data);
+          }
+      }).catch(err => displayToast('var(--red)', `get status : ${err}`))
 }
 
 function fetchUsers() {
@@ -84,10 +118,8 @@ function fetchUsers() {
                 toggleloginPage();
                 return;
             }
-            if (data && data.length > 0) {
-                console.log(data);  
+            if (data && data.length > 0) { 
                 displayUsers(data);
-                
             }
         }).catch(err => displayToast('var(--red)', `get users : ${err}`))
 }

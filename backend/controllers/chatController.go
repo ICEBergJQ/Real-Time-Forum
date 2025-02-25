@@ -199,7 +199,7 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 				continue
 			}
 
-			user_id, err := utils.GetUserid(username, db)
+			user_id, err := utils.GetUserid(msg.Receiver, db)
 			if err != nil {
 				fmt.Println("Unauthorized:", err)
 				return

@@ -256,9 +256,9 @@
       });
     </script>
     <script>
+      const chatMessages = document.querySelector(".chat-messages");
       const usersContainer = document.querySelector(".chat-users");
       const chatBox = document.getElementById("chat-box");
-      const chatUsername = document.getElementById("chat-username");
       const closeChatBtn = document.querySelector(".close-chat");
       const chatSection = document.getElementById("chat")
       const feed = document.getElementById("feed");
@@ -356,6 +356,8 @@
     }
 
       function closeChat() {
+        chatUsername.textContent = "";
+        chatMessages.innerHTML = "";
         chatBox.style.display = "none";
       }
 

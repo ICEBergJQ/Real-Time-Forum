@@ -1,5 +1,6 @@
-let articles = []
-let categories = []
+let articles = [];
+let categories = [];
+let offset = 0;
 
 function checkIfLoggedout(msg) {
 
@@ -60,3 +61,12 @@ function calculateAge(birthdate) {
 
     return age;
 }
+
+function closeChat() {
+    chatUsername.textContent = "";
+    chatMessages.innerHTML = "";
+    chatBox.style.display = "none";
+    offset = 0;
+  }
+
+window.offset = offset;

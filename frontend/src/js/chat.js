@@ -1,23 +1,36 @@
 const socket = new WebSocket("ws://localhost:8080/ws");
-
 const userDivs = document.querySelectorAll('.chat-user');
 const usersBox = document.querySelector(".chat-users");
 const chatUsername = document.getElementById("chat-username");
+const messagesBox = document.querySelector(".chat-messages");
 
 
 socket.onopen = () => console.log("Connected to WebSocket");
 
+
 socket.onmessage = (event) => {
   const msg = JSON.parse(event.data);
-  console.log(msg);
   if (msg.sender === chatUsername.innerText.trim() && msg.message != "") {
     displayMessage(msg.sender, msg.message,true);
-  } else if (msg.receiver === chatUsername.innerText.trim()){
+  } else if (msg.receiver === chatUsername.innerText.trim() && !msg.status){
     displayMessage(msg.sender, msg.message);
   } else {
-    setTimeout (fetchStatus(), 2000);
+    if (msg.status === 'offline') {
+      updateStatus(msg.sender,msg.status);
+    } else {
+      updateStatus(msg.sender,msg.status);
+    }
   }
 };
+
+function updateStatus(user,status) {
+  let u = document.getElementById(user);
+  if (status === 'online' && u) {
+    u.classList.add("online");
+  } else if (status === 'offline' && u) {
+    u.classList.remove("online");
+  }
+}
 
 function sendMessage() {
   const input = document.getElementById("chat-input");
@@ -30,28 +43,31 @@ function sendMessage() {
   }
 }
 
-function displayMessage(username, content,flag) {
-  const chatBox = document.querySelector(".chat-messages");
+function displayMessage(username, content,reciverFlag, historyFlag) {
   const msgContainer = document.createElement("div");
   const msgDiv = document.createElement("div");
   msgContainer.classList.add("message-container");
   msgDiv.classList.add("message");
-  if (flag){
+  if (reciverFlag){
     msgContainer.classList.add("receiver");
     msgDiv.classList.add("receiver");
   }
   msgDiv.innerHTML = `<strong>${username}:</strong> ${content}`;
   msgContainer.appendChild(msgDiv);
-  chatBox.appendChild(msgContainer);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  if (historyFlag) {
+    messagesBox.insertBefore(msgContainer, messagesBox.firstChild)
+  } else {
+    messagesBox.appendChild(msgContainer);
+  }
+  messagesBox.scrollTop = messagesBox.scrollHeight;
 }
 
 function displayHistory(data, username) {
-  data.forEach((e)=>{
+  data.reverse().forEach((e)=>{
     if (username == e.sender) {
-      displayMessage(e.sender, e.message, true);
+      displayMessage(e.sender, e.message, true,true);
     } else {
-      displayMessage(e.sender, e.message);
+      displayMessage(e.sender, e.message,false, true);
     }
   })
 }
@@ -66,10 +82,7 @@ function displayUsers(data) {
   });
 }
 
-function updateStatus(data) {
-  userDivs.forEach((user)=> {
-    user.classList.remove("online");
-  })
+function insertStatus(data) {
   data.forEach(e => {
     let u = document.getElementById(e.username)
     if (u) {
@@ -80,23 +93,23 @@ function updateStatus(data) {
 
 function fetchStatus() {
   let url = '/users/online';
-
+  
   fetch(url)
-      .then(res => {
-          if (!res.ok) {
-              throw new Error("something went wrong, please try again")
-          }
-          return res.json()
-      })
-      .then(data => {
+  .then(res => {
+    if (!res.ok) {
+      throw new Error("something went wrong, please try again")
+    }
+    return res.json()
+  })
+  .then(data => {
           if (logged === '1'){
               checkIfLoggedout(data.Message)
-          } else {
+            } else {
               toggleloginPage();
               return;
-          }
+            }
           if (data && data.length > 0) { 
-              updateStatus(data);
+              insertStatus(data);
           }
       }).catch(err => displayToast('var(--red)', `get status : ${err}`))
 }
@@ -110,8 +123,8 @@ function fetchUsers() {
                 throw new Error("something went wrong, please try again")
             }
             return res.json()
-        })
-        .then(data => {
+          })
+          .then(data => {
             if (logged === '1'){
                 checkIfLoggedout(data.Message)
             } else {
@@ -127,12 +140,15 @@ function fetchUsers() {
 function fetchChatHistory(user) {
   let url = '/chat-history';
 
+    const oldScrollHeight = messagesBox.scrollHeight;
+    const oldScrollTop = messagesBox.scrollTop;
+
     fetch(url,{
-        method: 'POST', // Specifies the POST method
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json' // Tells the server the format of the request body
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ receiver: user , offset : 0 })
+        body: JSON.stringify({ receiver: user , offset : window.offset })
         })
         .then(res => {
             if (!res.ok) {
@@ -142,20 +158,32 @@ function fetchChatHistory(user) {
         })
         .then(data => {
             if (logged === '1'){
+              if (data.Message) {
                 checkIfLoggedout(data.Message)
+              }
             } else {
                 toggleloginPage();
                 return;
             }
             if (data && data.length > 0) {
-                console.log(data);  
+              window.offset += data.length; 
+              console.log(window.offset); 
                 displayHistory(data,user);
-                
+                messagesBox.scrollTop = messagesBox.scrollHeight - oldScrollHeight + oldScrollTop;
+            } else {
+              displayToast('var(--info)', `No Messages!`);
             }
         }).catch(err => displayToast('var(--red)', `getting chat history : ${err}`))
 }
 
 fetchUsers();
+fetchStatus();
+
+messagesBox.addEventListener("scroll", () => {
+  if (messagesBox.scrollTop === 0) {
+    fetchChatHistory(chatUsername.innerText)
+  }
+});
 
 document.getElementById("send-btn").addEventListener("click", sendMessage);
 

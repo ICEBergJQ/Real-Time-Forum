@@ -1,6 +1,7 @@
 let articles = [];
 let categories = [];
-let offset = 0;
+window.offset = 0;
+window.articles = articles;
 
 function checkIfLoggedout(msg) {
 
@@ -66,8 +67,5 @@ function closeChat() {
     chatUsername.textContent = "";
     chatMessages.innerHTML = "";
     chatBox.style.display = "none";
-    offset = 0;
+    window.offset = 0;
   }
-
-window.offset = offset;
-window.articles = articles;

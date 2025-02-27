@@ -46,13 +46,15 @@ function sendMessage() {
 function displayMessage(username, content,reciverFlag, historyFlag) {
   const msgContainer = document.createElement("div");
   const msgDiv = document.createElement("div");
+  const name = document.createElement('h1')
   msgContainer.classList.add("message-container");
   msgDiv.classList.add("message");
   if (reciverFlag){
     msgContainer.classList.add("receiver");
     msgDiv.classList.add("receiver");
   }
-  msgDiv.innerHTML = `<strong>${username}:</strong> ${content}`;
+
+  msgDiv.innerHTML = `${content}`;
   msgContainer.appendChild(msgDiv);
   if (historyFlag) {
     messagesBox.insertBefore(msgContainer, messagesBox.firstChild)
@@ -63,7 +65,7 @@ function displayMessage(username, content,reciverFlag, historyFlag) {
 }
 
 function displayHistory(data, username) {
-  data.reverse().forEach((e)=>{
+  data.forEach((e)=>{
     if (username == e.sender) {
       displayMessage(e.sender, e.message, true,true);
     } else {
@@ -73,13 +75,14 @@ function displayHistory(data, username) {
 }
 
 function displayUsers(data) {
-  const userdiv = document.createElement("div");
   data.forEach(e => {
+    const userdiv = document.createElement("div");
     userdiv.classList.add("chat-user");
     userdiv.id = e.username
     userdiv.innerHTML = `${e.username} <div class="status" ><i class="fa fa-circle" aria-hidden="true"></i></div>`;
     usersBox.appendChild(userdiv);
   });
+  console.log(data)
 }
 
 function insertStatus(data) {

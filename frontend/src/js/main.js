@@ -51,7 +51,7 @@ const formatDate = (date) => {
 
 //load more content...
 function popPost(e, id) {
-    const post = articles.find(p => p.id == id)
+    const post = window.articles.find(p => p.id == id)
     const parent = e.target.parentElement;
     parent.textContent = post.content;
     const readless = document.createElement('button');
@@ -63,7 +63,7 @@ function popPost(e, id) {
 }
 
 function readlesss(e, id) {
-    const post = articles.find(p => p.id == id)
+    const post = window.articles.find(p => p.id == id)
     const parent = e.target.parentElement;
     const content = `${post.content.slice(0, 76)}`;
     parent.textContent = content;

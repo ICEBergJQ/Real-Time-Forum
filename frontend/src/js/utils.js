@@ -70,3 +70,4 @@ function closeChat() {
   }
 
 window.offset = offset;
+window.articles = articles;

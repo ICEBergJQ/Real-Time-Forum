@@ -73,22 +73,22 @@ const listPosts = (posts, fromWhere) => {
     spinner.style.display = 'none !important';
     if (fromWhere === 'fromFilter') {
         postsContainer.innerHTML = ''
-        articles = []
+        window.articles = []
     }
 
     if (posts) {
         if (fromWhere === "fromloadmore") {
-            articles = posts
+            window.articles = posts
         } else {
 
-            articles.push(...posts)
+            window.articles.push(...posts)
         }
     }
 
-    !articles.length ?
+    !window.articles.length ?
         displayToast('var(--info', 'No Post Found!!')
 
-        : articles.forEach(async post => {
+        : window.articles.forEach(async post => {
             postsContainer.innerHTML += Article(post)
         })
 }
@@ -96,7 +96,7 @@ const listPosts = (posts, fromWhere) => {
 const listSingleComment = (Post_id, container, com) => container.querySelector('h2').insertAdjacentHTML("afterend", Comment(Post_id, com));
 
 loadMore.onclick = () => {
-    cursor = formatDate(new Date(articles[articles.length - 1].createdat))
+    cursor = formatDate(new Date(window.articles[window.articles.length - 1].createdat))
     fetchPosts("fromloadmore");
 }
 

@@ -153,6 +153,8 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 
 		userID, err := utils.UserIDFromToken(r, db)
 		if err != nil {
+			conn.Close()
+			Logout(w,r)
 			fmt.Println("can't get userFrom token, ", err)
 			return
 		}

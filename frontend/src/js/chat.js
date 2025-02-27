@@ -4,26 +4,27 @@ const usersBox = document.querySelector(".chat-users");
 const chatUsername = document.getElementById("chat-username");
 const messagesBox = document.querySelector(".chat-messages");
 
-
 socket.onopen = () => console.log("Connected to WebSocket");
-
 
 socket.onmessage = (event) => {
   const msg = JSON.parse(event.data);
   if (msg.sender === chatUsername.innerText.trim() && msg.message != "") {
-    displayMessage(msg.sender, msg.message,true);
-  } else if (msg.receiver === chatUsername.innerText.trim() && !msg.status){
+    displayMessage(msg.sender, msg.message, true);
+  } else if (msg.receiver === chatUsername.innerText.trim() && !msg.status) {
     displayMessage(msg.sender, msg.message);
   } else {
+    if (msg.message != "") {
+      displayToast('var(--info)', `new message from ${msg.sender}`)
+    }
     if (msg.status === 'offline') {
-      updateStatus(msg.sender,msg.status);
+      updateStatus(msg.sender, msg.status);
     } else {
-      updateStatus(msg.sender,msg.status);
+      updateStatus(msg.sender, msg.status);
     }
   }
 };
 
-function updateStatus(user,status) {
+function updateStatus(user, status) {
   let u = document.getElementById(user);
   if (status === 'online' && u) {
     u.classList.add("online");
@@ -37,19 +38,19 @@ function sendMessage() {
   const receiver = document.getElementById("chat-username").innerText;
   const message = input.value.trim();
   if (message) {
-    const msgObj = { receiver: receiver , message: message };
+    const msgObj = { receiver: receiver, message: message };
     socket.send(JSON.stringify(msgObj));
     input.value = "";
   }
 }
 
-function displayMessage(username, content,reciverFlag, historyFlag) {
+function displayMessage(username, content, reciverFlag, historyFlag) {
   const msgContainer = document.createElement("div");
   const msgDiv = document.createElement("div");
   const name = document.createElement('h1')
   msgContainer.classList.add("message-container");
   msgDiv.classList.add("message");
-  if (reciverFlag){
+  if (reciverFlag) {
     msgContainer.classList.add("receiver");
     msgDiv.classList.add("receiver");
   }
@@ -65,11 +66,11 @@ function displayMessage(username, content,reciverFlag, historyFlag) {
 }
 
 function displayHistory(data, username) {
-  data.forEach((e)=>{
+  data.forEach((e) => {
     if (username == e.sender) {
-      displayMessage(e.sender, e.message, true,true);
+      displayMessage(e.sender, e.message, true, true);
     } else {
-      displayMessage(e.sender, e.message,false, true);
+      displayMessage(e.sender, e.message, false, true);
     }
   })
 }
@@ -96,87 +97,87 @@ function insertStatus(data) {
 
 function fetchStatus() {
   let url = '/users/online';
-  
+
   fetch(url)
-  .then(res => {
-    if (!res.ok) {
-      throw new Error("something went wrong, please try again")
-    }
-    return res.json()
-  })
-  .then(data => {
-          if (logged === '1'){
-              checkIfLoggedout(data.Message)
-            } else {
-              toggleloginPage();
-              return;
-            }
-          if (data && data.length > 0) { 
-              insertStatus(data);
-          }
-      }).catch(err => displayToast('var(--red)', `get status : ${err}`))
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("something went wrong, please try again")
+      }
+      return res.json()
+    })
+    .then(data => {
+      if (logged === '1') {
+        checkIfLoggedout(data.Message)
+      } else {
+        toggleloginPage();
+        return;
+      }
+      if (data && data.length > 0) {
+        insertStatus(data);
+      }
+    }).catch(err => displayToast('var(--red)', `get status : ${err}`))
 }
 
 function fetchUsers() {
-    let url = '/users';
+  let url = '/users';
 
-    fetch(url)
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("something went wrong, please try again")
-            }
-            return res.json()
-          })
-          .then(data => {
-            if (logged === '1'){
-                checkIfLoggedout(data.Message)
-            } else {
-                toggleloginPage();
-                return;
-            }
-            if (data && data.length > 0) { 
-                displayUsers(data);
-            }
-        }).catch(err => displayToast('var(--red)', `get users : ${err}`))
+  fetch(url)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("something went wrong, please try again")
+      }
+      return res.json()
+    })
+    .then(data => {
+      if (logged === '1') {
+        checkIfLoggedout(data.Message)
+      } else {
+        toggleloginPage();
+        return;
+      }
+      if (data && data.length > 0) {
+        displayUsers(data);
+      }
+    }).catch(err => displayToast('var(--red)', `get users : ${err}`))
 }
 
 function fetchChatHistory(user) {
   let url = '/chat-history';
 
-    const oldScrollHeight = messagesBox.scrollHeight;
-    const oldScrollTop = messagesBox.scrollTop;
+  const oldScrollHeight = messagesBox.scrollHeight;
+  const oldScrollTop = messagesBox.scrollTop;
 
-    fetch(url,{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ receiver: user , offset : window.offset })
-        })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("something went wrong, please try again")
-            }
-            return res.json()
-        })
-        .then(data => {
-            if (logged === '1'){
-              if (data.Message) {
-                checkIfLoggedout(data.Message)
-              }
-            } else {
-                toggleloginPage();
-                return;
-            }
-            if (data && data.length > 0) {
-              window.offset += data.length; 
-              console.log(window.offset); 
-                displayHistory(data,user);
-                messagesBox.scrollTop = messagesBox.scrollHeight - oldScrollHeight + oldScrollTop;
-            } else {
-              displayToast('var(--info)', `No Messages!`);
-            }
-        }).catch(err => displayToast('var(--red)', `getting chat history : ${err}`))
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ receiver: user, offset: window.offset })
+  })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("something went wrong, please try again")
+      }
+      return res.json()
+    })
+    .then(data => {
+      if (logged === '1') {
+        if (data.Message) {
+          checkIfLoggedout(data.Message)
+        }
+      } else {
+        toggleloginPage();
+        return;
+      }
+      if (data && data.length > 0) {
+        window.offset += data.length;
+        console.log(window.offset);
+        displayHistory(data, user);
+        messagesBox.scrollTop = messagesBox.scrollHeight - oldScrollHeight + oldScrollTop;
+      } else {
+        displayToast('var(--info)', `No Messages!`);
+      }
+    }).catch(err => displayToast('var(--red)', `getting chat history : ${err}`))
 }
 
 fetchUsers();

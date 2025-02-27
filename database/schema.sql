@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL,
     age INTEGER NOT NULL,
     gender TEXT NOT NULL CHECK (gender IN ('male', 'female')),
-    created_at TEXT DEFAULT (datetime('now', '+1 hour')) NOT NULL
+    created_at TEXT DEFAULT (datetime('now')) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS posts (
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS posts (
     category_name TEXT NOT NULL,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
-    created_at TEXT DEFAULT (datetime('now', '+1 hour')) NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS comments (
     user_id INTEGER NOT NULL,
     post_id TEXT NOT NULL,
     content TEXT NOT NULL,
-    created_at TEXT DEFAULT (datetime('now', '+1 hour')) NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (user_id),
     FOREIGN KEY (post_id) REFERENCES posts (post_id) ON DELETE CASCADE
 );
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS Reactions (
     post_id TEXT,
     comment_id TEXT,
     reaction_type TEXT NOT NULL CHECK (reaction_type IN ('like', 'dislike')),
-    created_at TEXT DEFAULT (datetime('now', '+1 hour')) NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')) NOT NULL,
     PRIMARY KEY (user_id, post_id, comment_id),
     FOREIGN KEY (user_id) REFERENCES users (user_id),
     FOREIGN KEY (post_id) REFERENCES posts (post_id) ON DELETE CASCADE,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS Reactions (
 CREATE TABLE IF NOT EXISTS sessions (
     session_id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
-    created_at TEXT DEFAULT (datetime('now', '+1 hour')) NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')) NOT NULL,
     expired_at TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS chat_messages (
     message TEXT NOT NULL,
     sender TEXT NOT NULL,
     receiver TEXT NOT NULL,
-    sent_at TEXT DEFAULT (datetime('now', '+1 hour')) NOT NULL,
+    sent_at TEXT DEFAULT (datetime('now')) NOT NULL,
     FOREIGN KEY (sender) REFERENCES users (username),
     FOREIGN KEY (receiver) REFERENCES users (username)
 );

@@ -46,15 +46,15 @@ function sendMessage() {
 function displayMessage(username, content,reciverFlag, historyFlag) {
   const msgContainer = document.createElement("div");
   const msgDiv = document.createElement("div");
-  const name = document.createElement('h1')
   msgContainer.classList.add("message-container");
   msgDiv.classList.add("message");
   if (reciverFlag){
     msgContainer.classList.add("receiver");
     msgDiv.classList.add("receiver");
   }
-
-  msgDiv.innerHTML = `${content}`;
+  msgDiv.innerHTML = `<strong>${username}</strong>
+  <h2>${content}</h2>
+  <h3>m3a l 1 hh</h3>`;
   msgContainer.appendChild(msgDiv);
   if (historyFlag) {
     messagesBox.insertBefore(msgContainer, messagesBox.firstChild)
@@ -82,7 +82,6 @@ function displayUsers(data) {
     userdiv.innerHTML = `${e.username} <div class="status" ><i class="fa fa-circle" aria-hidden="true"></i></div>`;
     usersBox.appendChild(userdiv);
   });
-  console.log(data)
 }
 
 function insertStatus(data) {

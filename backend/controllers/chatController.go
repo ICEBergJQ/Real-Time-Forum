@@ -21,7 +21,6 @@ var upgrader = websocket.Upgrader{
 // var connection map[int][]*websocket.Conn
 var connection = make(map[int][]*websocket.Conn)
 
-
 type Message struct {
 	Type     string `json:"type"`
 	Status   string `json:"status"`
@@ -42,20 +41,65 @@ type User struct {
 }
 
 func GetAllUsers(db *sql.DB, currentUserID int) ([]User, error) {
-	query := `
-		SELECT user_id, username 
-		FROM users 
-		WHERE user_id != ? 
-		ORDER BY username ASC
+	var users []User
+	currentUsername := ""
+
+	// Get current user's username
+	err := db.QueryRow("SELECT username FROM users WHERE user_id = ?", currentUserID).Scan(&currentUsername)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch current username: %v", err)
+	}
+
+	// Get users with messages, ordered by last message sent
+	queryWithMessages := `
+		SELECT u.user_id, u.username
+		FROM users u
+		WHERE u.user_id != ?
+		AND u.username IN (
+			SELECT sender FROM chat_messages WHERE receiver = ?
+			UNION
+			SELECT receiver FROM chat_messages WHERE sender = ?
+		)
+		ORDER BY (
+			SELECT MAX(sent_at) 
+			FROM chat_messages 
+			WHERE (sender = u.username AND receiver = ?) OR (receiver = u.username AND sender = ?)
+		) DESC
 	`
 
-	rows, err := db.Query(query, currentUserID)
+	rows, err := db.Query(queryWithMessages, currentUserID, currentUsername, currentUsername, currentUsername, currentUsername)
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch users: %v", err)
+		return nil, fmt.Errorf("failed to fetch users with messages: %v", err)
 	}
 	defer rows.Close()
 
-	var users []User
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.UserID, &user.Username); err != nil {
+			return nil, fmt.Errorf("failed to scan user: %v", err)
+		}
+		users = append(users, user)
+	}
+
+	// Get users with no messages, ordered alphabetically
+	queryWithoutMessages := `
+		SELECT user_id, username 
+		FROM users 
+		WHERE user_id != ? 
+		AND username NOT IN (
+			SELECT sender FROM chat_messages WHERE receiver = ?
+			UNION
+			SELECT receiver FROM chat_messages WHERE sender = ?
+		)
+		ORDER BY username ASC
+	`
+
+	rows, err = db.Query(queryWithoutMessages, currentUserID, currentUsername, currentUsername)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch users without messages: %v", err)
+	}
+	defer rows.Close()
+
 	for rows.Next() {
 		var user User
 		if err := rows.Scan(&user.UserID, &user.Username); err != nil {
@@ -154,7 +198,7 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 		userID, err := utils.UserIDFromToken(r, db)
 		if err != nil {
 			conn.Close()
-			Logout(w,r)
+			Logout(w, r)
 			fmt.Println("can't get userFrom token, ", err)
 			return
 		}

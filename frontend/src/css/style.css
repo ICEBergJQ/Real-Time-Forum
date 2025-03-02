@@ -590,16 +590,13 @@ article i {
   padding: 5px 5px;
   background-color: #00ADB5;
   color: white;
-  padding: 5px 5px;
+  padding: 10px 5px;
   margin-right: 4px;
   word-wrap: break-word;
   border-radius: 15px 15px 0 15px;
-  font-size: 10px;
-  h2{
-    font-size: 20px;
-  };
+  font-size: 18px;
   h3{
-    font-size: 5px;
+    font-size: 9px;
   };
 }
 
@@ -665,6 +662,6 @@ article i {
   font-size: 14px;
 }
 
-.main-content.hidden, .chat-button.hidden {
+.main-content.hidden, .chat-button.hidden, .chat-user.hidden {
   display: none;
 }

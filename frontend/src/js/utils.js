@@ -69,3 +69,18 @@ function closeChat() {
     chatBox.style.display = "none";
     window.offset = 0;
   }
+
+function searchUsersById() {
+  const input = document.getElementById("userSearch").value.toLowerCase();
+  const userDivs = document.querySelectorAll(".chat-user");
+  
+  userDivs.forEach((userDiv) => {
+    if (input === "") {
+        userDiv.classList.remove('hidden')
+    } else if (userDiv.id.toLowerCase().includes(input)) {
+      userDiv.classList.remove('hidden')
+    } else {
+      userDiv.classList.add('hidden')
+    }
+  });
+}

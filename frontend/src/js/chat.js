@@ -10,6 +10,9 @@ socket.onopen = () => console.log("Connected to WebSocket");
 
 socket.onmessage = (event) => {
   const msg = JSON.parse(event.data);
+  if (msg.message != "") {
+    moveToTop(msg.sender);
+  }
   if (msg.sender === chatUsername.innerText.trim() && msg.message != "") {
     displayMessage(msg.sender, msg.message,true);
   } else if (msg.receiver === chatUsername.innerText.trim() && !msg.status){
@@ -22,6 +25,14 @@ socket.onmessage = (event) => {
     }
   }
 };
+
+function moveToTop(userId) {
+  const userDiv = document.getElementById(userId);
+
+  if (userDiv) {
+    usersBox.prepend(userDiv);
+  }
+}
 
 function updateStatus(user,status) {
   let u = document.getElementById(user);
@@ -46,15 +57,16 @@ function sendMessage() {
 function displayMessage(username, content,reciverFlag, historyFlag) {
   const msgContainer = document.createElement("div");
   const msgDiv = document.createElement("div");
+
   msgContainer.classList.add("message-container");
   msgDiv.classList.add("message");
   if (reciverFlag){
     msgContainer.classList.add("receiver");
     msgDiv.classList.add("receiver");
   }
-  msgDiv.innerHTML = `<strong>${username}</strong>
-  <h2>${content}</h2>
+  msgDiv.innerHTML = `<strong>${username}:</strong> ${content}
   <h3>m3a l 1 hh</h3>`;
+
   msgContainer.appendChild(msgDiv);
   if (historyFlag) {
     messagesBox.insertBefore(msgContainer, messagesBox.firstChild)

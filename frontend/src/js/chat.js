@@ -1,30 +1,43 @@
-const socket = new WebSocket("ws://localhost:8080/ws");
 const userDivs = document.querySelectorAll('.chat-user');
 const usersBox = document.querySelector(".chat-users");
 const chatUsername = document.getElementById("chat-username");
 const messagesBox = document.querySelector(".chat-messages");
 
-
-socket.onopen = () => console.log("Connected to WebSocket");
-
-
-socket.onmessage = (event) => {
-  const msg = JSON.parse(event.data);
-  if (msg.message != "") {
-    moveToTop(msg.sender);
-  }
-  if (msg.sender === chatUsername.innerText.trim() && msg.message != "") {
-    displayMessage(msg.sender, msg.message,true);
-  } else if (msg.receiver === chatUsername.innerText.trim() && !msg.status){
-    displayMessage(msg.sender, msg.message);
-  } else {
-    if (msg.status === 'offline') {
-      updateStatus(msg.sender,msg.status);
+if (logged == 1) {
+  const socket = new WebSocket("ws://localhost:8080/ws");
+  socket.onopen = () => console.log("Connected to WebSocket");
+  
+  
+  socket.onmessage = (event) => {
+    const msg = JSON.parse(event.data);
+    if (msg.message != "") {
+      moveToTop(msg.sender);
+    }
+    if (msg.sender === chatUsername.innerText.trim() && msg.message != "") {
+      displayMessage(msg.sender, msg.message, msg.date ,true);
+    } else if (msg.receiver === chatUsername.innerText.trim() && !msg.status){
+      displayMessage(msg.sender, msg.message, msg.date);
     } else {
-      updateStatus(msg.sender,msg.status);
+      if (msg.status === 'offline') {
+        updateStatus(msg.sender,msg.status);
+      } else {
+        updateStatus(msg.sender,msg.status);
+      }
+    }
+  };
+
+  function sendMessage() {
+    const input = document.getElementById("chat-input");
+    const receiver = document.getElementById("chat-username").innerText;
+    const message = input.value.trim();
+    if (message) {
+      const msgObj = { receiver: receiver , message: message };
+      socket.send(JSON.stringify(msgObj));
+      input.value = "";
     }
   }
-};
+}
+
 
 function moveToTop(userId) {
   const userDiv = document.getElementById(userId);
@@ -43,18 +56,8 @@ function updateStatus(user,status) {
   }
 }
 
-function sendMessage() {
-  const input = document.getElementById("chat-input");
-  const receiver = document.getElementById("chat-username").innerText;
-  const message = input.value.trim();
-  if (message) {
-    const msgObj = { receiver: receiver , message: message };
-    socket.send(JSON.stringify(msgObj));
-    input.value = "";
-  }
-}
 
-function displayMessage(username, content,reciverFlag, historyFlag) {
+function displayMessage(username, content, date ,reciverFlag, historyFlag) {
   const msgContainer = document.createElement("div");
   const msgDiv = document.createElement("div");
 
@@ -65,7 +68,7 @@ function displayMessage(username, content,reciverFlag, historyFlag) {
     msgDiv.classList.add("receiver");
   }
   msgDiv.innerHTML = `<strong>${username}:</strong> ${content}
-  <h3>m3a l 1 hh</h3>`;
+  <h3>${date}</h3>`;
 
   msgContainer.appendChild(msgDiv);
   if (historyFlag) {
@@ -79,9 +82,9 @@ function displayMessage(username, content,reciverFlag, historyFlag) {
 function displayHistory(data, username) {
   data.forEach((e)=>{
     if (username == e.sender) {
-      displayMessage(e.sender, e.message, true,true);
+      displayMessage(e.sender, e.message, e.date, true,true);
     } else {
-      displayMessage(e.sender, e.message,false, true);
+      displayMessage(e.sender, e.message, e.date, false, true);
     }
   })
 }
@@ -184,14 +187,23 @@ function fetchChatHistory(user) {
               console.log(window.offset); 
                 displayHistory(data,user);
                 messagesBox.scrollTop = messagesBox.scrollHeight - oldScrollHeight + oldScrollTop;
-            } else {
+            } 
+            if (!data) {
               displayToast('var(--info)', `No Messages!`);
             }
-        }).catch(err => displayToast('var(--red)', `getting chat history : ${err}`))
+        }).catch(err => { 
+          if (err.toString().includes("data is null")) {
+          displayToast('var(--info)', `No Messages!`);
+        } else {
+          displayToast('var(--red)', `Getting chat history: ${err}`);
+        }
+        }
+      )
 }
-
-fetchUsers();
-fetchStatus();
+if (logged == 1) {
+  fetchUsers();
+  fetchStatus();
+}
 
 messagesBox.addEventListener("scroll", () => {
   if (messagesBox.scrollTop === 0) {

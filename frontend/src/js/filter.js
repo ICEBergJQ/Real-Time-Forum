@@ -38,7 +38,7 @@ function filterPosts(filtermethod, from) {
         //list filtered posts
         Array.from(document.querySelectorAll('nav input[type=checkbox]:checked'), elem =>elem.checked = false)
         data.postsremaing ? loadMore.style.display = 'block' : loadMore.style.display = 'none'
-        listPosts(data.posts, 'fromFilter')
+        window.listPosts(data.posts, 'fromFilter')
     }).catch(err => displayToast('var(--red)', err))
 }
 

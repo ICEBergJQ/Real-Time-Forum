@@ -69,7 +69,7 @@ createPostBtn.onclick = () => showCreatePostModal()
 
 let cursor = formatDate(new Date())
 
-const listPosts = (posts, fromWhere) => {
+export const listPosts = (posts, fromWhere) => {
     spinner.style.display = 'none !important';
     if (fromWhere === 'fromFilter') {
         postsContainer.innerHTML = ''

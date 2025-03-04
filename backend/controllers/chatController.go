@@ -231,23 +231,26 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 			var msg Message
 			if err := conn.ReadJSON(&msg); err != nil {
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-					fmt.Printf("websocket error: %v\n", err)
+					// fmt.Printf("websocket error: %v\n", err)
+					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "websocket error")
+					return
 				}
-				// instead of break i need to handle close websocket and delete the user from the map
 				delete(connection, userID)
 				break
 			}
 			msg.Sender = username
 			msg.Date = time.Now().Format("2006-01-02 15:04:05")
-
-			if err := StoreMessage(db, msg); err != nil {
-				fmt.Printf("Error storing message: %v\n", err)
+			if len(msg.Message) > 400 {
+				err = fmt.Errorf("message is too long. max  = 400 !!!")
+				utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "message is too long!!! max = 400")
+			} else if err := StoreMessage(db, msg); err != nil {
+				utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error storing message")
 				continue
 			}
 
 			user_id, err := utils.GetUserid(msg.Receiver, db)
 			if err != nil {
-				fmt.Println("Unauthorized:", err)
+				utils.CreateResponseAndLogger(w, http.StatusNotFound, err, "Unauthorized")
 				return
 			}
 			con, ok := connection[user_id]
@@ -255,12 +258,13 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 				for _, co := range con {
 					err := co.WriteJSON(msg)
 					if err != nil {
-						fmt.Printf("Error sending confirmation: %v\n", err)
+						utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
 					}
 				}
 			}
 			if err := conn.WriteJSON(msg); err != nil {
-				fmt.Printf("Error sending confirmation: %v\n", err)
+				utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
+				// fmt.Printf("Error sending confirmation: %v\n", err)
 			}
 		}
 		for _, v := range connection {
@@ -269,7 +273,10 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 				msg.Type = "status"
 				msg.Status = "offline"
 				msg.Sender = username
-				val.WriteJSON(msg)
+				err := val.WriteJSON(msg)
+				if err != nil {
+					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
+				}
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 const createPostForm = document.querySelector('#createPostForm')
 const postTitle = createPostForm.querySelector('input[type=text]')
 const postContent = createPostForm.querySelector('textarea')
+import Article from '../../public/components/articleCmp.js'
 
 createPostForm.onsubmit = (e) => {
     e.preventDefault()
@@ -39,12 +40,15 @@ createPostForm.onsubmit = (e) => {
             
 
 
-            displayToast('var(--info)', 'post created successfully!!!')
-            popupOverlay.classList.add("hidden")
-            createPostForm.reset()
-            console.log(data);
-
+            displayToast('var(--info)', 'post created successfully!!!');
+            popupOverlay.classList.add("hidden");
+            createPostForm.reset();
+            listPost(data);
     
         })
         .catch(() => displayToast('var(--red)', "creating post Error"));
+}
+
+function listPost(post) {
+    postsContainer.innerHTML = Article(post) + postsContainer.innerHTML
 }

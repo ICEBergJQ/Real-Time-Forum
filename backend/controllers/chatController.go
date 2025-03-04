@@ -156,8 +156,7 @@ func StoreMessage(db *sql.DB, msg Message) error {
 }
 
 func GetChatHistory(db *sql.DB, username string, MsgData ChatHistoryRequest) ([]Message, error) {
-	// add offset to the query
-	// OFFSET := from front-end
+	
 	query := `
 		SELECT sender, receiver, message, sent_at 
 		FROM chat_messages 
@@ -190,7 +189,8 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			fmt.Println("Error upgrading WebSocket:", err)
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error upgrading WebSocket")
+			// fmt.Println("Error upgrading WebSocket:", err)
 			return
 		}
 		defer conn.Close()
@@ -199,12 +199,14 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			conn.Close()
 			Logout(w, r)
-			fmt.Println("can't get userFrom token, ", err)
+			utils.CreateResponseAndLogger(w, http.StatusBadGateway, err, "can't get userFrom token")
+			// fmt.Println("can't get userFrom token, ", err)
 			return
 		}
 		username, err := utils.GetUserName(userID, db)
 		if err != nil {
-			fmt.Println("can't get username:", err)
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "can't get username")
+			// fmt.Println("can't get username:", err)
 			return
 		}
 
@@ -285,30 +287,36 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 func GetChatHistoryHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
-			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			err := fmt.Errorf("Method not allowed") 
+			utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Method not allowed")
+			// http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
 
 		userID, err := utils.UserIDFromToken(r, db)
 		if err != nil {
-			http.Error(w, "user from token error: ", http.StatusUnauthorized)
+			utils.CreateResponseAndLogger(w, http.StatusUnauthorized, err, "can't get user from token")
+			// http.Error(w, "user from token error: ", http.StatusUnauthorized)
 			return
 		}
 		// convert userid into username
 		username, err := utils.GetUserName(userID, db)
 		if err != nil {
-			http.Error(w, "can't get username: ", http.StatusUnauthorized)
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "can't get username with user_id")
+			// http.Error(w, "can't get username: ", http.StatusUnauthorized)
 			return
 		}
 
 		var req ChatHistoryRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			http.Error(w, "Invalid request body", http.StatusBadRequest)
+			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Invalid request body")
+			// http.Error(w, "Invalid request body", http.StatusBadRequest)
 			return
 		}
 		messages, err := GetChatHistory(db, username, req)
 		if err != nil {
-			http.Error(w, "Failed to fetch chat history", http.StatusInternalServerError)
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Failed to fetch chat history")
+			// http.Error(w, "Failed to fetch chat history", http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")

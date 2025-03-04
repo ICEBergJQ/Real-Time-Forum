@@ -41,14 +41,10 @@ createPostForm.onsubmit = (e) => {
 
             displayToast('var(--info)', 'post created successfully!!!')
             popupOverlay.classList.add("hidden")
-            mainContent.innerHTML = ''
-
             createPostForm.reset()
-            setTimeout(() => {
-                form.reset()
-                window.location.href = "/"
+            console.log(data);
 
-            }, 1000)
+    
         })
         .catch(() => displayToast('var(--red)', "creating post Error"));
 }

@@ -3,6 +3,7 @@ let categories = [];
 window.offset = 0;
 window.articles = articles;
 
+
 function checkIfLoggedout(msg) {
 
     if (msg === 'user logged-out successfully' || msg === "user not logged-in") {
@@ -84,3 +85,11 @@ function searchUsersById() {
     }
   });
 }
+
+const listPosts = (post) => {
+
+    if (post) {
+        
+    }
+}
+

@@ -18,6 +18,9 @@ if (logged == 1) {
     } else if (msg.receiver === chatUsername.innerText.trim() && !msg.status){
       displayMessage(msg.sender, msg.message, msg.date);
     } else {
+      if (msg.message != "") {
+        displayToast('var(--info)', `new message from ${msg.sender}`)
+      }
       if (msg.status === 'offline') {
         updateStatus(msg.sender,msg.status);
       } else {

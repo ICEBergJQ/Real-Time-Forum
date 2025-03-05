@@ -102,6 +102,8 @@ loadMore.onclick = () => {
 
 // Function to fetch posts
 function fetchPosts(from) {
+    console.log(cursor);
+    
     let url = '/post';
     url += `?cursor=${cursor}`
     spinner.style.display = 'block';

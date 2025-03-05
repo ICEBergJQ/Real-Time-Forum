@@ -21,7 +21,6 @@ var upgrader = websocket.Upgrader{
 // var connection map[int][]*websocket.Conn
 var connection = make(map[int][]*websocket.Conn)
 
-
 type Message struct {
 	Type     string `json:"type"`
 	Status   string `json:"status"`
@@ -42,20 +41,65 @@ type User struct {
 }
 
 func GetAllUsers(db *sql.DB, currentUserID int) ([]User, error) {
-	query := `
-		SELECT user_id, username 
-		FROM users 
-		WHERE user_id != ? 
-		ORDER BY username ASC
+	var users []User
+	currentUsername := ""
+
+	// Get current user's username
+	err := db.QueryRow("SELECT username FROM users WHERE user_id = ?", currentUserID).Scan(&currentUsername)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch current username: %v", err)
+	}
+
+	// Get users with messages, ordered by last message sent
+	queryWithMessages := `
+		SELECT u.user_id, u.username
+		FROM users u
+		WHERE u.user_id != ?
+		AND u.username IN (
+			SELECT sender FROM chat_messages WHERE receiver = ?
+			UNION
+			SELECT receiver FROM chat_messages WHERE sender = ?
+		)
+		ORDER BY (
+			SELECT MAX(sent_at) 
+			FROM chat_messages 
+			WHERE (sender = u.username AND receiver = ?) OR (receiver = u.username AND sender = ?)
+		) DESC
 	`
 
-	rows, err := db.Query(query, currentUserID)
+	rows, err := db.Query(queryWithMessages, currentUserID, currentUsername, currentUsername, currentUsername, currentUsername)
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch users: %v", err)
+		return nil, fmt.Errorf("failed to fetch users with messages: %v", err)
 	}
 	defer rows.Close()
 
-	var users []User
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.UserID, &user.Username); err != nil {
+			return nil, fmt.Errorf("failed to scan user: %v", err)
+		}
+		users = append(users, user)
+	}
+
+	// Get users with no messages, ordered alphabetically
+	queryWithoutMessages := `
+		SELECT user_id, username 
+		FROM users 
+		WHERE user_id != ? 
+		AND username NOT IN (
+			SELECT sender FROM chat_messages WHERE receiver = ?
+			UNION
+			SELECT receiver FROM chat_messages WHERE sender = ?
+		)
+		ORDER BY username ASC
+	`
+
+	rows, err = db.Query(queryWithoutMessages, currentUserID, currentUsername, currentUsername)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch users without messages: %v", err)
+	}
+	defer rows.Close()
+
 	for rows.Next() {
 		var user User
 		if err := rows.Scan(&user.UserID, &user.Username); err != nil {
@@ -112,8 +156,7 @@ func StoreMessage(db *sql.DB, msg Message) error {
 }
 
 func GetChatHistory(db *sql.DB, username string, MsgData ChatHistoryRequest) ([]Message, error) {
-	// add offset to the query
-	// OFFSET := from front-end
+	
 	query := `
 		SELECT sender, receiver, message, sent_at 
 		FROM chat_messages 
@@ -146,7 +189,8 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			fmt.Println("Error upgrading WebSocket:", err)
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error upgrading WebSocket")
+			// fmt.Println("Error upgrading WebSocket:", err)
 			return
 		}
 		defer conn.Close()
@@ -154,13 +198,15 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 		userID, err := utils.UserIDFromToken(r, db)
 		if err != nil {
 			conn.Close()
-			Logout(w,r)
-			fmt.Println("can't get userFrom token, ", err)
+			Logout(w, r)
+			utils.CreateResponseAndLogger(w, http.StatusBadGateway, err, "can't get userFrom token")
+			// fmt.Println("can't get userFrom token, ", err)
 			return
 		}
 		username, err := utils.GetUserName(userID, db)
 		if err != nil {
-			fmt.Println("can't get username:", err)
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "can't get username")
+			// fmt.Println("can't get username:", err)
 			return
 		}
 
@@ -187,23 +233,26 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 			var msg Message
 			if err := conn.ReadJSON(&msg); err != nil {
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-					fmt.Printf("websocket error: %v\n", err)
+					// fmt.Printf("websocket error: %v\n", err)
+					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "websocket error")
+					return
 				}
-				// instead of break i need to handle close websocket and delete the user from the map
 				delete(connection, userID)
 				break
 			}
 			msg.Sender = username
 			msg.Date = time.Now().Format("2006-01-02 15:04:05")
-
-			if err := StoreMessage(db, msg); err != nil {
-				fmt.Printf("Error storing message: %v\n", err)
+			if len(msg.Message) > 400 {
+				err = fmt.Errorf("message is too long. max  = 400 !!!")
+				utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "message is too long!!! max = 400")
+			} else if err := StoreMessage(db, msg); err != nil {
+				utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error storing message")
 				continue
 			}
 
 			user_id, err := utils.GetUserid(msg.Receiver, db)
 			if err != nil {
-				fmt.Println("Unauthorized:", err)
+				utils.CreateResponseAndLogger(w, http.StatusNotFound, err, "Unauthorized")
 				return
 			}
 			con, ok := connection[user_id]
@@ -211,12 +260,13 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 				for _, co := range con {
 					err := co.WriteJSON(msg)
 					if err != nil {
-						fmt.Printf("Error sending confirmation: %v\n", err)
+						utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
 					}
 				}
 			}
 			if err := conn.WriteJSON(msg); err != nil {
-				fmt.Printf("Error sending confirmation: %v\n", err)
+				utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
+				// fmt.Printf("Error sending confirmation: %v\n", err)
 			}
 		}
 		for _, v := range connection {
@@ -225,7 +275,10 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 				msg.Type = "status"
 				msg.Status = "offline"
 				msg.Sender = username
-				val.WriteJSON(msg)
+				err := val.WriteJSON(msg)
+				if err != nil {
+					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
+				}
 			}
 		}
 	}
@@ -234,30 +287,36 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 func GetChatHistoryHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
-			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			err := fmt.Errorf("Method not allowed") 
+			utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Method not allowed")
+			// http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
 
 		userID, err := utils.UserIDFromToken(r, db)
 		if err != nil {
-			http.Error(w, "user from token error: ", http.StatusUnauthorized)
+			utils.CreateResponseAndLogger(w, http.StatusUnauthorized, err, "can't get user from token")
+			// http.Error(w, "user from token error: ", http.StatusUnauthorized)
 			return
 		}
 		// convert userid into username
 		username, err := utils.GetUserName(userID, db)
 		if err != nil {
-			http.Error(w, "can't get username: ", http.StatusUnauthorized)
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "can't get username with user_id")
+			// http.Error(w, "can't get username: ", http.StatusUnauthorized)
 			return
 		}
 
 		var req ChatHistoryRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			http.Error(w, "Invalid request body", http.StatusBadRequest)
+			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Invalid request body")
+			// http.Error(w, "Invalid request body", http.StatusBadRequest)
 			return
 		}
 		messages, err := GetChatHistory(db, username, req)
 		if err != nil {
-			http.Error(w, "Failed to fetch chat history", http.StatusInternalServerError)
+			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Failed to fetch chat history")
+			// http.Error(w, "Failed to fetch chat history", http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")

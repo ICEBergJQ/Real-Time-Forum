@@ -47,7 +47,7 @@ function moveToTop(userId) {
   }
 }
 
-function updateStatus(user,status) {
+function updateStatus(user, status) {
   let u = document.getElementById(user);
   if (status === 'online' && u) {
     u.classList.add("online");
@@ -63,7 +63,7 @@ function displayMessage(username, content, date ,reciverFlag, historyFlag) {
 
   msgContainer.classList.add("message-container");
   msgDiv.classList.add("message");
-  if (reciverFlag){
+  if (reciverFlag) {
     msgContainer.classList.add("receiver");
     msgDiv.classList.add("receiver");
   }
@@ -80,7 +80,7 @@ function displayMessage(username, content, date ,reciverFlag, historyFlag) {
 }
 
 function displayHistory(data, username) {
-  data.forEach((e)=>{
+  data.forEach((e) => {
     if (username == e.sender) {
       displayMessage(e.sender, e.message, e.date, true,true);
     } else {
@@ -110,55 +110,55 @@ function insertStatus(data) {
 
 function fetchStatus() {
   let url = '/users/online';
-  
+
   fetch(url)
-  .then(res => {
-    if (!res.ok) {
-      throw new Error("something went wrong, please try again")
-    }
-    return res.json()
-  })
-  .then(data => {
-          if (logged === '1'){
-              checkIfLoggedout(data.Message)
-            } else {
-              toggleloginPage();
-              return;
-            }
-          if (data && data.length > 0) { 
-              insertStatus(data);
-          }
-      }).catch(err => displayToast('var(--red)', `get status : ${err}`))
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("something went wrong, please try again")
+      }
+      return res.json()
+    })
+    .then(data => {
+      if (logged === '1') {
+        checkIfLoggedout(data.Message)
+      } else {
+        toggleloginPage();
+        return;
+      }
+      if (data && data.length > 0) {
+        insertStatus(data);
+      }
+    }).catch(err => displayToast('var(--red)', `get status : ${err}`))
 }
 
 function fetchUsers() {
-    let url = '/users';
+  let url = '/users';
 
-    fetch(url)
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("something went wrong, please try again")
-            }
-            return res.json()
-          })
-          .then(data => {
-            if (logged === '1'){
-                checkIfLoggedout(data.Message)
-            } else {
-                toggleloginPage();
-                return;
-            }
-            if (data && data.length > 0) { 
-                displayUsers(data);
-            }
-        }).catch(err => displayToast('var(--red)', `get users : ${err}`))
+  fetch(url)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("something went wrong, please try again")
+      }
+      return res.json()
+    })
+    .then(data => {
+      if (logged === '1') {
+        checkIfLoggedout(data.Message)
+      } else {
+        toggleloginPage();
+        return;
+      }
+      if (data && data.length > 0) {
+        displayUsers(data);
+      }
+    }).catch(err => displayToast('var(--red)', `get users : ${err}`))
 }
 
 function fetchChatHistory(user) {
   let url = '/chat-history';
 
-    const oldScrollHeight = messagesBox.scrollHeight;
-    const oldScrollTop = messagesBox.scrollTop;
+  const oldScrollHeight = messagesBox.scrollHeight;
+  const oldScrollTop = messagesBox.scrollTop;
 
     fetch(url,{
         method: 'POST',

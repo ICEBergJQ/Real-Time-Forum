@@ -86,6 +86,13 @@ document.addEventListener("DOMContentLoaded", () => {
   usersContainer.addEventListener("click", (event) => {
   if (event.target.classList.contains("chat-user")) {
     openChat(event.target);
+    userDiv = document.getElementById(event.target.textContent.trim())
+    if (userDiv) {
+      let readIcon = userDiv.querySelector("#read");
+      if (readIcon) {
+        readIcon.innerHTML = '<i class="fa fa-envelope-open-o" aria-hidden="true"></i>';
+      }
+    }
     fetchChatHistory(event.target.textContent.trim());
   }
 });

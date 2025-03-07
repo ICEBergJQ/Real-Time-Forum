@@ -11,6 +11,7 @@ if (logged == 1) {
   socket.onmessage = (event) => {
     const msg = JSON.parse(event.data);
     if (msg.message != "") {
+      moveToTop(msg.receiver);
       moveToTop(msg.sender);
     }
     if (msg.sender === chatUsername.innerText.trim() && msg.message != "") {
@@ -19,6 +20,13 @@ if (logged == 1) {
       displayMessage(msg.sender, msg.message, msg.date);
     } else {
       if (msg.message != "") {
+        let userDiv = document.getElementById(msg.sender)
+      if (userDiv) {
+        let readIcon = userDiv.querySelector("#read");
+        if (readIcon) {
+          readIcon.innerHTML = '<i class="fa fa-envelope-o" aria-hidden="true"></i>';
+        }
+      }
         displayToast('var(--info)', `new message from ${msg.sender}`)
       }
       if (msg.status === 'offline') {
@@ -94,10 +102,15 @@ function displayHistory(data, username) {
 
 function displayUsers(data) {
   data.forEach(e => {
+    const read = document.createElement("div");
     const userdiv = document.createElement("div");
+    read.id = 'read';
+    // read.innerHTML = '<i class="fa fa-envelope-o" aria-hidden="true"></i>'
+    read.innerHTML = '<i class="fa fa-envelope-open-o" aria-hidden="true"></i>'
     userdiv.classList.add("chat-user");
     userdiv.id = e.username
-    userdiv.innerHTML = `${e.username} <div class="status" ><i class="fa fa-circle" aria-hidden="true"></i></div>`;
+    userdiv.appendChild(read)
+    userdiv.innerHTML += `${e.username} <div class="status" ><i class="fa fa-circle" aria-hidden="true"></i></div>`;
     usersBox.appendChild(userdiv);
   });
 }

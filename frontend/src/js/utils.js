@@ -2,6 +2,7 @@ let articles = [];
 let categories = [];
 window.offset = 0;
 window.articles = articles;
+const input = document.getElementById("chat-input");
 
 
 function checkIfLoggedout(msg) {
@@ -65,6 +66,7 @@ function calculateAge(birthdate) {
 }
 
 function closeChat() {
+    input.value = "";
     chatUsername.textContent = "";
     chatMessages.innerHTML = "";
     chatBox.style.display = "none";
@@ -84,12 +86,5 @@ function searchUsersById() {
       userDiv.classList.add('hidden')
     }
   });
-}
-
-const listPosts = (post) => {
-
-    if (post) {
-        
-    }
 }
 

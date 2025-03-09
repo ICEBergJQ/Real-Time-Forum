@@ -560,6 +560,17 @@ article i {
   border-radius: 8px;
 }
 
+.typing {
+  margin-top: 4px;
+  width: 50px;
+  height: 12px;
+  background-image: url('../typing.gif');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: none;
+}
+
 .chat-messages {
   display: flex;
   flex: 1;

@@ -9,12 +9,10 @@
     transition: transform 0.3s ease-in-out;
 }
 
-#arrow.active {
+#arrow.active, .menu.active {
     transform: rotate(90deg);
 }
-.menu.active {
-    transform: rotate(90deg);
-}
+
 
 /*jdid*/
 
@@ -39,7 +37,7 @@
     opacity: 2;
     transform: translateX(-50%) translateY(10px);
 }
-.overlay.active {
+.overlay.active, .typing.active {
     display: block;
 }
 

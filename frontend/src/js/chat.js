@@ -2,49 +2,100 @@ const userDivs = document.querySelectorAll('.chat-user');
 const usersBox = document.querySelector(".chat-users");
 const chatUsername = document.getElementById("chat-username");
 const messagesBox = document.querySelector(".chat-messages");
+const typing = document.querySelector('.typing');
 
 if (logged == 1) {
-  const socket = new WebSocket("ws://localhost:8080/ws");
-  socket.onopen = () => console.log("Connected to WebSocket");
-  
-  
-  socket.onmessage = (event) => {
-    const msg = JSON.parse(event.data);
-    if (msg.message != "") {
-      moveToTop(msg.receiver);
-      moveToTop(msg.sender);
-    }
-    if (msg.sender === chatUsername.innerText.trim() && msg.message != "") {
-      displayMessage(msg.sender, msg.message, msg.date ,true);
-    } else if (msg.receiver === chatUsername.innerText.trim() && !msg.status){
-      displayMessage(msg.sender, msg.message, msg.date);
-    } else {
-      if (msg.message != "") {
-        let userDiv = document.getElementById(msg.sender)
-      if (userDiv) {
-        let readIcon = userDiv.querySelector("#read");
-        if (readIcon) {
-          readIcon.innerHTML = '<i class="fa fa-envelope-o" aria-hidden="true"></i>';
-        }
+  let socket = new WebSocket("ws://localhost:8080/ws");
+  function connectWebSocket() {
+    socket = new WebSocket("ws://localhost:8080/ws");
+
+    socket.onopen = () => console.log("Connected to WebSocket");
+
+    socket.onmessage = (event) => {
+      const msg = JSON.parse(event.data);
+      if (msg.message !== "") {
+        moveToTop(msg.receiver);
+        moveToTop(msg.sender);
       }
-        displayToast('var(--info)', `new message from ${msg.sender}`)
-      }
-      if (msg.status === 'offline') {
-        updateStatus(msg.sender,msg.status);
+
+      if (msg.type == 'typing' && msg.sender === chatUsername.innerText.trim()) {
+        displayTyping('display');
+      } else if (msg.type == 'stopped-typing' && msg.sender === chatUsername.innerText.trim()) {
+        displayTyping('hide');
+      } else if (msg.sender === chatUsername.innerText.trim() && msg.message !== "") {
+        displayMessage(msg.sender, msg.message, msg.date, true);
+      } else if (msg.receiver === chatUsername.innerText.trim() && !msg.status && !msg.type) {
+        displayMessage(msg.sender, msg.message, msg.date);
       } else {
-        updateStatus(msg.sender,msg.status);
+        if (msg.message !== "") {
+          let userDiv = document.getElementById(msg.sender);
+          if (userDiv) {
+            let readIcon = userDiv.querySelector("#read");
+            if (readIcon) {
+              readIcon.innerHTML = '<i class="fa fa-envelope-o" aria-hidden="true"></i>';
+            }
+          }
+          displayToast("var(--info)", `new message from ${msg.sender}`);
+        }
+
+        if (msg.status === "offline") {
+          updateStatus(msg.sender, msg.status);
+        } else  {
+          updateStatus(msg.sender, msg.status);
+        }
+        console.log(msg.type);
       }
-    }
+    };
   };
 
-  function sendMessage() {
+  connectWebSocket();
+  
+  socket.onclose = () => {
+    console.log("WebSocket closed. Reconnecting...");
+    setTimeout(connectWebSocket, 3000);
+  };
+
+  socket.onerror = (error) => {
+    console.error("WebSocket Error:", error);
+    socket.close();
+  };
+
+
+  let typingTimeout;
+  let lastTypingTime = 0;
+
+  input.addEventListener("input", () => {
+    const now = Date.now(); // Get current timestamp
+
+  if (now - lastTypingTime >= 2000) {
+      sendMessage('typing');
+      lastTypingTime = now;
+  }
+  
+    clearTimeout(typingTimeout);
+    
+    typingTimeout = setTimeout(() => {
+      if (socket.readyState === WebSocket.OPEN) {
+        sendMessage('stopped-typing');
+      }
+    }, 3000);
+  });
+
+  function sendMessage(type) {
     const input = document.getElementById("chat-input");
     const receiver = document.getElementById("chat-username").innerText;
     const message = input.value.trim();
-    if (message) {
-      const msgObj = { receiver: receiver , message: message };
-      socket.send(JSON.stringify(msgObj));
+    let msgObj;
+
+    if (message && !type) {
+      msgObj = { receiver: receiver , message: message };
       input.value = "";
+    }
+    if (type) {
+      msgObj = { receiver : chatUsername.innerText, type: type };
+    }
+    if (msgObj) {
+      socket.send(JSON.stringify(msgObj));
     }
   }
 }
@@ -219,16 +270,24 @@ function fetchChatHistory(user) {
 if (logged == 1) {
   fetchUsers();
   fetchStatus();
+
+  messagesBox.addEventListener("scroll", () => {
+    if (messagesBox.scrollTop === 0) {
+      fetchChatHistory(chatUsername.innerText)
+    }
+  });
+  
+  document.getElementById("send-btn").addEventListener("click", sendMessage);
+  
+  document.getElementById("chat-input").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
 }
 
-messagesBox.addEventListener("scroll", () => {
-  if (messagesBox.scrollTop === 0) {
-    fetchChatHistory(chatUsername.innerText)
+function displayTyping(display) {
+  if (display == 'diplay') {
+    typing.classList.add('active');
+  } else {
+    typing.classList.remove('active')
   }
-});
-
-document.getElementById("send-btn").addEventListener("click", sendMessage);
-
-document.getElementById("chat-input").addEventListener("keypress", (e) => {
-  if (e.key === "Enter") sendMessage();
-});
+}

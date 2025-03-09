@@ -71,6 +71,7 @@ function closeChat() {
     chatMessages.innerHTML = "";
     chatBox.style.display = "none";
     window.offset = 0;
+    displayTyping('hide');
   }
 
 function searchUsersById() {

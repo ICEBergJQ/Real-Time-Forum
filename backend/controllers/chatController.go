@@ -233,7 +233,6 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 			var msg Message
 			if err := conn.ReadJSON(&msg); err != nil {
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-					// fmt.Printf("websocket error: %v\n", err)
 					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "websocket error")
 					return
 				}
@@ -242,13 +241,15 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 			}
 			msg.Sender = username
 			msg.Date = time.Now().Format("2006-01-02 15:04:05")
-			if len(msg.Message) > 400 {
-				err = fmt.Errorf("message is too long. max  = 400 !!!")
-				utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "message is too long!!! max = 400")
-			} else if err := StoreMessage(db, msg); err != nil {
-				utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error storing message")
-				continue
-			}
+			if msg.Type == "" {
+				if len(msg.Message) > 400 {
+					err = fmt.Errorf("message is too long. max  = 400")
+					utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "message is too long!!! max = 400")
+				} else if err := StoreMessage(db, msg); err != nil {
+					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error storing message")
+					continue
+				}
+			} 
 
 			user_id, err := utils.GetUserid(msg.Receiver, db)
 			if err != nil {
@@ -287,7 +288,7 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 func GetChatHistoryHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
-			err := fmt.Errorf("Method not allowed") 
+			err := fmt.Errorf("method not allowed") 
 			utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Method not allowed")
 			// http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return

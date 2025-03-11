@@ -43,7 +43,6 @@ if (logged == 1) {
         } else  {
           updateStatus(msg.sender, msg.status);
         }
-        console.log(msg.type);
       }
     };
   };
@@ -83,7 +82,7 @@ if (logged == 1) {
 
   function sendMessage(type) {
     const input = document.getElementById("chat-input");
-    const receiver = document.getElementById("chat-username").innerText;
+    const receiver = chatUsername.innerText.trim();
     const message = input.value.trim();
     let msgObj;
 
@@ -92,7 +91,7 @@ if (logged == 1) {
       input.value = "";
     }
     if (type) {
-      msgObj = { receiver : chatUsername.innerText, type: type };
+      msgObj = { receiver : receiver, type: type };
     }
     if (msgObj) {
       socket.send(JSON.stringify(msgObj));
@@ -285,9 +284,11 @@ if (logged == 1) {
 }
 
 function displayTyping(display) {
-  if (display == 'diplay') {
+  if (display === 'display') {
+    
     typing.classList.add('active');
   } else {
+    console.log('dkhl');
     typing.classList.remove('active')
   }
 }

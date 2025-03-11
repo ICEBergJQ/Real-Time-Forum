@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -156,7 +157,6 @@ func StoreMessage(db *sql.DB, msg Message) error {
 }
 
 func GetChatHistory(db *sql.DB, username string, MsgData ChatHistoryRequest) ([]Message, error) {
-	
 	query := `
 		SELECT sender, receiver, message, sent_at 
 		FROM chat_messages 
@@ -184,111 +184,111 @@ func GetChatHistory(db *sql.DB, username string, MsgData ChatHistoryRequest) ([]
 	return messages, nil
 }
 
-// handles WebSocket connections
-func ChatHandler(db *sql.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		conn, err := upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error upgrading WebSocket")
-			// fmt.Println("Error upgrading WebSocket:", err)
-			return
-		}
-		defer conn.Close()
+// // handles WebSocket connections
+// func ChatHandler(db *sql.DB) http.HandlerFunc {
+// 	return func(w http.ResponseWriter, r *http.Request) {
+// 		conn, err := upgrader.Upgrade(w, r, nil)
+// 		if err != nil {
+// 			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error upgrading WebSocket")
+// 			// fmt.Println("Error upgrading WebSocket:", err)
+// 			return
+// 		}
+// 		defer conn.Close()
 
-		userID, err := utils.UserIDFromToken(r, db)
-		if err != nil {
-			conn.Close()
-			Logout(w, r)
-			utils.CreateResponseAndLogger(w, http.StatusBadGateway, err, "can't get userFrom token")
-			// fmt.Println("can't get userFrom token, ", err)
-			return
-		}
-		username, err := utils.GetUserName(userID, db)
-		if err != nil {
-			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "can't get username")
-			// fmt.Println("can't get username:", err)
-			return
-		}
+// 		userID, err := utils.UserIDFromToken(r, db)
+// 		if err != nil {
+// 			conn.Close()
+// 			Logout(w, r)
+// 			utils.CreateResponseAndLogger(w, http.StatusBadGateway, err, "can't get userFrom token")
+// 			// fmt.Println("can't get userFrom token, ", err)
+// 			return
+// 		}
+// 		username, err := utils.GetUserName(userID, db)
+// 		if err != nil {
+// 			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "can't get username")
+// 			// fmt.Println("can't get username:", err)
+// 			return
+// 		}
 
-		mutex.Lock()
-		connection[userID] = append(connection[userID], conn)
+// 		mutex.Lock()
+// 		connection[userID] = append(connection[userID], conn)
 
-		onlineUsers[userID] = User{
-			UserID:   userID,
-			Username: username,
-		}
-		mutex.Unlock()
+// 		onlineUsers[userID] = User{
+// 			UserID:   userID,
+// 			Username: username,
+// 		}
+// 		mutex.Unlock()
 
-		for _, v := range connection {
-			for _, val := range v {
-				var msg Message
-				msg.Type = "status"
-				msg.Status = "online"
-				msg.Sender = username
-				val.WriteJSON(msg)
-			}
-		}
-		// Handle incoming messages
-		for {
-			var msg Message
-			if err := conn.ReadJSON(&msg); err != nil {
-				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "websocket error")
-					return
-				}
-				delete(connection, userID)
-				break
-			}
-			msg.Sender = username
-			msg.Date = time.Now().Format("2006-01-02 15:04:05")
-			if msg.Type == "" {
-				if len(msg.Message) > 400 {
-					err = fmt.Errorf("message is too long. max  = 400")
-					utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "message is too long!!! max = 400")
-				} else if err := StoreMessage(db, msg); err != nil {
-					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error storing message")
-					continue
-				}
-			} 
+// 		for _, v := range connection {
+// 			for _, val := range v {
+// 				var msg Message
+// 				msg.Type = "status"
+// 				msg.Status = "online"
+// 				msg.Sender = username
+// 				val.WriteJSON(msg)
+// 			}
+// 		}
+// 		// Handle incoming messages
+// 		for {
+// 			var msg Message
+// 			if err := conn.ReadJSON(&msg); err != nil {
+// 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+// 					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "websocket error")
+// 					return
+// 				}
+// 				delete(connection, userID)
+// 				break
+// 			}
+// 			msg.Sender = username
+// 			msg.Date = time.Now().Format("2006-01-02 15:04:05")
+// 			if msg.Type == "" {
+// 				if len(msg.Message) > 400 {
+// 					err = fmt.Errorf("message is too long. max  = 400")
+// 					utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "message is too long!!! max = 400")
+// 				} else if err := StoreMessage(db, msg); err != nil {
+// 					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error storing message")
+// 					continue
+// 				}
+// 			}
 
-			user_id, err := utils.GetUserid(msg.Receiver, db)
-			if err != nil {
-				utils.CreateResponseAndLogger(w, http.StatusNotFound, err, "Unauthorized")
-				return
-			}
-			con, ok := connection[user_id]
-			if ok {
-				for _, co := range con {
-					err := co.WriteJSON(msg)
-					if err != nil {
-						utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
-					}
-				}
-			}
-			if err := conn.WriteJSON(msg); err != nil {
-				utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
-				// fmt.Printf("Error sending confirmation: %v\n", err)
-			}
-		}
-		for _, v := range connection {
-			for _, val := range v {
-				var msg Message
-				msg.Type = "status"
-				msg.Status = "offline"
-				msg.Sender = username
-				err := val.WriteJSON(msg)
-				if err != nil {
-					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
-				}
-			}
-		}
-	}
-}
+// 			user_id, err := utils.GetUserid(msg.Receiver, db)
+// 			if err != nil {
+// 				utils.CreateResponseAndLogger(w, http.StatusNotFound, err, "Unauthorized")
+// 				return
+// 			}
+// 			con, ok := connection[user_id]
+// 			if ok {
+// 				for _, co := range con {
+// 					err := co.WriteJSON(msg)
+// 					if err != nil {
+// 						utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
+// 					}
+// 				}
+// 			}
+// 			if err := conn.WriteJSON(msg); err != nil {
+// 				utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
+// 				// fmt.Printf("Error sending confirmation: %v\n", err)
+// 			}
+// 		}
+// 		for _, v := range connection {
+// 			for _, val := range v {
+// 				var msg Message
+// 				msg.Type = "status"
+// 				msg.Status = "offline"
+// 				msg.Sender = username
+// 				err := val.WriteJSON(msg)
+// 				if err != nil {
+// 					utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "Error sending confirmation")
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 
 func GetChatHistoryHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
-			err := fmt.Errorf("method not allowed") 
+			err := fmt.Errorf("method not allowed")
 			utils.CreateResponseAndLogger(w, http.StatusMethodNotAllowed, err, "Method not allowed")
 			// http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
@@ -322,5 +322,95 @@ func GetChatHistoryHandler(db *sql.DB) http.HandlerFunc {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(messages)
+	}
+}
+
+func ChatHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		conn, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Println("Error upgrading WebSocket:", err)
+			return
+		}
+
+		userID, err := utils.UserIDFromToken(r, db)
+		if err != nil {
+			conn.Close()
+			Logout(w, r) // Logs the user out
+			log.Println("Error getting user from token:", err)
+			return
+		}
+
+		username, err := utils.GetUserName(userID, db)
+		if err != nil {
+			conn.Close()
+			log.Println("Error getting username:", err)
+			return
+		}
+
+		mutex.Lock()
+		connection[userID] = append(connection[userID], conn)
+		onlineUsers[userID] = User{UserID: userID, Username: username}
+		mutex.Unlock()
+
+		log.Printf("User %s connected\n", username)
+
+		for {
+			var msg Message
+			if err := conn.ReadJSON(&msg); err != nil {
+				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+					log.Println("WebSocket read error:", err)
+				}
+				removeConnection(userID, conn) // Ensure safe removal of closed connections
+				return
+			}
+
+			msg.Sender = username
+			msg.Date = time.Now().Format("2006-01-02 15:04:05")
+
+			recipientID, err := utils.GetUserid(msg.Receiver, db)
+			if err == nil {
+				mutex.Lock()
+				if conns, ok := connection[recipientID]; ok {
+					for _, c := range conns {
+						if err := c.WriteJSON(msg); err != nil {
+							log.Println("Error sending message:", err)
+						}
+					}
+				}
+				mutex.Unlock()
+			}
+			fmt.Println(msg)
+			if err := conn.WriteJSON(msg); err != nil {
+				log.Println("Error sending confirmation:", err)
+				return
+			}
+		}
+	}
+}
+
+func removeConnection(userID int, conn *websocket.Conn) {
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	conns, ok := connection[userID]
+	if !ok {
+		return
+	}
+
+	// Filter out the closed connection
+	newConns := []*websocket.Conn{}
+	for _, c := range conns {
+		if c != conn {
+			newConns = append(newConns, c)
+		}
+	}
+
+	// Update the connection list
+	if len(newConns) > 0 {
+		connection[userID] = newConns
+	} else {
+		delete(connection, userID)  // Remove user entry if no connections remain
+		delete(onlineUsers, userID) // Mark user as offline
 	}
 }

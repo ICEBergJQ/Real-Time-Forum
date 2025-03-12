@@ -1,8 +1,8 @@
-const userDivs = document.querySelectorAll('.chat-user');
+const userDivs = document.querySelectorAll(".chat-user");
 const usersBox = document.querySelector(".chat-users");
 const chatUsername = document.getElementById("chat-username");
 const messagesBox = document.querySelector(".chat-messages");
-const typing = document.querySelector('.typing');
+const typing = document.querySelector(".typing");
 
 if (logged == 1) {
   let socket = new WebSocket("ws://localhost:8080/ws");
@@ -18,40 +18,52 @@ if (logged == 1) {
         moveToTop(msg.sender);
       }
 
-      if (msg.type == 'typing' && msg.sender === chatUsername.innerText.trim()) {
-        displayTyping('display');
-      } else if (msg.type == 'stopped-typing' && msg.sender === chatUsername.innerText.trim()) {
-        displayTyping('hide');
-      } else if (msg.sender === chatUsername.innerText.trim() && msg.message !== "") {
-        displayMessage(msg.sender, msg.message, msg.date, true);
-      } else if (msg.receiver === chatUsername.innerText.trim() && !msg.status && !msg.type) {
-        displayMessage(msg.sender, msg.message, msg.date);
+      if (msg.status) {
+        updateStatus(msg.sender, msg.status);
       } else {
-        if (msg.message !== "") {
-          let userDiv = document.getElementById(msg.sender);
-          if (userDiv) {
-            let readIcon = userDiv.querySelector("#read");
-            if (readIcon) {
-              readIcon.innerHTML = '<i class="fa fa-envelope-o" aria-hidden="true"></i>';
+        if (
+          msg.type == "typing" &&
+          msg.sender === chatUsername.innerText.trim()
+        ) {
+          displayTyping("display");
+        } else if (
+          msg.type == "stopped-typing" &&
+          msg.sender === chatUsername.innerText.trim()
+        ) {
+          displayTyping("hide");
+        } else if (
+          msg.sender === chatUsername.innerText.trim() &&
+          msg.message !== ""
+        ) {
+          displayMessage(msg.sender, msg.message, msg.date, true);
+        } else if (
+          msg.receiver === chatUsername.innerText.trim() &&
+          !msg.status &&
+          !msg.type
+        ) {
+          displayMessage(msg.sender, msg.message, msg.date);
+        } else {
+          if (msg.message !== "") {
+            let userDiv = document.getElementById(msg.sender);
+            if (userDiv) {
+              let readIcon = userDiv.querySelector("#read");
+              if (readIcon) {
+                readIcon.innerHTML =
+                  '<i class="fa fa-envelope-o" aria-hidden="true"></i>';
+              }
             }
+            displayToast("var(--info)", `new message from ${msg.sender}`);
           }
-          displayToast("var(--info)", `new message from ${msg.sender}`);
-        }
-
-        if (msg.status === "offline") {
-          updateStatus(msg.sender, msg.status);
-        } else  {
-          updateStatus(msg.sender, msg.status);
         }
       }
     };
-  };
+  }
 
   connectWebSocket();
-  
+
   socket.onclose = () => {
     console.log("WebSocket closed. Reconnecting...");
-    setTimeout(connectWebSocket, 3000);
+    setTimeout(connectWebSocket, 2000);
   };
 
   socket.onerror = (error) => {
@@ -59,23 +71,22 @@ if (logged == 1) {
     socket.close();
   };
 
-
   let typingTimeout;
   let lastTypingTime = 0;
 
   input.addEventListener("input", () => {
     const now = Date.now(); // Get current timestamp
 
-  if (now - lastTypingTime >= 2000) {
-      sendMessage('typing');
+    if (now - lastTypingTime >= 2000) {
+      sendMessage("typing");
       lastTypingTime = now;
-  }
-  
+    }
+
     clearTimeout(typingTimeout);
-    
+
     typingTimeout = setTimeout(() => {
       if (socket.readyState === WebSocket.OPEN) {
-        sendMessage('stopped-typing');
+        sendMessage("stopped-typing");
       }
     }, 3000);
   });
@@ -87,18 +98,17 @@ if (logged == 1) {
     let msgObj;
 
     if (message && !type) {
-      msgObj = { receiver: receiver , message: message };
+      msgObj = { receiver: receiver, message: message };
       input.value = "";
     }
     if (type) {
-      msgObj = { receiver : receiver, type: type };
+      msgObj = { receiver: receiver, type: type };
     }
     if (msgObj) {
       socket.send(JSON.stringify(msgObj));
     }
   }
 }
-
 
 function moveToTop(userId) {
   const userDiv = document.getElementById(userId);
@@ -110,15 +120,14 @@ function moveToTop(userId) {
 
 function updateStatus(user, status) {
   let u = document.getElementById(user);
-  if (status === 'online' && u) {
+  if (status === "online" && u) {
     u.classList.add("online");
-  } else if (status === 'offline' && u) {
+  } else if (status === "offline" && u) {
     u.classList.remove("online");
   }
 }
 
-
-function displayMessage(username, content, date ,reciverFlag, historyFlag) {
+function displayMessage(username, content, date, reciverFlag, historyFlag) {
   const msgContainer = document.createElement("div");
   const msgDiv = document.createElement("div");
 
@@ -133,7 +142,7 @@ function displayMessage(username, content, date ,reciverFlag, historyFlag) {
 
   msgContainer.appendChild(msgDiv);
   if (historyFlag) {
-    messagesBox.insertBefore(msgContainer, messagesBox.firstChild)
+    messagesBox.insertBefore(msgContainer, messagesBox.firstChild);
   } else {
     messagesBox.appendChild(msgContainer);
   }
@@ -143,73 +152,83 @@ function displayMessage(username, content, date ,reciverFlag, historyFlag) {
 function displayHistory(data, username) {
   data.forEach((e) => {
     if (username == e.sender) {
-      displayMessage(e.sender, e.message, e.date, true,true);
+      displayMessage(e.sender, e.message, e.date, true, true);
     } else {
       displayMessage(e.sender, e.message, e.date, false, true);
     }
-  })
+  });
 }
 
 function displayUsers(data) {
-  data.forEach(e => {
+  data.forEach((e) => {
     const read = document.createElement("div");
     const userdiv = document.createElement("div");
-    read.id = 'read';
-    // read.innerHTML = '<i class="fa fa-envelope-o" aria-hidden="true"></i>'
-    read.innerHTML = '<i class="fa fa-envelope-open-o" aria-hidden="true"></i>'
+    read.id = "read";
+    read.innerHTML = '<i class="fa fa-envelope-open-o" aria-hidden="true"></i>';
     userdiv.classList.add("chat-user");
-    userdiv.id = e.username
-    userdiv.appendChild(read)
+    userdiv.id = e.username;
+    userdiv.appendChild(read);
     userdiv.innerHTML += `${e.username} <div class="status" ><i class="fa fa-circle" aria-hidden="true"></i></div>`;
     usersBox.appendChild(userdiv);
   });
 }
 
 function insertStatus(data) {
-  data.forEach(e => {
-    let u = document.getElementById(e.username)
+  if (!Array.isArray(data)) return;
+
+  data.forEach((e) => {
+    console.log(e.username);
+
+    if (!e.username) return;
+    let u = document.getElementById(e.username);
     if (u) {
-      u.classList.add("online")
+      u.classList.add("online");
     }
   });
 }
 
 function fetchStatus() {
-  let url = '/users/online';
+  let url = "/users/online";
 
   fetch(url)
-    .then(res => {
+    .then((res) => {
       if (!res.ok) {
-        throw new Error("something went wrong, please try again")
+        displayToast("var(--red)", `Error getting status... try again later`);
       }
-      return res.json()
+      return res.json();
     })
-    .then(data => {
-      if (logged === '1') {
-        checkIfLoggedout(data.Message)
+    .then((data) => {
+      if (logged === "1") {
+        if (data && data.Message) {
+          checkIfLoggedout(data.Message);
+        }
       } else {
         toggleloginPage();
         return;
       }
-      if (data && data.length > 0) {
+
+      if (Array.isArray(data) && data.length > 0) {
         insertStatus(data);
       }
-    }).catch(err => displayToast('var(--red)', `get status : ${err}`))
+    })
+    .catch((err) => {
+      displayToast("var(--red)", `Error getting status... try again later`);
+    });
 }
 
 function fetchUsers() {
-  let url = '/users';
+  let url = "/users";
 
   fetch(url)
-    .then(res => {
+    .then((res) => {
       if (!res.ok) {
-        throw new Error("something went wrong, please try again")
+        throw new Error("something went wrong, please try again");
       }
-      return res.json()
+      return res.json();
     })
-    .then(data => {
-      if (logged === '1') {
-        checkIfLoggedout(data.Message)
+    .then((data) => {
+      if (logged === "1") {
+        checkIfLoggedout(data.Message);
       } else {
         toggleloginPage();
         return;
@@ -217,78 +236,97 @@ function fetchUsers() {
       if (data && data.length > 0) {
         displayUsers(data);
       }
-    }).catch(err => displayToast('var(--red)', `get users : ${err}`))
+    })
+    .catch((err) => displayToast("var(--red)", `get users : ${err}`));
 }
 
 function fetchChatHistory(user) {
-  let url = '/chat-history';
+  let url = "/chat-history";
 
   const oldScrollHeight = messagesBox.scrollHeight;
   const oldScrollTop = messagesBox.scrollTop;
 
-    fetch(url,{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ receiver: user , offset : window.offset })
-        })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("something went wrong, please try again")
-            }
-            return res.json()
-        })
-        .then(data => {
-            if (logged === '1'){
-              if (data.Message) {
-                checkIfLoggedout(data.Message)
-              }
-            } else {
-                toggleloginPage();
-                return;
-            }
-            if (data && data.length > 0) {
-              window.offset += data.length; 
-              console.log(window.offset); 
-                displayHistory(data,user);
-                messagesBox.scrollTop = messagesBox.scrollHeight - oldScrollHeight + oldScrollTop;
-            } 
-            if (!data) {
-              displayToast('var(--info)', `No Messages!`);
-            }
-        }).catch(err => { 
-          if (err.toString().includes("data is null")) {
-          displayToast('var(--info)', `No Messages!`);
-        } else {
-          displayToast('var(--red)', `Getting chat history: ${err}`);
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ receiver: user, offset: window.offset }),
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("something went wrong, please try again");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      if (logged === "1") {
+        if (data.Message) {
+          checkIfLoggedout(data.Message);
         }
-        }
-      )
+      } else {
+        toggleloginPage();
+        return;
+      }
+      if (data && data.length > 0) {
+        window.offset += data.length;
+        displayHistory(data, user);
+        messagesBox.scrollTop =
+          messagesBox.scrollHeight - oldScrollHeight + oldScrollTop;
+      }
+      if (!data) {
+        displayToast("var(--info)", `No Messages!`);
+      }
+    })
+    .catch((err) => {
+      if (err.toString().includes("null")) {
+        displayToast("var(--info)", `No Messages!`);
+      } else {
+        displayToast("var(--red)", `Getting chat history... try again later`);
+      }
+    });
 }
 if (logged == 1) {
   fetchUsers();
-  fetchStatus();
+  document.addEventListener("DOMContentLoaded", () => {
+    fetchStatus();
+  });
+
+  function throttle(func, limit) {
+    let lastCall = 0;
+    return function (...args) {
+      const now = Date.now();
+      if (now - lastCall >= limit) {
+        lastCall = now;
+        func(...args);
+      } else {
+        displayToast("var(--info)", `please be patient`);
+      }
+    };
+  }
+
+  const throttledFetchChatHistory = throttle(() => {
+    fetchChatHistory(chatUsername.innerText);
+  }, 2000);
 
   messagesBox.addEventListener("scroll", () => {
     if (messagesBox.scrollTop === 0) {
-      fetchChatHistory(chatUsername.innerText)
+      throttledFetchChatHistory();
     }
   });
-  
+
   document.getElementById("send-btn").addEventListener("click", sendMessage);
-  
+
   document.getElementById("chat-input").addEventListener("keypress", (e) => {
     if (e.key === "Enter") sendMessage();
   });
 }
 
 function displayTyping(display) {
-  if (display === 'display') {
-    
-    typing.classList.add('active');
+  if (display === "display") {
+    typing.classList.add("active");
   } else {
-    console.log('dkhl');
-    typing.classList.remove('active')
+    console.log("dkhl");
+    typing.classList.remove("active");
   }
 }

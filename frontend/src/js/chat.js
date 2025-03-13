@@ -17,44 +17,52 @@ if (logged == 1) {
         moveToTop(msg.receiver);
         moveToTop(msg.sender);
       }
+      if (msg.Message) {
+        checkIfLoggedout(msg.Message);
+        return;
+      }
 
+      if (
+        msg.type == "typing" &&
+        msg.sender === chatUsername.innerText.trim()
+      ) {
+        displayTyping("display");
+        clearTimeout(typingTimeout);
+
+        typingTimeout = setTimeout(() => {
+          displayTyping("hide");
+        }, 3500);
+      } else if (
+        msg.type == "stopped-typing" &&
+        msg.sender === chatUsername.innerText.trim()
+      ) {
+        displayTyping("hide");
+      } else if (
+        msg.sender === chatUsername.innerText.trim() &&
+        msg.message !== ""
+      ) {
+        displayMessage(msg.sender, msg.message, msg.date, true);
+      } else if (
+        msg.receiver === chatUsername.innerText.trim() &&
+        !msg.status &&
+        !msg.type
+      ) {
+        displayMessage(msg.sender, msg.message, msg.date);
+      } else {
+        if (msg.message !== "") {
+          let userDiv = document.getElementById(msg.sender);
+          if (userDiv) {
+            let readIcon = userDiv.querySelector("#read");
+            if (readIcon) {
+              readIcon.innerHTML =
+                '<i class="fa fa-envelope-o" aria-hidden="true"></i>';
+            }
+          }
+          displayToast("var(--info)", `new message from ${msg.sender}`);
+        }
+      }
       if (msg.status) {
         updateStatus(msg.sender, msg.status);
-      } else {
-        if (
-          msg.type == "typing" &&
-          msg.sender === chatUsername.innerText.trim()
-        ) {
-          displayTyping("display");
-        } else if (
-          msg.type == "stopped-typing" &&
-          msg.sender === chatUsername.innerText.trim()
-        ) {
-          displayTyping("hide");
-        } else if (
-          msg.sender === chatUsername.innerText.trim() &&
-          msg.message !== ""
-        ) {
-          displayMessage(msg.sender, msg.message, msg.date, true);
-        } else if (
-          msg.receiver === chatUsername.innerText.trim() &&
-          !msg.status &&
-          !msg.type
-        ) {
-          displayMessage(msg.sender, msg.message, msg.date);
-        } else {
-          if (msg.message !== "") {
-            let userDiv = document.getElementById(msg.sender);
-            if (userDiv) {
-              let readIcon = userDiv.querySelector("#read");
-              if (readIcon) {
-                readIcon.innerHTML =
-                  '<i class="fa fa-envelope-o" aria-hidden="true"></i>';
-              }
-            }
-            displayToast("var(--info)", `new message from ${msg.sender}`);
-          }
-        }
       }
     };
   }
@@ -78,7 +86,7 @@ if (logged == 1) {
     const now = Date.now(); // Get current timestamp
 
     if (now - lastTypingTime >= 2000) {
-      sendMessage("typing");
+      sendTyping("typing");
       lastTypingTime = now;
     }
 
@@ -86,23 +94,33 @@ if (logged == 1) {
 
     typingTimeout = setTimeout(() => {
       if (socket.readyState === WebSocket.OPEN) {
-        sendMessage("stopped-typing");
+        sendTyping("stopped-typing");
       }
     }, 3000);
   });
 
-  function sendMessage(type) {
+  function sendTyping(type) {
+    const receiver = chatUsername.innerText.trim();
+    let msgObj;
+
+    if (type) {
+      msgObj = { receiver: receiver, type: type };
+    }
+
+    if (msgObj) {
+      socket.send(JSON.stringify(msgObj));
+    }
+  }
+
+  function sendMessage() {
     const input = document.getElementById("chat-input");
     const receiver = chatUsername.innerText.trim();
     const message = input.value.trim();
     let msgObj;
 
-    if (message && !type) {
+    if (message) {
       msgObj = { receiver: receiver, message: message };
       input.value = "";
-    }
-    if (type) {
-      msgObj = { receiver: receiver, type: type };
     }
     if (msgObj) {
       socket.send(JSON.stringify(msgObj));
@@ -177,8 +195,6 @@ function insertStatus(data) {
   if (!Array.isArray(data)) return;
 
   data.forEach((e) => {
-    console.log(e.username);
-
     if (!e.username) return;
     let u = document.getElementById(e.username);
     if (u) {
@@ -326,7 +342,6 @@ function displayTyping(display) {
   if (display === "display") {
     typing.classList.add("active");
   } else {
-    console.log("dkhl");
     typing.classList.remove("active");
   }
 }

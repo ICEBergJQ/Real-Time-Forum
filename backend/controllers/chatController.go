@@ -302,7 +302,8 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 			// Store valid messages in the database
 			if msg.Type == "" {
 				if len(msg.Message) > 400 {
-					log.Println("Message too long! Max = 400")
+					err = fmt.Errorf("Message too long! Max = 400")
+					utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Message too long! Max = 400")
 					continue
 				}
 				if err := StoreMessage(db, msg); err != nil {

@@ -119,6 +119,10 @@ if (logged == 1) {
     let msgObj;
 
     if (message) {
+      if (message.length > 400) {
+        displayToast("var(--red)", 'message too long')
+        return
+      }
       msgObj = { receiver: receiver, message: message };
       input.value = "";
     }

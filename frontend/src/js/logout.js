@@ -3,6 +3,8 @@ const logoutModal = document.querySelector("#logoutModal");
 const closeLogoutModal = logoutModal.querySelector(".close");
 const confirmLogout = logoutModal.querySelector("#confirmLogout");
 const postList = document.querySelector(".post-list");
+const chatUsers = document.querySelector(".chat-users");
+
 //check if it's logged in alreadty bedore access logout
 // Handle logout confirmation
 confirmLogout.onclick = () => {
@@ -23,6 +25,7 @@ confirmLogout.onclick = () => {
       setTimeout(() => {
         window.location.href = "/";
         postList.innerHTML = "";
+        chatUsers. innerHTML = "";
       }, 700);
     })
     .catch((err) => displayToast("var(--red)", "logout Error : " + err));

@@ -277,8 +277,10 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 				}
 
 				removeConnection(userID, conn)
+				if len(connection[userID]) == 0 {
+					broadcastStatus(username, "offline")
+				}
 
-				broadcastStatus(username, "offline")
 				return
 			}
 			_, err := utils.UserIDFromToken(r, db)

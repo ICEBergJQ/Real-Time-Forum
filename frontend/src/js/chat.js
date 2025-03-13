@@ -155,8 +155,12 @@ function displayMessage(username, content, date, reciverFlag, historyFlag) {
     msgContainer.classList.add("receiver");
     msgDiv.classList.add("receiver");
   }
-  msgDiv.innerHTML = `<strong>${username}:</strong> ${content}
-  <h3>${date}</h3>`;
+  msgDiv.innerHTML = `<strong></strong> <span></span> <h3></h3>`;
+
+  msgDiv.querySelector("strong").textContent = username + ":";
+  msgDiv.querySelector("span").textContent = content;
+  msgDiv.querySelector("h3").textContent = date;
+  
 
   msgContainer.appendChild(msgDiv);
   if (historyFlag) {

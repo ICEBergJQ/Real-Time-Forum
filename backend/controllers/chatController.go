@@ -326,10 +326,16 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 			}
 
 			// Send confirmation back to sender
-			if err := conn.WriteJSON(msg); err != nil {
-				log.Println("Error sending confirmation:", err)
-				return
+			mutex.Lock()
+			if conns, ok := connection[userID]; ok {
+				for _, c := range conns {
+					if err := c.WriteJSON(msg); err != nil {
+						log.Println("Error sending confirmation:", err)
+						return
+					}
+				}
 			}
+			mutex.Unlock()
 		}
 	}
 }

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -93,6 +94,16 @@ func UserIDFromToken(r *http.Request, db *sql.DB) (int, error) {
 		}
 	}
 	return session.UserID, nil
+}
+
+func GetUserIDHandler(w http.ResponseWriter, r *http.Request) {
+	userID, err := UserIDFromToken(r, config.DB)
+	if err != nil {
+		http.Error(w, "no cockies: ", http.StatusUnauthorized)
+		return
+	}
+	response := map[string]int{"user_id": userID}
+	json.NewEncoder(w).Encode(response)
 }
 
 func DeleteCookie(w http.ResponseWriter, r *http.Request) bool {

@@ -2,7 +2,7 @@ import Comment from './commentCmp.js'
 
 export default function Article(post) {
   return `
-    <article class="post-preview">
+    <article class="post-preview" id="${post.id}">
       <div class="post-header">
         <h4 class="post-title">${post.title}</h4>
         <div class="comment-header comment-details">

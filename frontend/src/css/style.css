@@ -560,16 +560,80 @@ article i {
   border-radius: 8px;
 }
 
-.chat-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px;
-  background: #222831;
-  border-radius: 8px;
+.typing {
+  margin-top: 4px;
+  width: 50px;
+  height: 12px;
+  background-image: url('../typing.gif');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: none;
 }
 
+.chat-messages {
+  display: flex;
+  flex: 1;
+  overflow-y: auto;
+  background: #222831;
+  border-radius: 8px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.message-container {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  padding: 5px 0px;
+  border-radius: 8px;
+  word-wrap: break-word;
+  /* font-size: 14px; */
+}
+
+.message-container.receiver {
+  justify-content: flex-start;
+}
+
+.message {
+  width: fit-content;
+  max-width: 90%;
+  padding: 5px 5px;
+  background-color: #00ADB5;
+  color: white;
+  padding: 10px 5px;
+  margin-right: 4px;
+  word-wrap: break-word;
+  border-radius: 15px 15px 0 15px;
+  font-size: 18px;
+  h3{
+    font-size: 9px;
+  };
+}
+
+.message.receiver {
+  width: fit-content;
+  max-width: 90%;
+  padding: 5px 5px;
+  background-color: #393E46;
+  color: #f1f1f1;
+  margin-left: 4px;
+  word-wrap: break-word;
+  border-radius: 15px 15px 15px 0;
+}
+.chat-util{
+  display: flex;
+  justify-content: space-between;
+}
+.send-btn {
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-radius: 100%;
+  margin: 5px;
+}
 .chat-input {
-  max-width: 100%;
+  width: 100%;
   padding: 10px;
   border: none;
   outline: none;
@@ -589,6 +653,17 @@ article i {
   max-height: 100%;
   overflow: auto;
 }
+.chat-user {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chat-user.online {
+  .status{
+    color: #39db49;
+  }
+}
+
 .search-bar {
   max-width: 100%;
   padding: 8px;
@@ -598,6 +673,6 @@ article i {
   font-size: 14px;
 }
 
-.main-content.hidden, .chat-button.hidden {
+.main-content.hidden, .chat-button.hidden, .chat-user.hidden {
   display: none;
 }

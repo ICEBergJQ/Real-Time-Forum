@@ -3,6 +3,7 @@ const usersBox = document.querySelector(".chat-users");
 const chatUsername = document.getElementById("chat-username");
 const messagesBox = document.querySelector(".chat-messages");
 const typing = document.querySelector(".typing");
+let secondTypingTimeout;
 
 if (logged == 1) {
   let socket = new WebSocket("ws://localhost:8080/ws");
@@ -29,11 +30,11 @@ if (logged == 1) {
         msg.sender === chatUsername.innerText.trim()
       ) {
         displayTyping("display");
-        clearTimeout(typingTimeout);
-
-        typingTimeout = setTimeout(() => {
+        clearTimeout(secondTypingTimeout);
+        
+        secondTypingTimeout = setTimeout(() => {
           displayTyping("hide");
-        }, 3500);
+        }, 2200);
       } else if (
         msg.type == "stopped-typing" &&
         msg.sender === chatUsername.innerText.trim()
@@ -100,7 +101,7 @@ if (logged == 1) {
       if (socket.readyState === WebSocket.OPEN) {
         sendTyping("stopped-typing");
       }
-    }, 3000);
+    }, 2000);
   });
 
   function sendTyping(type) {
@@ -367,5 +368,5 @@ function loggedCheck(){
       checkIfLoggedout(data.Message);
     }
   })
-  .catch(error => console.error("Error fetching user status:", error));
+  .catch(error => displayToast("var(--red)", `there was an issue fetching users status`));
 }

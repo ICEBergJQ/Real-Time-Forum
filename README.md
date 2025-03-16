@@ -1,4 +1,4 @@
-# **Phorum Architecture Blueprint**
+# **Real Time Phorum Architecture Blueprint**
 
 This document provides a concise summary of the project architecture, detailing how all components of the application work together. It serves as a guide for the development team and offers clarity on the project flow.
 
@@ -11,7 +11,7 @@ This document provides a concise summary of the project architecture, detailing 
   Built using HTML, CSS, and JavaScript, served directly from the back-end server. Handles user interactions such as login, registration, post viewing, commenting, liking, and filtering.
 
 - **Back-End (Application Logic):**  
-  Written in Go (Golang), serves the front-end static files, exposes RESTful APIs for front-end requests, handles business logic (authentication, CRUD operations), and communicates with the SQLite database.
+  Written in Go (Golang), serves the front-end static files, exposes RESTful APIs for front-end requests, handles business logic (authentication, CRUD operations), and communicates with the SQLite database. WebSockets are used **only** for the chat feature, while all other functionalities rely on HTTP APIs.
 
 - **Database (Persistent Storage):**  
   SQLite database stores user data, posts, comments, categories, and likes/dislikes.
@@ -34,6 +34,9 @@ This document provides a concise summary of the project architecture, detailing 
       |                            |                                  |
       |                            v                                  |
       +----------------------- API Requests --------------------------+
+      |                                                               |
+      |                         WebSockets (Chat Only)                |
+      +---------------------------------------------------------------+
 ```
 
 ---
@@ -46,6 +49,7 @@ This document provides a concise summary of the project architecture, detailing 
   - Display the user interface.
   - Capture user input (forms, buttons, etc.).
   - Interact with the back-end via AJAX (RESTful API).
+  - Establish a WebSocket connection for real-time chat.
 - **Served From:** Back-end server
 
 ### **Back-End**
@@ -56,42 +60,34 @@ This document provides a concise summary of the project architecture, detailing 
   - Handle business logic (e.g., authentication, CRUD operations).
   - Interact with the database (read/write operations).
   - Enforce security measures like hashing passwords.
+  - **Manage WebSocket connections for real-time private chat.**
 - **Port:** `8080`
 
 ### **Database**
 - **Technology:** SQLite
 - **Responsibilities:**
   - Store persistent data (users, posts, comments, categories, likes/dislikes).
+  - Store chat messages (optional, if message history is needed).
   - Provide structured query results for the back-end.
   - Enforce relationships with constraints (foreign keys).
 
 ---
 
-## **Key Components**
+## **Real-Time Forum & Chat Integration**
 
-- **Back-End Service:**
-  - Runs a Go application that serves both static files and APIs.
-  - Manages all front-end requests and database interactions.
+### **WebSockets (Chat Feature)**
+- **Backend (Go)**:
+  - Create a WebSocket server to handle real-time messaging.
+  - Store active connections in a map for private messaging.
+  - Broadcast messages only to the intended recipient.
 
-- **Database Service:**
-  - SQLite database initialized with schema and seed data.
-  - Persistent data stored within the container.
+- **Frontend (JavaScript)**:
+  - Establish a WebSocket connection to receive/send messages.
+  - Update the UI dynamically when a message arrives.
 
----
-
-## **Data Flow**
-
-1. **User Interaction (Frontend):**
-   - User submits a request (e.g., registration, liking a post).
-   - Front-end sends an AJAX request to the back-end API.
-
-2. **API Processing (Backend):**
-   - Receives the request, processes it, and interacts with the database.
-   - Returns a response (success, error, or data) to the front-end.
-
-3. **Database Queries:**
-   - Backend executes SQL queries (e.g., `SELECT`, `INSERT`) to interact with the SQLite database.
-   - Results are sent back to the back-end for further processing or direct response to the user.
+### **HTTP (Forum Features - Posts, Comments, Likes)**
+- **Forum operations (post creation, commenting, liking, etc.) remain HTTP-based.**
+- The UI fetches new posts/comments using periodic API polling or manual refresh.
 
 ---
 
@@ -106,9 +102,11 @@ This document provides a concise summary of the project architecture, detailing 
 - **Front-End Development:**
   - Work on HTML, CSS, and JavaScript for user interfaces.
   - Test API calls with mock data or the back-end.
+  - Implement WebSocket client logic for chat.
 
 - **Back-End Development:**
   - Develop RESTful APIs.
+  - Implement WebSocket server logic.
   - Test APIs using tools like Postman or curl.
   - Integrate and test with the database.
 
@@ -118,7 +116,7 @@ This document provides a concise summary of the project architecture, detailing 
   - Seed sample data for testing.
 
 ### **3. Testing and Debugging**
-- Test individual components independently (e.g., API endpoints, UI responsiveness).
+- Test individual components independently (e.g., API endpoints, WebSocket connections, UI responsiveness).
 - Integrate the front-end and back-end.
 - Verify database interactions.
 
@@ -129,11 +127,12 @@ This document provides a concise summary of the project architecture, detailing 
 
 ## **Quick Summary Table**
 
+
 | **Component**   | **Technology**           | **Responsibilities**                                   | **Port** |
-|------------------|--------------------------|-------------------------------------------------------|----------|
-| **Frontend**     | HTML, CSS, JavaScript    | User interface, AJAX requests                         | Served via backend |
-| **Backend**      | Go (Golang)             | Business logic, API handling, database interaction    | `8080`   |
-| **Database**     | SQLite                  | Persistent storage for application data               | Internal |
+|----------------|-------------------------|-------------------------------------------------------|----------|
+| **Frontend**   | HTML, CSS, JavaScript    | User interface, AJAX requests, WebSockets (Chat)      | Served via backend |
+| **Backend**    | Go (Golang)              | Business logic, API handling, database interaction, WebSocket chat | `8080`   |
+| **Database**   | SQLite                   | Persistent storage for application data               | Internal |
 
 ---
 

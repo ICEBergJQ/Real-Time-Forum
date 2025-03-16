@@ -22,7 +22,8 @@ document
       username == "" ||
       email == "" ||
       password == "" ||
-      confirmPassword == ""
+      confirmPassword == "" ||
+      gender == ""
     ) {
       displayToast("var(--red)", "all fields are required!!");
       return;
@@ -37,6 +38,9 @@ document
       return;
     } else if (password !== confirmPassword) {
       displayToast("var(--red)", "Password mismatch");
+      return;
+    } else if (age < 13) {
+      displayToast("var(--red)", "age must be over 13 years old");
       return;
     }
 

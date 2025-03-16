@@ -6,6 +6,7 @@ import (
 	"errors"
 	"html"
 	"net/http"
+	"strconv"
 	"time"
 
 	"forum/config"
@@ -33,6 +34,11 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	user.Email = html.EscapeString(user.Email)
 	user.Password = html.EscapeString(user.Password)
 	user.Gender = html.EscapeString(user.Gender)
+	age, err := strconv.Atoi(user.Age)
+	if age < 13 || age > 150 {
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Invalid Age")
+		return
+	}
 
 	if err := utils.Validation(user, true); err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
@@ -45,7 +51,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := "INSERT INTO users (username, email, password, age, gender) VALUES (?, ?, ?, ?, ?)"
-	_, err := config.DB.Exec(query, user.Username, user.Email, user.Password, user.Age, user.Gender)
+	_, err = config.DB.Exec(query, user.Username, user.Email, user.Password, user.Age, user.Gender)
 	if err != nil {
 		if err.Error() == "UNIQUE constraint failed: users.username" {
 			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Username already exists")
@@ -156,6 +162,10 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	err = config.DB.QueryRow("SELECT user_id FROM sessions WHERE session_id = ?", cookie.Value).Scan(&userID)
 	if err == nil {
 		RemoveOnlineUser(userID)
+	}
+
+	for _, conn := range connection[userID] {
+		conn.Close()
 	}
 
 	query := "DELETE FROM sessions WHERE session_id = ?"

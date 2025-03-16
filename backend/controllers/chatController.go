@@ -277,8 +277,10 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 				}
 
 				removeConnection(userID, conn)
+				if len(connection[userID]) == 0 {
+					broadcastStatus(username, "offline")
+				}
 
-				broadcastStatus(username, "offline")
 				return
 			}
 			_, err := utils.UserIDFromToken(r, db)
@@ -300,7 +302,8 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 			// Store valid messages in the database
 			if msg.Type == "" {
 				if len(msg.Message) > 400 {
-					log.Println("Message too long! Max = 400")
+					err = fmt.Errorf("Message too long! Max = 400")
+					utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Message too long! Max = 400")
 					continue
 				}
 				if err := StoreMessage(db, msg); err != nil {
@@ -323,10 +326,16 @@ func ChatHandler(db *sql.DB) http.HandlerFunc {
 			}
 
 			// Send confirmation back to sender
-			if err := conn.WriteJSON(msg); err != nil {
-				log.Println("Error sending confirmation:", err)
-				return
+			mutex.Lock()
+			if conns, ok := connection[userID]; ok {
+				for _, c := range conns {
+					if err := c.WriteJSON(msg); err != nil {
+						log.Println("Error sending confirmation:", err)
+						return
+					}
+				}
 			}
+			mutex.Unlock()
 		}
 	}
 }

@@ -49,6 +49,7 @@ if (logged == 1) {
         !msg.type
       ) {
         displayMessage(msg.sender, msg.message, msg.date);
+        window.offset++;
       } else {
         if (msg.message !== "") {
           let userDiv = document.getElementById(msg.sender);
@@ -120,6 +121,10 @@ if (logged == 1) {
     let msgObj;
 
     if (message) {
+      if (message.length > 400) {
+        displayToast("var(--red)", 'message too long')
+        return
+      }
       msgObj = { receiver: receiver, message: message };
       input.value = "";
     }
@@ -156,8 +161,12 @@ function displayMessage(username, content, date, reciverFlag, historyFlag) {
     msgContainer.classList.add("receiver");
     msgDiv.classList.add("receiver");
   }
-  msgDiv.innerHTML = `<strong>${username}:</strong> ${content}
-  <h3>${date}</h3>`;
+  msgDiv.innerHTML = `<strong></strong> <span></span> <h3></h3>`;
+
+  msgDiv.querySelector("strong").textContent = username + ":";
+  msgDiv.querySelector("span").textContent = content;
+  msgDiv.querySelector("h3").textContent = date;
+  
 
   msgContainer.appendChild(msgDiv);
   if (historyFlag) {

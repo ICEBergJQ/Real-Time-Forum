@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"forum/config"
+	"forum/models"
 	"forum/utils"
 
 	"github.com/gorilla/websocket"
@@ -126,7 +128,7 @@ func GetUsersHandler(db *sql.DB) http.HandlerFunc {
 
 		currentUserID, err := utils.UserIDFromToken(r, db)
 		if err != nil {
-			http.Error(w, "can't get user_id: ", http.StatusUnauthorized)
+			Logout(w, r)
 			return
 		}
 
@@ -196,15 +198,13 @@ func GetChatHistoryHandler(db *sql.DB) http.HandlerFunc {
 
 		userID, err := utils.UserIDFromToken(r, db)
 		if err != nil {
-			utils.CreateResponseAndLogger(w, http.StatusUnauthorized, err, "can't get user from token")
-			// http.Error(w, "user from token error: ", http.StatusUnauthorized)
+			Logout(w, r)
 			return
 		}
 		// convert userid into username
 		username, err := utils.GetUserName(userID, db)
 		if err != nil {
 			utils.CreateResponseAndLogger(w, http.StatusInternalServerError, err, "can't get username with user_id")
-			// http.Error(w, "can't get username: ", http.StatusUnauthorized)
 			return
 		}
 
@@ -381,5 +381,28 @@ func removeConnection(userID int, conn *websocket.Conn) {
 	} else {
 		delete(connection, userID)
 		delete(onlineUsers, userID)
+	}
+}
+
+func Checkifconnect(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+	}
+	_, err := utils.UserIDFromToken(r, config.DB)
+	if err != nil {
+		Logout(w, r)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	errorResponse := models.Response{
+		Message: "logged in",
+	}
+
+	encoder := json.NewEncoder(w)
+	if err := encoder.Encode(errorResponse); err != nil {
+		log.Printf("\nFailed to encode error response: %v\n", err)
 	}
 }

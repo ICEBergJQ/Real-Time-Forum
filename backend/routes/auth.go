@@ -13,4 +13,5 @@ func AuthRoutes() {
 	http.HandleFunc("/auth/login", controllers.LoginUser)
 	http.HandleFunc("/auth/logout", controllers.Logout)
 	http.HandleFunc("/auth/user_id", utils.GetUserIDHandler)
+	http.HandleFunc("/auth/user_logged", controllers.Checkifconnect)
 }

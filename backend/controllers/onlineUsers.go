@@ -62,7 +62,7 @@ func GetOnlineUsersHandler(db *sql.DB) http.HandlerFunc {
 
 		_, err := utils.UserIDFromToken(r, db)
 		if err != nil {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			Logout(w,r)
 			return
 		}
 

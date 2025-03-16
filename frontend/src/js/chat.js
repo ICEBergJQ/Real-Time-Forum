@@ -22,6 +22,8 @@ if (logged == 1) {
         return;
       }
 
+      loggedCheck();
+
       if (
         msg.type == "typing" &&
         msg.sender === chatUsername.innerText.trim()
@@ -354,4 +356,16 @@ function displayTyping(display) {
   } else {
     typing.classList.remove("active");
   }
+}
+
+function loggedCheck(){
+  fetch('/auth/user_logged', {method: "POST",
+    headers: { "Content-Type": "application/json" }})
+  .then(response => response.json())
+  .then(data => {
+    if (data.Message) {
+      checkIfLoggedout(data.Message);
+    }
+  })
+  .catch(error => console.error("Error fetching user status:", error));
 }

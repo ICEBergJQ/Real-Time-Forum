@@ -42,6 +42,7 @@ if (logged == 1) {
         msg.message !== ""
       ) {
         displayMessage(msg.sender, msg.message, msg.date, true);
+        window.offset++;
       } else if (
         msg.receiver === chatUsername.innerText.trim() &&
         !msg.status &&

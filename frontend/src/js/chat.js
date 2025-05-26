@@ -125,8 +125,8 @@ if (logged == 1) {
 
     if (message) {
       if (message.length > 400) {
-        displayToast("var(--red)", 'message too long')
-        return
+        displayToast("var(--red)", "message too long");
+        return;
       }
       msgObj = { receiver: receiver, message: message };
       input.value = "";
@@ -147,7 +147,11 @@ function moveToTop(userId) {
 
 function updateStatus(user, status) {
   let u = document.getElementById(user);
-  if (status === "online" && u) {
+  if (!u) {
+    fetchUsers().then(() => {
+    fetchStatus();
+  });
+  } else if (status === "online" && u) {
     u.classList.add("online");
   } else if (status === "offline" && u) {
     u.classList.remove("online");
@@ -169,7 +173,6 @@ function displayMessage(username, content, date, reciverFlag, historyFlag) {
   msgDiv.querySelector("strong").textContent = username + ":";
   msgDiv.querySelector("span").textContent = content;
   msgDiv.querySelector("h3").textContent = date;
-  
 
   msgContainer.appendChild(msgDiv);
   if (historyFlag) {
@@ -191,6 +194,7 @@ function displayHistory(data, username) {
 }
 
 function displayUsers(data) {
+  usersBox.innerHTML = "";
   data.forEach((e) => {
     const read = document.createElement("div");
     const userdiv = document.createElement("div");
@@ -207,11 +211,12 @@ function displayUsers(data) {
 function insertStatus(data) {
   if (!Array.isArray(data)) return;
 
+  console.log(data);
   data.forEach((e) => {
-    if (!e.username) return;
     let u = document.getElementById(e.username);
     if (u) {
       u.classList.add("online");
+      console.log("inserted");
     }
   });
 }
@@ -245,10 +250,34 @@ function fetchStatus() {
     });
 }
 
-function fetchUsers() {
+// function fetchUsers() {
+//   let url = "/users";
+
+//   fetch(url)
+//     .then((res) => {
+//       if (!res.ok) {
+//         throw new Error("something went wrong, please try again");
+//       }
+//       return res.json();
+//     })
+//     .then((data) => {
+//       if (logged === "1") {
+//         checkIfLoggedout(data.Message);
+//       } else {
+//         toggleloginPage();
+//         return;
+//       }
+//       if (data && data.length > 0) {
+//         displayUsers(data);
+//       }
+//     })
+//     .catch((err) => displayToast("var(--red)", `get users : ${err}`));
+// }
+
+async function fetchUsers() {
   let url = "/users";
 
-  fetch(url)
+  return fetch(url)
     .then((res) => {
       if (!res.ok) {
         throw new Error("something went wrong, please try again");
@@ -268,6 +297,7 @@ function fetchUsers() {
     })
     .catch((err) => displayToast("var(--red)", `get users : ${err}`));
 }
+
 
 function fetchChatHistory(user) {
   let url = "/chat-history";
@@ -316,8 +346,7 @@ function fetchChatHistory(user) {
     });
 }
 if (logged == 1) {
-  fetchUsers();
-  document.addEventListener("DOMContentLoaded", () => {
+   fetchUsers().then(() => {
     fetchStatus();
   });
 

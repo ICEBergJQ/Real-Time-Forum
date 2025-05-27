@@ -175,9 +175,10 @@ async function getComment(postId) {
 }
 
 const displayComments = async (e, postid) => {
-  e.target.parentElement.nextElementSibling.querySelector(
-    ".replyContainer"
-  ).innerHTML = "";
+  e.target.parentElement.nextElementSibling.querySelectorAll('.comment').forEach(elem => elem?.remove())
+
+  console.log(e);
+
   let comms = await getComment(postid);
   e.target.parentElement.nextElementSibling.classList.toggle("hidden");
 

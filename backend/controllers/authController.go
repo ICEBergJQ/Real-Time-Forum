@@ -86,7 +86,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := "SELECT user_id, username, email, password FROM users WHERE email = ? OR username = ?"
-	row := config.DB.QueryRow(query, user.Email, user.Username)
+	row := config.DB.QueryRow(query, user.Username, user.Username)
 	err := row.Scan(&userFromDb.ID, &userFromDb.Username, &userFromDb.Email, &userFromDb.Password)
 	if err != nil {
 		if err == sql.ErrNoRows {

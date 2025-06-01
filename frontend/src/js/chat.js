@@ -8,10 +8,7 @@ let secondTypingTimeout;
 if (logged == 1) {
   let socket = new WebSocket("ws://localhost:8080/ws");
   function connectWebSocket() {
-    socket = new WebSocket("ws://localhost:8080/ws");
-
     socket.onopen = () => console.log("Connected to WebSocket");
-
     socket.onmessage = (event) => {
       const msg = JSON.parse(event.data);
       if (msg.message !== "") {
@@ -194,6 +191,8 @@ function displayHistory(data, username) {
 }
 
 function displayUsers(data) {
+  console.log(data);
+  
   usersBox.innerHTML = "";
   data.forEach((e) => {
     const read = document.createElement("div");
@@ -211,7 +210,6 @@ function displayUsers(data) {
 function insertStatus(data) {
   if (!Array.isArray(data)) return;
 
-  console.log(data);
   data.forEach((e) => {
     let u = document.getElementById(e.username);
     if (u) {
@@ -250,29 +248,7 @@ function fetchStatus() {
     });
 }
 
-// function fetchUsers() {
-//   let url = "/users";
 
-//   fetch(url)
-//     .then((res) => {
-//       if (!res.ok) {
-//         throw new Error("something went wrong, please try again");
-//       }
-//       return res.json();
-//     })
-//     .then((data) => {
-//       if (logged === "1") {
-//         checkIfLoggedout(data.Message);
-//       } else {
-//         toggleloginPage();
-//         return;
-//       }
-//       if (data && data.length > 0) {
-//         displayUsers(data);
-//       }
-//     })
-//     .catch((err) => displayToast("var(--red)", `get users : ${err}`));
-// }
 
 async function fetchUsers() {
   let url = "/users";
@@ -291,8 +267,8 @@ async function fetchUsers() {
         toggleloginPage();
         return;
       }
-      if (data && data.length > 0) {
-        displayUsers(data);
+      if (data.users && data.users.length > 0) {
+        displayUsers(data.users);
       }
     })
     .catch((err) => displayToast("var(--red)", `get users : ${err}`));

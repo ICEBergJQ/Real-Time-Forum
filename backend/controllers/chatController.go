@@ -44,6 +44,11 @@ type User struct {
 	Username string `json:"username"`
 }
 
+type Response struct {
+	Message string `json:"Message"`
+	Users []User   `json:"users"`
+}
+
 func GetAllUsers(db *sql.DB, currentUserID int) ([]User, error) {
 	var users []User
 	currentUsername := ""
@@ -121,6 +126,7 @@ func GetAllUsers(db *sql.DB, currentUserID int) ([]User, error) {
 
 func GetUsersHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		var Resp Response
 		if r.Method != http.MethodGet {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
@@ -132,7 +138,7 @@ func GetUsersHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		users, err := GetAllUsers(db, currentUserID)
+		Resp.Users, err = GetAllUsers(db, currentUserID)
 		if err != nil {
 			http.Error(w, "Failed to fetch users", http.StatusInternalServerError)
 			fmt.Printf("Error fetching users: %v\n", err)
@@ -140,7 +146,7 @@ func GetUsersHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(users); err != nil {
+		if err := json.NewEncoder(w).Encode(Resp); err != nil {
 			http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 			return
 		}

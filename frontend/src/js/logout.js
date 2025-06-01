@@ -5,9 +5,19 @@ const confirmLogout = logoutModal.querySelector("#confirmLogout");
 const postList = document.querySelector(".post-list");
 const chatUsers = document.querySelector(".chat-users");
 
-//check if it's logged in alreadty bedore access logout
 // Handle logout confirmation
 confirmLogout.onclick = () => {
+  logout()
+};
+
+addEventListener("storage", () => {
+  val = localStorage.getItem("logged")
+  if (val != 1) {
+    logout();
+  }
+})
+
+function logout() {
   fetch("/auth/logout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -29,7 +39,7 @@ confirmLogout.onclick = () => {
       }, 700);
     })
     .catch((err) => displayToast("var(--red)", "logout Error : " + err));
-};
+}
 
 // Show the logout modal when the logout button is clicked
 logoutBtn.addEventListener("click", () => showPopup(logoutModal));

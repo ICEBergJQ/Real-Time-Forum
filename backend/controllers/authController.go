@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"html"
 	"net/http"
 	"strconv"
@@ -42,6 +43,10 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	if err := utils.Validation(user, true); err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
+		return
+	}
+	if utils.IsValidEmail(user.Username) {
+		utils.CreateResponseAndLogger(w, http.StatusBadRequest, fmt.Errorf("invalid username"), "Invalid Username")
 		return
 	}
 

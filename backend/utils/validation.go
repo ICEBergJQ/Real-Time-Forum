@@ -38,14 +38,14 @@ func printable(s string) bool {
 	return true
 }
 
-func isValidEmail(email string) bool {
+func IsValidEmail(email string) bool {
 	re := regexp.MustCompile(`^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 	return re.MatchString(email)
 }
 
 func Validation(user models.User, flag bool) error {
 	if flag {
-		if !isValidEmail(user.Email) {
+		if !IsValidEmail(user.Email) {
 			return errors.New("invalid email address")
 		}
 	}

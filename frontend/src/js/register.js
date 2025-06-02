@@ -15,7 +15,12 @@ document
       .value.trim();
     const birthDate = document.querySelector("#birthdate").value.trim();
     const gender = document.querySelector("#gender").value.trim();
-
+    const fname = document
+      .querySelector("#fname")
+      .value.trim();
+    const lname = document
+      .querySelector("#lname")
+      .value.trim();
     let age = calculateAge(birthDate) + "";
 
     if (
@@ -23,7 +28,9 @@ document
       email == "" ||
       password == "" ||
       confirmPassword == "" ||
-      gender == ""
+      gender == "" ||
+      fname == "" ||
+      lname == ""
     ) {
       displayToast("var(--red)", "all fields are required!!");
       return;
@@ -42,12 +49,15 @@ document
     } else if (age < 13) {
       displayToast("var(--red)", "age must be over 13 years old");
       return;
+    } else if (fname.length < 3 || fname.length > 20 || lname.length < 3 || lname.length > 20) {
+      displayToast("var(--red)", "first name and last name must be between  3 and 20 chars !!");
+      return;
     }
 
     fetch("/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password, gender, age }),
+      body: JSON.stringify({ username, email,fname,lname, password, gender, age }),
     })
       .then((res) => {
         if (!res.ok) {

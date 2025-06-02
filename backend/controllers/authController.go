@@ -32,6 +32,8 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user.Username = html.EscapeString(user.Username)
+	user.FirstName = html.EscapeString(user.FirstName)
+	user.LastName = html.EscapeString(user.LastName)
 	user.Email = html.EscapeString(user.Email)
 	user.Password = html.EscapeString(user.Password)
 	user.Gender = html.EscapeString(user.Gender)
@@ -55,7 +57,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query := "INSERT INTO users (username, email, password, age, gender) VALUES (?, ?, ?, ?, ?)"
+	query := "INSERT INTO users (username,firstname, lastname ,email, password, age, gender) VALUES (?, ?, ?, ?, ?)"
 	_, err = config.DB.Exec(query, user.Username, user.Email, user.Password, user.Age, user.Gender)
 	if err != nil {
 		if err.Error() == "UNIQUE constraint failed: users.username" {

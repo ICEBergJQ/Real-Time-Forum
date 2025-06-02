@@ -52,11 +52,29 @@ func Validation(user models.User, flag bool) error {
 	if user.Username == "" {
 		return errors.New("username cannot be empty")
 	}
+	if user.FirstName == "" {
+		return errors.New("FirstName cannot be empty")
+	}
+	if user.LastName == "" {
+		return errors.New("LastName cannot be empty")
+	}
 	if len(user.Username) > 20 || len(user.Username) < 3 {
 		return errors.New("username must be at most 20 characters long")
 	}
+	if len(user.FirstName) > 20 || len(user.FirstName) < 3 {
+		return errors.New("FirstName must be at most 20 characters long")
+	}
+	if len(user.LastName) > 20 || len(user.LastName) < 3 {
+		return errors.New("LastName must be at most 20 characters long")
+	}
 	if !printable(user.Username) {
 		return errors.New("username must be printable")
+	}
+	if !printable(user.FirstName) {
+		return errors.New("FirstName must be printable")
+	}
+	if !printable(user.LastName) {
+		return errors.New("LastName must be printable")
 	}
 	if user.Password == "" {
 		return errors.New("password cannot be empty")

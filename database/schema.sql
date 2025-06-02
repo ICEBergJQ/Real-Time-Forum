@@ -3,6 +3,8 @@ PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
+    fisrtname TEXT NOT NULL UNIQUE,
+    lastname TEXT NOT NULL UNIQUE,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     age INTEGER NOT NULL,
@@ -41,7 +43,6 @@ CREATE TABLE IF NOT EXISTS Reactions (
     comment_id TEXT,
     reaction_type TEXT NOT NULL CHECK (reaction_type IN ('like', 'dislike')),
     created_at TEXT DEFAULT (datetime('now')) NOT NULL,
-    PRIMARY KEY (user_id, post_id, comment_id),
     FOREIGN KEY (user_id) REFERENCES users (user_id),
     FOREIGN KEY (post_id) REFERENCES posts (post_id) ON DELETE CASCADE,
     FOREIGN KEY (comment_id) REFERENCES comments (comment_id)

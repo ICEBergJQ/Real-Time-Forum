@@ -4,7 +4,13 @@ export default function registerForm() {
         <div class="modal-content popup">
             <h2 class="log">Sign Up</h2>
             <form class="for">
-                   <label for="username">username</label>
+                <label for="fname">First Name</label>
+                <input type="text" id="fname" name="fname" placeholder="Enter your first name" required>
+            
+                <label for="lname">Last Name</label>
+                <input type="text" id="lname" name="lname" placeholder="Enter your last name" required>
+
+                <label for="username">username</label>
                 <input type="text" id="username" name="username" placeholder="Enter your username" required>
                 
                 <label for="gender">Gender</label>

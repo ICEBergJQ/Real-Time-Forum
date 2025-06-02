@@ -42,7 +42,6 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Invalid Age")
 		return
 	}
-
 	if err := utils.Validation(user, true); err != nil {
 		utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, err.Error())
 		return
@@ -57,8 +56,8 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query := "INSERT INTO users (username,firstname, lastname ,email, password, age, gender) VALUES (?, ?, ?, ?, ?)"
-	_, err = config.DB.Exec(query, user.Username, user.Email, user.Password, user.Age, user.Gender)
+	query := "INSERT INTO users (username,firstname, lastname ,email, password, age, gender) VALUES (?, ?, ?, ?, ?,?,?)"
+	_, err = config.DB.Exec(query, user.Username, user.FirstName, user.LastName, user.Email, user.Password, user.Age, user.Gender)
 	if err != nil {
 		if err.Error() == "UNIQUE constraint failed: users.username" {
 			utils.CreateResponseAndLogger(w, http.StatusBadRequest, err, "Username already exists")

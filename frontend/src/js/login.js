@@ -10,8 +10,8 @@ form.addEventListener("submit", (e) => {
   if (username == "" || password == "") {
     displayToast("var(--red)", "all fields are required!!");
     return;
-  } else if (username.length < 3 || username.length > 20) {
-    displayToast("var(--red)", "username must be between  3 and 20 chars !!");
+  } else if (username.length < 3 || username.length > 40) {
+    displayToast("var(--red)", "invalid username or email");
     return;
   } else if (password.length < 6 || password.length > 20) {
     //Password should be at least 6 characters long

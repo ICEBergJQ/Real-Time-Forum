@@ -3,7 +3,6 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"sync"
 
@@ -15,23 +14,6 @@ var (
 	onlineUsers = make(map[int]User)
 	mutex       sync.RWMutex
 )
-
-// AddOnlineUser adds a user to the online users map
-func AddOnlineUser(userID int, db *sql.DB) error {
-	var username string
-	err := db.QueryRow("SELECT username FROM users WHERE user_id = ?", userID).Scan(&username)
-	if err != nil {
-		return fmt.Errorf("failed to get username: %v", err)
-	}
-	mutex.Lock()
-	onlineUsers[userID] = User{
-		UserID:   userID,
-		Username: username,
-	}
-	mutex.Unlock()
-
-	return nil
-}
 
 // removes a user from the online users
 func RemoveOnlineUser(userID int) {
@@ -62,12 +44,12 @@ func GetOnlineUsersHandler(db *sql.DB) http.HandlerFunc {
 
 		_, err := utils.UserIDFromToken(r, db)
 		if err != nil {
-			Logout(w,r)
+			Logout(w, r)
 			return
 		}
 
 		users := GetOnlineUsers()
-		
+
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(users); err != nil {
 			http.Error(w, "Failed to encode response", http.StatusInternalServerError)

@@ -34,7 +34,7 @@ document
     ) {
       displayToast("var(--red)", "all fields are required!!");
       return;
-    } else if (username.length < 3 || username.length > 20) {
+    } else if (username.length < 3 || username.length > 40) {
       displayToast("var(--red)", "username must be between  3 and 20 chars !!");
       return;
     } else if (email.length < 5 || email.length > 40) {

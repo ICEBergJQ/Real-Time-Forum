@@ -71,7 +71,7 @@ func Validation(user models.User, flag bool) error {
 		return errors.New("username cannot be empty")
 	}
 
-	if len(user.Username) > 20 || len(user.Username) < 3 {
+	if len(user.Username) > 40 || len(user.Username) < 3 {
 		return errors.New("username must be at most 20 characters long")
 	}
 

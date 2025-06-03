@@ -58,7 +58,10 @@ window.addEventListener("click", (event) => {
   }
 });
 
-createPostBtn.onclick = () => showCreatePostModal();
+createPostBtn.onclick = () => {
+  closeChat()
+  showCreatePostModal();
+}
 
 //get poosts
 

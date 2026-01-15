@@ -1,28 +1,77 @@
-# **Real Time Phorum Architecture Blueprint**
+# Real-Time Forum
 
-This document provides a concise summary of the project architecture, detailing how all components of the application work together. It serves as a guide for the development team and offers clarity on the project flow.
+A full-stack real-time forum application featuring post creation, comments, categories, likes/dislikes, and a real-time private chat system.
+
+## 🚀 Features
+
+*   **User Authentication**: Secure Signup, Login, and Logout.
+*   **Forum Interactions**: Create posts, comment on posts, and like/dislike content.
+*   **Categories**: Organize and filter posts by categories.
+*   **Real-Time Chat**: Private messaging between online users using WebSockets.
+*   **Responsive UI**: Frontend built with Vanilla JavaScript and CSS.
+*   **Containerized**: Easy deployment with Docker.
+
+## 🛠️ Tech Stack
+
+*   **Backend**: Go (Golang)
+*   **Database**: SQLite
+*   **Frontend**: HTML, CSS, Vanilla JavaScript
+*   **Containerization**: Docker
+
+## 📋 Prerequisites
+
+*   **Docker** (Recommended for easiest setup)
+*   **Go 1.22+** (If running locally)
+*   **GCC** (Required for SQLite CGO if running locally)
+
+## 🏃‍♂️ How to Run
+
+### Method 1: Using Docker (Recommended)
+
+This method ensures all dependencies and paths are correctly configured.
+
+1.  **Run the helper script:**
+    ```bash
+    ./docker/RunDocker.sh
+    ```
+    This script will stop any existing container, build the image, and run the new container.
+
+2.  **Access the application:**
+    Open your browser and go to [http://localhost:8080](http://localhost:8080).
+
+### Method 2: Running Locally
+
+If you prefer to run it without Docker, follow these steps:
+
+1.  **Navigate to the backend directory:**
+    ```bash
+    cd backend
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    go mod download
+    ```
+
+3.  **Run the application:**
+    ```bash
+    go run main.go
+    ```
+    *Note: The application expects the `frontend` and `database` directories to be in the parent directory (`../`), so you must run this command from inside the `backend` folder.*
+
+4.  **Access the application:**
+    Open [http://localhost:8080](http://localhost:8080).
 
 ---
 
-## **Blueprint: Full Stack Project Architecture**
+## 🏗️ Architecture Blueprint
 
-### **1. Overview**
-- **Front-End (User Interface):**  
-  Built using HTML, CSS, and JavaScript, served directly from the back-end server. Handles user interactions such as login, registration, post viewing, commenting, liking, and filtering.
+### Overview
+*   **Front-End**: Served by the Go backend. Handles UI and WebSocket connections.
+*   **Back-End**: Go REST API + WebSocket server.
+*   **Database**: SQLite for persistent storage.
 
-- **Back-End (Application Logic):**  
-  Written in Go (Golang), serves the front-end static files, exposes RESTful APIs for front-end requests, handles business logic (authentication, CRUD operations), and communicates with the SQLite database. WebSockets are used **only** for the chat feature, while all other functionalities rely on HTTP APIs.
-
-- **Database (Persistent Storage):**  
-  SQLite database stores user data, posts, comments, categories, and likes/dislikes.
-
-- **Containerization:**  
-  The entire application (front-end, back-end, and database) runs within a single Docker container for simplicity.
-
----
-
-## **System Diagram**
-
+### System Diagram
 ```plaintext
 +-------------+          +-----------------------+          +-----------------+
 |  Front-End  |          |       Back-End       |          |     Database    |
@@ -39,100 +88,13 @@ This document provides a concise summary of the project architecture, detailing 
       +---------------------------------------------------------------+
 ```
 
----
+### Directory Structure
+```
+├── backend/        # Go application source code
+├── database/       # SQL schema and DB file
+├── docker/         # Docker configuration
+└── frontend/       # Static assets (HTML, JS, CSS)
+```
 
-## **Component Breakdown**
-
-### **Front-End**
-- **Technologies:** HTML, CSS, JavaScript
-- **Responsibilities:**
-  - Display the user interface.
-  - Capture user input (forms, buttons, etc.).
-  - Interact with the back-end via AJAX (RESTful API).
-  - Establish a WebSocket connection for real-time chat.
-- **Served From:** Back-end server
-
-### **Back-End**
-- **Technologies:** Go (Golang)
-- **Responsibilities:**
-  - Serve static front-end files.
-  - Expose RESTful APIs for the front-end.
-  - Handle business logic (e.g., authentication, CRUD operations).
-  - Interact with the database (read/write operations).
-  - Enforce security measures like hashing passwords.
-  - **Manage WebSocket connections for real-time private chat.**
-- **Port:** `8080`
-
-### **Database**
-- **Technology:** SQLite
-- **Responsibilities:**
-  - Store persistent data (users, posts, comments, categories, likes/dislikes).
-  - Store chat messages (optional, if message history is needed).
-  - Provide structured query results for the back-end.
-  - Enforce relationships with constraints (foreign keys).
-
----
-
-## **Real-Time Forum & Chat Integration**
-
-### **WebSockets (Chat Feature)**
-- **Backend (Go)**:
-  - Create a WebSocket server to handle real-time messaging.
-  - Store active connections in a map for private messaging.
-  - Broadcast messages only to the intended recipient.
-
-- **Frontend (JavaScript)**:
-  - Establish a WebSocket connection to receive/send messages.
-  - Update the UI dynamically when a message arrives.
-
-### **HTTP (Forum Features - Posts, Comments, Likes)**
-- **Forum operations (post creation, commenting, liking, etc.) remain HTTP-based.**
-- The UI fetches new posts/comments using periodic API polling or manual refresh.
-
----
-
-## **Project Workflow**
-
-### **1. Initial Setup**
-- Clone the repository.
-- Set up environment variables in `.env`.
-- Build and run the container using Docker.
-
-### **2. Development Process**
-- **Front-End Development:**
-  - Work on HTML, CSS, and JavaScript for user interfaces.
-  - Test API calls with mock data or the back-end.
-  - Implement WebSocket client logic for chat.
-
-- **Back-End Development:**
-  - Develop RESTful APIs.
-  - Implement WebSocket server logic.
-  - Test APIs using tools like Postman or curl.
-  - Integrate and test with the database.
-
-- **Database Development:**
-  - Design and optimize the schema.
-  - Write and test queries.
-  - Seed sample data for testing.
-
-### **3. Testing and Debugging**
-- Test individual components independently (e.g., API endpoints, WebSocket connections, UI responsiveness).
-- Integrate the front-end and back-end.
-- Verify database interactions.
-
-### **4. Deployment**
-- Run `docker run` to deploy the application locally or in a production environment.
-
----
-
-## **Quick Summary Table**
-
-
-| **Component**   | **Technology**           | **Responsibilities**                                   | **Port** |
-|----------------|-------------------------|-------------------------------------------------------|----------|
-| **Frontend**   | HTML, CSS, JavaScript    | User interface, AJAX requests, WebSockets (Chat)      | Served via backend |
-| **Backend**    | Go (Golang)              | Business logic, API handling, database interaction, WebSocket chat | `8080`   |
-| **Database**   | SQLite                   | Persistent storage for application data               | Internal |
-
----
-
+### Port
+The server listens on port **8080**.
